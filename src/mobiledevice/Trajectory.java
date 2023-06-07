@@ -1,0 +1,25 @@
+package mobiledevice;
+
+import java.util.Comparator;
+import java.util.TreeSet;
+
+public class Trajectory {
+
+    private final TreeSet<Position> positionsSet;
+
+    public Trajectory(Trajectory trajectory) {
+        this.positionsSet = trajectory.getPositionsSet();
+    }
+
+    public Trajectory() {
+        this.positionsSet = new TreeSet<>(Comparator.comparing(Position::timestamp));
+    }
+
+    public TreeSet<Position> getPositionsSet() {
+        return new TreeSet<>(positionsSet);
+    }
+
+    public void addPosition(Position position) {
+        this.positionsSet.add(position);
+    }
+}
