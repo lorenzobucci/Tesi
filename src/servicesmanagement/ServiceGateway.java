@@ -1,6 +1,7 @@
 package servicesmanagement;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class ServiceGateway {
@@ -22,16 +23,24 @@ public class ServiceGateway {
         return serviceManager.instantiateWorkflow(workflowType);
     }
 
-    public HashSet<ServiceType> getAvailableServiceTypes(UUID clientID) {
+    public Set<ServiceType> getAvailableServiceTypes(UUID clientID) {
         // TODO: check client permissions, location, ...
 
-        return new HashSet<>(serviceManager.getAllServiceTypes()); // dummy return
+        // dummy return
+        HashSet<ServiceType> availableServiceTypes = new HashSet<>();
+        for (ServiceType serviceType: serviceManager.getAllServiceTypes().values())
+            availableServiceTypes.add(new ServiceType(serviceType));
+        return availableServiceTypes;
     }
 
-    public HashSet<WorkflowType> getAvailableWorkflowTypes(UUID clientID) {
+    public Set<WorkflowType> getAvailableWorkflowTypes(UUID clientID) {
         // TODO: check client permissions, location, ...
 
-        return new HashSet<>(serviceManager.getAllWorkflowTypes()); // dummy return
+        // dummy return
+        HashSet<WorkflowType> availableWorkflowTypes = new HashSet<>();
+        for (WorkflowType workflowType: serviceManager.getAllWorkflowTypes().values())
+            availableWorkflowTypes.add(new WorkflowType(workflowType));
+        return availableWorkflowTypes;
     }
 
 }

@@ -27,7 +27,7 @@ public class ServiceManager {
         if (!allServiceTypes.containsKey(serviceType.id))
             allServiceTypes.putIfAbsent(serviceType.id, new ServiceType(serviceType));
         else
-            throw new IllegalArgumentException("The service is already in memory")
+            throw new IllegalArgumentException("The service is already in memory");
     }
 
     public void addNewWorkflowType(WorkflowType workflowType) {
