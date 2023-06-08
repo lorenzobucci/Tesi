@@ -13,7 +13,7 @@ public class WorkflowInstance {
     public final UUID workflowTypeId;
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
-    public WorkflowInstance(WorkflowType workflowType) {
+    WorkflowInstance(WorkflowType workflowType) {
         workflowTypeId = workflowType.id;
         serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
@@ -29,7 +29,6 @@ public class WorkflowInstance {
 
             serviceInstanceDAG.addEdge(callerService, calleeService);
         }
-
     }
 
     Set<ServiceInstance> getServiceInstances() {

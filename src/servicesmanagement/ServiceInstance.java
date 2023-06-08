@@ -10,7 +10,7 @@ public class ServiceInstance {
     public final UUID serviceTypeId;
     private HashMap<String, Integer> internalState;
 
-    public ServiceInstance(ServiceType serviceType) {
+    ServiceInstance(ServiceType serviceType) {
         serviceTypeId = serviceType.id;
     }
 
