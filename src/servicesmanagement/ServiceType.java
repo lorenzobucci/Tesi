@@ -1,8 +1,10 @@
 package servicesmanagement;
 
-import java.util.Objects;
+import java.util.UUID;
 
 public class ServiceType {
+
+    public final UUID id = UUID.randomUUID();
 
     public final String name;
 
@@ -12,7 +14,10 @@ public class ServiceType {
 
     @Override
     public String toString() {
-        return "ServiceType{" + "name='" + name + '\'' + '}';
+        return "ServiceType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     @Override
@@ -22,11 +27,11 @@ public class ServiceType {
 
         ServiceType that = (ServiceType) o;
 
-        return Objects.equals(name, that.name);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return id.hashCode();
     }
 }

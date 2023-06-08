@@ -1,15 +1,17 @@
 package servicesmanagement;
 
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.UUID;
 
 public class ServiceInstance {
 
-    final ServiceType serviceType;
+    public final UUID id = UUID.randomUUID();
+
+    public final UUID serviceTypeId;
     private HashMap<String, Integer> internalState;
 
     public ServiceInstance(ServiceType serviceType) {
-        this.serviceType = serviceType;
+        serviceTypeId = serviceType.id;
     }
 
     public void updateInternalState(HashMap<String, Integer> internalState) {
@@ -19,7 +21,8 @@ public class ServiceInstance {
     @Override
     public String toString() {
         return "ServiceInstance{" +
-                "serviceType=" + serviceType +
+                "id=" + id +
+                ", serviceTypeID=" + serviceTypeId +
                 '}';
     }
 
@@ -30,14 +33,11 @@ public class ServiceInstance {
 
         ServiceInstance that = (ServiceInstance) o;
 
-        if (!Objects.equals(serviceType, that.serviceType)) return false;
-        return Objects.equals(internalState, that.internalState);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        int result = serviceType != null ? serviceType.hashCode() : 0;
-        result = 31 * result + (internalState != null ? internalState.hashCode() : 0);
-        return result;
+        return id.hashCode();
     }
 }

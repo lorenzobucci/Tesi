@@ -4,15 +4,17 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class WorkflowInstance {
 
-    private final WorkflowType workflowType;
+    public final UUID id = UUID.randomUUID();
 
+    public final UUID workflowTypeId;
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
     public WorkflowInstance(WorkflowType workflowType) {
-        this.workflowType = workflowType;
+        workflowTypeId = workflowType.id;
         this.serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
@@ -32,5 +34,20 @@ public class WorkflowInstance {
 
     Set<ServiceInstance> getServiceInstances() {
         return serviceInstanceDAG.vertexSet();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WorkflowInstance that = (WorkflowInstance) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
