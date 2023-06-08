@@ -7,6 +7,11 @@ public class MobileDevice {
     private Trajectory pastTrajectory;
     private UUID id;
 
+    public MobileDevice() {
+        id = UUID.randomUUID();
+        pastTrajectory = new Trajectory();
+    }
+
     public Trajectory getPastTrajectory() {
         return new Trajectory(pastTrajectory);
     }
