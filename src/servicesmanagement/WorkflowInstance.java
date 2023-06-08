@@ -15,7 +15,7 @@ public class WorkflowInstance {
 
     public WorkflowInstance(WorkflowType workflowType) {
         workflowTypeId = workflowType.id;
-        this.serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
+        serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
             ServiceType callerServiceType = workflowType.getDAG().getEdgeSource(edge);

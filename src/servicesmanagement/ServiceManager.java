@@ -1,17 +1,16 @@
 package servicesmanagement;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ServiceManager {
 
     private static ServiceManager instance = null;
 
-    private final HashSet<ServiceType> allServiceTypes = new HashSet<>();
-    private final HashSet<WorkflowType> allWorkflowTypes = new HashSet<>();
+    private final HashMap<UUID, ServiceType> allServiceTypes = new HashMap<>();
+    private final HashMap<UUID, WorkflowType> allWorkflowTypes = new HashMap<>();
 
-    private final HashSet<ServiceInstance> runningServiceInstances = new HashSet<>();
-    private final HashSet<WorkflowInstance> runningWorkflowInstances = new HashSet<>();
+    private final HashMap<UUID, ServiceInstance> runningServiceInstances = new HashMap<>();
+    private final HashMap<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
 
     private ServiceManager() {
 
@@ -24,46 +23,63 @@ public class ServiceManager {
     }
 
 
-    public void addServiceTypes(Set<ServiceType> serviceTypes) {
-        allServiceTypes.addAll(serviceTypes);
+    public void addNewServiceType(ServiceType serviceType) {
+        if (!allServiceTypes.containsKey(serviceType.id))
+            allServiceTypes.putIfAbsent(serviceType.id, new ServiceType(serviceType));
+        else
+            throw new IllegalArgumentException("The service is already in memory")
     }
 
-    public void addWorkflowTypes(Set<WorkflowType> workflowTypes) {
-        HashSet<ServiceType> serviceTypes = new HashSet<>();
-        for (WorkflowType workflowType: workflowTypes)
-            serviceTypes.addAll(workflowType.getServiceTypes());
-
-        allServiceTypes.addAll(serviceTypes);
-        allWorkflowTypes.addAll(workflowTypes);
+    public void addNewWorkflowType(WorkflowType workflowType) {
+        if (!allWorkflowTypes.containsKey(workflowType.id)) {
+            WorkflowType newWorkflowType = new WorkflowType(workflowType);
+            for (ServiceType serviceType : newWorkflowType.getServiceTypes())
+                allServiceTypes.putIfAbsent(serviceType.id, serviceType);
+            allWorkflowTypes.put(newWorkflowType.id, newWorkflowType);
+        } else
+            throw new IllegalArgumentException("The workflow is already in memory");
     }
 
-    public void removeServiceType(ServiceType serviceType) {
-        allServiceTypes.remove(serviceType);
+    public void removeServiceType(UUID serviceTypeId) {
+        for (WorkflowType workflowType : allWorkflowTypes.values()) {
+            if (workflowType.contains(serviceTypeId))
+                throw new IllegalArgumentException("The specified service belongs to an existent workflow");
+        }
+        allServiceTypes.remove(serviceTypeId);
     }
 
-    public void removeWorkflowType(WorkflowType workflowType) {
-        allWorkflowTypes.remove(workflowType);
+    public void removeWorkflowType(UUID workflowTypeId) {
+        allWorkflowTypes.remove(workflowTypeId);
+    }
+
+    public ServiceType getServiceType(UUID serviceTypeId){
+        return new ServiceType(allServiceTypes.get(serviceTypeId));
+    }
+
+    public WorkflowType getWorkflowType(UUID workflowTypeId) {
+        return new WorkflowType(allWorkflowTypes.get(workflowTypeId));
     }
 
     ServiceInstance instantiateService(ServiceType serviceType) {
         ServiceInstance serviceInstance = new ServiceInstance(serviceType);
-        runningServiceInstances.add(serviceInstance);
+        runningServiceInstances.put(serviceInstance.id, serviceInstance);
         return serviceInstance;
     }
 
     WorkflowInstance instantiateWorkflow(WorkflowType workflowType) {
         WorkflowInstance workflowInstance = new WorkflowInstance(workflowType);
-        runningWorkflowInstances.add(workflowInstance);
-        runningServiceInstances.addAll(workflowInstance.getServiceInstances());
+        runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
+        for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
+            runningServiceInstances.put(serviceInstance.id, serviceInstance);
         return workflowInstance;
     }
 
-    public HashSet<ServiceType> getAllServiceTypes() {
-        return new HashSet<>(allServiceTypes);
+    HashMap<UUID, ServiceType> getAllServiceTypes() {
+        return allServiceTypes;
     }
 
-    public HashSet<WorkflowType> getAllWorkflowTypes() {
-        return new HashSet<>(allWorkflowTypes);
+    HashMap<UUID, WorkflowType> getAllWorkflowTypes() {
+        return allWorkflowTypes;
     }
 
 
