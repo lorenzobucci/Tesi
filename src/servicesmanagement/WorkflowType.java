@@ -8,12 +8,29 @@ import java.util.UUID;
 
 public class WorkflowType {
 
-    public final UUID id = UUID.randomUUID();
+    public final UUID id;
 
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG;
 
     public WorkflowType() {
         serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
+        id = UUID.randomUUID();
+    }
+
+    public WorkflowType(WorkflowType workflowType) {
+        id = workflowType.id;
+
+        serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
+
+        for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
+            ServiceType callerServiceType = new ServiceType(workflowType.getDAG().getEdgeSource(edge));
+            ServiceType calleeServiceType = new ServiceType(workflowType.getDAG().getEdgeTarget(edge));
+
+            serviceTypeDAG.addVertex(callerServiceType);
+            serviceTypeDAG.addVertex(calleeServiceType);
+
+            serviceTypeDAG.addEdge(callerServiceType, calleeServiceType);
+        }
     }
 
     public void addRootService(ServiceType rootService) {

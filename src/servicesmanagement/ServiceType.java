@@ -4,12 +4,18 @@ import java.util.UUID;
 
 public class ServiceType {
 
-    public final UUID id = UUID.randomUUID();
+    public final UUID id;
 
     public final String name;
 
     public ServiceType(String name) {
         this.name = name;
+        id = UUID.randomUUID();
+    }
+
+    public ServiceType(ServiceType serviceType) {
+        name = serviceType.name;
+        id = serviceType.id;
     }
 
     @Override
