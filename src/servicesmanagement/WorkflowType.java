@@ -37,19 +37,19 @@ public class WorkflowType {
         try {
             serviceTypeDAG.addVertex(rootService);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("The service already belongs to the workflow");
+            throw new IllegalArgumentException("The service " + rootService.id + " already belongs to the workflow");
         }
     }
 
     public void addServiceType(ServiceType newService, ServiceType callerService) {
         boolean addResult = serviceTypeDAG.addVertex(newService);
         if (!addResult)
-            throw new IllegalArgumentException("The service already belongs to the workflow");
+            throw new IllegalArgumentException("The service " + newService.id + " already belongs to the workflow");
 
         try {
             serviceTypeDAG.addEdge(callerService, newService);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Caller service must belong to the workflow");
+            throw new IllegalArgumentException("Caller service " + callerService.id + " must belong to the workflow");
         }
 
     }
@@ -59,9 +59,9 @@ public class WorkflowType {
             if (serviceTypeDAG.containsVertex(calleeService))
                 serviceTypeDAG.addEdge(callerService, calleeService);
             else
-                throw new IllegalArgumentException("Callee service must belong to the workflow");
+                throw new IllegalArgumentException("Callee service " + calleeService.id + " must belong to the workflow");
         } else
-            throw new IllegalArgumentException("Caller service must belong to the workflow");
+            throw new IllegalArgumentException("Caller service " + callerService.id + " must belong to the workflow");
     }
 
     public boolean contains(UUID serviceTypeId) {
@@ -71,7 +71,7 @@ public class WorkflowType {
     public void removeServiceType(ServiceType service) {
         boolean removeResult = serviceTypeDAG.removeVertex(service);
         if (!removeResult)
-            throw new IllegalArgumentException("The service does not belong to the workflow");
+            throw new IllegalArgumentException("The service " + service.id + " does not belong to the workflow");
 
     }
 
