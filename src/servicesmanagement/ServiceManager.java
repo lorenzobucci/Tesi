@@ -6,8 +6,8 @@ public class ServiceManager {
 
     private static ServiceManager instance = null;
 
-    private final HashMap<UUID, ServiceType> allServiceTypes = new HashMap<>();
-    private final HashMap<UUID, WorkflowType> allWorkflowTypes = new HashMap<>();
+    private final HashMap<UUID, ServiceType> providedServiceTypes = new HashMap<>();
+    private final HashMap<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
 
     private final HashMap<UUID, ServiceInstance> runningServiceInstances = new HashMap<>();
     private final HashMap<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
@@ -24,62 +24,62 @@ public class ServiceManager {
 
 
     public void addNewServiceType(ServiceType serviceType) {
-        if (!allServiceTypes.containsKey(serviceType.id))
-            allServiceTypes.putIfAbsent(serviceType.id, new ServiceType(serviceType));
+        if (!providedServiceTypes.containsKey(serviceType.id))
+            providedServiceTypes.putIfAbsent(serviceType.id, new ServiceType(serviceType));
         else
             throw new IllegalArgumentException("The service is already in memory");
     }
 
     public void addNewWorkflowType(WorkflowType workflowType) {
-        if (!allWorkflowTypes.containsKey(workflowType.id)) {
+        if (!providedWorkflowTypes.containsKey(workflowType.id)) {
             WorkflowType newWorkflowType = new WorkflowType(workflowType);
             for (ServiceType serviceType : newWorkflowType.getServiceTypes())
-                allServiceTypes.putIfAbsent(serviceType.id, serviceType);
-            allWorkflowTypes.put(newWorkflowType.id, newWorkflowType);
+                providedServiceTypes.putIfAbsent(serviceType.id, serviceType);
+            providedWorkflowTypes.put(newWorkflowType.id, newWorkflowType);
         } else
             throw new IllegalArgumentException("The workflow is already in memory");
     }
 
     public void removeServiceType(UUID serviceTypeId) {
-        for (WorkflowType workflowType : allWorkflowTypes.values()) {
+        for (WorkflowType workflowType : providedWorkflowTypes.values()) {
             if (workflowType.contains(serviceTypeId))
                 throw new IllegalArgumentException("The specified service belongs to an existent workflow");
         }
-        allServiceTypes.remove(serviceTypeId);
+        providedServiceTypes.remove(serviceTypeId);
     }
 
     public void removeWorkflowType(UUID workflowTypeId) {
-        allWorkflowTypes.remove(workflowTypeId);
+        providedWorkflowTypes.remove(workflowTypeId);
     }
 
     public ServiceType getServiceType(UUID serviceTypeId){
-        return new ServiceType(allServiceTypes.get(serviceTypeId));
+        return new ServiceType(providedServiceTypes.get(serviceTypeId));
     }
 
     public WorkflowType getWorkflowType(UUID workflowTypeId) {
-        return new WorkflowType(allWorkflowTypes.get(workflowTypeId));
+        return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
     }
 
-    ServiceInstance instantiateService(ServiceType serviceType) {
-        ServiceInstance serviceInstance = new ServiceInstance(serviceType);
+    ServiceInstance instantiateService(UUID serviceTypeId) {
+        ServiceInstance serviceInstance = new ServiceInstance(providedServiceTypes.get(serviceTypeId));
         runningServiceInstances.put(serviceInstance.id, serviceInstance);
         return serviceInstance;
     }
 
-    WorkflowInstance instantiateWorkflow(WorkflowType workflowType) {
-        WorkflowInstance workflowInstance = new WorkflowInstance(workflowType);
+    WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
+        WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
         runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
         for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
             runningServiceInstances.put(serviceInstance.id, serviceInstance);
         return workflowInstance;
     }
 
-    HashMap<UUID, ServiceType> getAllServiceTypes() {
-        return allServiceTypes;
+    HashMap<UUID, ServiceType> getProvidedServiceTypes() {
+        return providedServiceTypes;
     }
 
-    HashMap<UUID, WorkflowType> getAllWorkflowTypes() {
-        return allWorkflowTypes;
+    HashMap<UUID, WorkflowType> getProvidedWorkflowTypes() {
+        return providedWorkflowTypes;
     }
 
 
