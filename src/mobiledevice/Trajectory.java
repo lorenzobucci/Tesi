@@ -8,11 +8,11 @@ public class Trajectory {
     private final TreeSet<Position> positionsSet;
 
     public Trajectory(Trajectory trajectory) {
-        this.positionsSet = trajectory.getPositionsSet();
+        positionsSet = trajectory.getPositionsSet();
     }
 
     public Trajectory() {
-        this.positionsSet = new TreeSet<>(Comparator.comparing(Position::timestamp));
+        positionsSet = new TreeSet<>(Comparator.comparing(Position::timestamp));
     }
 
     public TreeSet<Position> getPositionsSet() {
@@ -20,6 +20,6 @@ public class Trajectory {
     }
 
     public void addPosition(Position position) {
-        this.positionsSet.add(position);
+        positionsSet.add(position);
     }
 }

@@ -14,7 +14,7 @@ public class ServiceInstance {
         serviceTypeId = serviceType.id;
     }
 
-    public void updateInternalState(HashMap<String, Integer> internalState) {
+    public void syncInternalState(HashMap<String, Integer> internalState) {
         this.internalState = new HashMap<>(internalState);
     }
 
