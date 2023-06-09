@@ -52,7 +52,7 @@ public class ServiceManager {
         providedWorkflowTypes.remove(workflowTypeId);
     }
 
-    public ServiceType getServiceType(UUID serviceTypeId){
+    public ServiceType getServiceType(UUID serviceTypeId) {
         return new ServiceType(providedServiceTypes.get(serviceTypeId));
     }
 
@@ -61,17 +61,25 @@ public class ServiceManager {
     }
 
     ServiceInstance instantiateService(UUID serviceTypeId) {
-        ServiceInstance serviceInstance = new ServiceInstance(providedServiceTypes.get(serviceTypeId));
-        runningServiceInstances.put(serviceInstance.id, serviceInstance);
-        return serviceInstance;
+        try {
+            ServiceInstance serviceInstance = new ServiceInstance(providedServiceTypes.get(serviceTypeId));
+            runningServiceInstances.put(serviceInstance.id, serviceInstance);
+            return serviceInstance;
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("The specified service does not exist");
+        }
     }
 
     WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
-        WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
-        runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
-        for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
-            runningServiceInstances.put(serviceInstance.id, serviceInstance);
-        return workflowInstance;
+        try {
+            WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
+            runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
+            for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
+                runningServiceInstances.put(serviceInstance.id, serviceInstance);
+            return workflowInstance;
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("The specified workflow does not exist");
+        }
     }
 
     HashMap<UUID, ServiceType> getProvidedServiceTypes() {
