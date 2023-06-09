@@ -6,11 +6,11 @@ public class ServiceManager {
 
     private static ServiceManager instance = null;
 
-    private final HashMap<UUID, ServiceType> providedServiceTypes = new HashMap<>();
-    private final HashMap<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
+    private final Map<UUID, ServiceType> providedServiceTypes = new HashMap<>();
+    private final Map<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
 
-    private final HashMap<UUID, ServiceInstance> runningServiceInstances = new HashMap<>();
-    private final HashMap<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
+    private final Map<UUID, ServiceInstance> runningServiceInstances = new HashMap<>();
+    private final Map<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
 
     private ServiceManager() {
 
@@ -90,11 +90,11 @@ public class ServiceManager {
         }
     }
 
-    HashMap<UUID, ServiceType> getProvidedServiceTypes() {
+    Map<UUID, ServiceType> getProvidedServiceTypes() {
         return providedServiceTypes;
     }
 
-    HashMap<UUID, WorkflowType> getProvidedWorkflowTypes() {
+    Map<UUID, WorkflowType> getProvidedWorkflowTypes() {
         return providedWorkflowTypes;
     }
 

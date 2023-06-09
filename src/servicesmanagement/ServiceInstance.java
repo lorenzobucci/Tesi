@@ -1,6 +1,7 @@
 package servicesmanagement;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ServiceInstance {
@@ -8,13 +9,13 @@ public class ServiceInstance {
     public final UUID id = UUID.randomUUID();
 
     public final UUID serviceTypeId;
-    private HashMap<String, Integer> internalState;
+    private Map<String, Integer> internalState;
 
     ServiceInstance(ServiceType serviceType) {
         serviceTypeId = serviceType.id;
     }
 
-    public void syncInternalState(HashMap<String, Integer> internalState) {
+    public void syncInternalState(Map<String, Integer> internalState) {
         this.internalState = new HashMap<>(internalState);
     }
 

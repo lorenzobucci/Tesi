@@ -35,7 +35,7 @@ public class ServiceGateway {
         // TODO: check client permissions, location, ...
 
         // dummy return
-        HashSet<ServiceType> availableServiceTypes = new HashSet<>();
+        Set<ServiceType> availableServiceTypes = new HashSet<>();
         for (ServiceType serviceType: serviceManager.getProvidedServiceTypes().values())
             availableServiceTypes.add(new ServiceType(serviceType));
         return availableServiceTypes;
@@ -45,7 +45,7 @@ public class ServiceGateway {
         // TODO: check client permissions, location, ...
 
         // dummy return
-        HashSet<WorkflowType> availableWorkflowTypes = new HashSet<>();
+        Set<WorkflowType> availableWorkflowTypes = new HashSet<>();
         for (WorkflowType workflowType: serviceManager.getProvidedWorkflowTypes().values())
             availableWorkflowTypes.add(new WorkflowType(workflowType));
         return availableWorkflowTypes;
