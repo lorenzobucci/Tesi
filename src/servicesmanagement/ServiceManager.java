@@ -53,11 +53,19 @@ public class ServiceManager {
     }
 
     public ServiceType getServiceType(UUID serviceTypeId) {
-        return new ServiceType(providedServiceTypes.get(serviceTypeId));
+        try {
+            return new ServiceType(providedServiceTypes.get(serviceTypeId));
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Requested service " + serviceTypeId + " does not exist");
+        }
     }
 
     public WorkflowType getWorkflowType(UUID workflowTypeId) {
-        return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
+        try {
+            return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist");
+        }
     }
 
     ServiceInstance instantiateService(UUID serviceTypeId) {
