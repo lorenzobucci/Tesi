@@ -21,11 +21,17 @@ public class WorkflowInstance {
             ServiceType callerServiceType = workflowType.getDAG().getEdgeSource(edge);
             ServiceType calleeServiceType = workflowType.getDAG().getEdgeTarget(edge);
 
-            ServiceInstance callerService = new ServiceInstance(callerServiceType);
-            ServiceInstance calleeService = new ServiceInstance(calleeServiceType);
+            ServiceInstance callerService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.serviceTypeId == callerServiceType.id).findAny().orElse(null);
+            if (callerService == null) {
+                callerService = new ServiceInstance(callerServiceType);
+                serviceInstanceDAG.addVertex(callerService);
+            }
 
-            serviceInstanceDAG.addVertex(callerService);
-            serviceInstanceDAG.addVertex(calleeService);
+            ServiceInstance calleeService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.serviceTypeId == calleeServiceType.id).findAny().orElse(null);
+            if (calleeService == null) {
+                calleeService = new ServiceInstance(calleeServiceType);
+                serviceInstanceDAG.addVertex(calleeService);
+            }
 
             serviceInstanceDAG.addEdge(callerService, calleeService);
         }
