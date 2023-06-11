@@ -34,21 +34,24 @@ public class WorkflowType {
     }
 
     public void addRootServiceType(ServiceType rootService) {
-        try {
-            serviceTypeDAG.addVertex(rootService);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("The service " + rootService.id + " already belongs to the workflow");
+        if (serviceTypeDAG.vertexSet().isEmpty()) {
+            try {
+                serviceTypeDAG.addVertex(rootService);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("The service " + rootService.id + " already belongs to the workflow");
+            }
+        } else {
+            throw new IllegalStateException("The root service has already been added");
         }
     }
 
     public void addServiceType(ServiceType newService, ServiceType callerService) {
-        boolean addResult = serviceTypeDAG.addVertex(newService);
-        if (!addResult)
-            throw new IllegalArgumentException("The service " + newService.id + " already belongs to the workflow");
-
-        try {
+        if (serviceTypeDAG.containsVertex(callerService)) {
+            boolean addResult = serviceTypeDAG.addVertex(newService);
+            if (!addResult)
+                throw new IllegalArgumentException("The service " + newService.id + " already belongs to the workflow");
             serviceTypeDAG.addEdge(callerService, newService);
-        } catch (IllegalArgumentException e) {
+        } else {
             throw new IllegalArgumentException("Caller service " + callerService.id + " must belong to the workflow");
         }
 
