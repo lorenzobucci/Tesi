@@ -34,7 +34,7 @@ public class ServiceGateway {
 
         // dummy return
         Set<WorkflowType> availableWorkflowTypes = new HashSet<>();
-        for (WorkflowType workflowType: serviceManager.getProvidedWorkflowTypes().values())
+        for (WorkflowType workflowType : serviceManager.providedWorkflowTypes.values())
             availableWorkflowTypes.add(new WorkflowType(workflowType));
         return availableWorkflowTypes;
     }

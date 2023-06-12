@@ -8,10 +8,10 @@ public class ServiceManager {
 
     private static ServiceManager instance = null;
 
-    private final Map<UUID, ServiceType> providedServiceTypes = new HashMap<>();
-    private final Map<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
+    final Map<UUID, ServiceType> providedServiceTypes = new HashMap<>();
+    final Map<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
 
-    private final Map<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
+    final Map<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
 
     private ServiceManager() {
 
@@ -81,10 +81,6 @@ public class ServiceManager {
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist");
         }
-    }
-
-    Map<UUID, WorkflowType> getProvidedWorkflowTypes() {
-        return providedWorkflowTypes;
     }
 
 
