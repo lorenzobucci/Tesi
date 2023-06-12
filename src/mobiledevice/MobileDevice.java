@@ -1,6 +1,8 @@
 package mobiledevice;
 
-import servicesmanagement.*;
+import servicesmanagement.ServiceGateway;
+import servicesmanagement.WorkflowInstance;
+import servicesmanagement.WorkflowType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,9 +16,7 @@ public class MobileDevice {
 
     private final ServiceGateway serviceGateway = ServiceGateway.getInstance();
 
-    public Set<ServiceType> availableServiceTypes = serviceGateway.getAvailableServiceTypes(id);
-    public Set<WorkflowType> availableWorkflowTypes = serviceGateway.getAvailableWorkflowTypes(id);
-    public Set<ServiceInstance> ownedSingleServices = new HashSet<>();
+    public Set<WorkflowType> availableWorkflow = serviceGateway.getAvailableWorkflowTypes(id);
     public Set<WorkflowInstance> ownedWorkflows = new HashSet<>();
 
 
@@ -28,16 +28,8 @@ public class MobileDevice {
         pastTrajectory.addPosition(currentPosition);
     }
 
-    public void updateAvailableServiceTypes() {
-        availableServiceTypes = serviceGateway.getAvailableServiceTypes(id);
-    }
-
-    public void updateAvailableWorkflowTypes() {
-        availableWorkflowTypes = serviceGateway.getAvailableWorkflowTypes(id);
-    }
-
-    public void useService(ServiceType serviceType) {
-        ownedSingleServices.add(serviceGateway.instantiateService(serviceType.id));
+    public void updateAvailableWorkflow() {
+        availableWorkflow = serviceGateway.getAvailableWorkflowTypes(id);
     }
 
     public void useWorkflow(WorkflowType workflowType) {

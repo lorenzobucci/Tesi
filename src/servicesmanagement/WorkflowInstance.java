@@ -37,7 +37,7 @@ public class WorkflowInstance {
         }
     }
 
-    Set<ServiceInstance> getServiceInstances() {
+    public Set<ServiceInstance> getServiceInstances() {
         return serviceInstanceDAG.vertexSet();
     }
 

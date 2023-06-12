@@ -1,6 +1,8 @@
 package servicesmanagement;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ServiceManager {
 
@@ -9,7 +11,6 @@ public class ServiceManager {
     private final Map<UUID, ServiceType> providedServiceTypes = new HashMap<>();
     private final Map<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
 
-    private final Map<UUID, ServiceInstance> runningServiceInstances = new HashMap<>();
     private final Map<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
 
     private ServiceManager() {
@@ -40,6 +41,10 @@ public class ServiceManager {
             throw new IllegalArgumentException("The workflow " + workflowType.id + " is already in memory");
     }
 
+    public void cleanOrphanedServiceTypes() {
+        // TODO
+    }
+
     public void removeServiceType(UUID serviceTypeId) {
         for (WorkflowType workflowType : providedWorkflowTypes.values()) {
             if (workflowType.contains(serviceTypeId))
@@ -68,30 +73,14 @@ public class ServiceManager {
         }
     }
 
-    ServiceInstance instantiateService(UUID serviceTypeId) {
-        try {
-            ServiceInstance serviceInstance = new ServiceInstance(providedServiceTypes.get(serviceTypeId));
-            runningServiceInstances.put(serviceInstance.id, serviceInstance);
-            return serviceInstance;
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested service " + serviceTypeId + " does not exist");
-        }
-    }
-
     WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
         try {
             WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
             runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
-            for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
-                runningServiceInstances.put(serviceInstance.id, serviceInstance);
             return workflowInstance;
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist");
         }
-    }
-
-    Map<UUID, ServiceType> getProvidedServiceTypes() {
-        return providedServiceTypes;
     }
 
     Map<UUID, WorkflowType> getProvidedWorkflowTypes() {

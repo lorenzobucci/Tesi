@@ -19,26 +19,10 @@ public class ServiceGateway {
         return instance;
     }
 
-    public ServiceInstance instantiateService(UUID serviceTypeId) {
-        // TODO: check client permissions, location, ...
-
-        return serviceManager.instantiateService(serviceTypeId);
-    }
-
     public WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
         // TODO: check client permissions, location, ...
 
         return serviceManager.instantiateWorkflow(workflowTypeId);
-    }
-
-    public Set<ServiceType> getAvailableServiceTypes(UUID clientID) {
-        // TODO: check client permissions, location, ...
-
-        // dummy return
-        Set<ServiceType> availableServiceTypes = new HashSet<>();
-        for (ServiceType serviceType: serviceManager.getProvidedServiceTypes().values())
-            availableServiceTypes.add(new ServiceType(serviceType));
-        return availableServiceTypes;
     }
 
     public Set<WorkflowType> getAvailableWorkflowTypes(UUID clientID) {
