@@ -7,15 +7,18 @@ public class ServiceType {
     public final UUID id;
 
     public final String name;
+    public final ServiceRequirements requirements;
 
-    public ServiceType(String name) {
+    public ServiceType(String name, ServiceRequirements requirements) {
         this.name = name;
         id = UUID.randomUUID();
+        this.requirements = requirements;
     }
 
     public ServiceType(ServiceType serviceType) {
         name = serviceType.name;
         id = serviceType.id;
+        requirements = serviceType.requirements;
     }
 
     @Override

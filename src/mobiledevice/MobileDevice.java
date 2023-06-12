@@ -32,8 +32,8 @@ public class MobileDevice {
         availableWorkflow = serviceGateway.getAvailableWorkflowTypes(id);
     }
 
-    public void useWorkflow(WorkflowType workflowType) {
-        ownedWorkflows.add(serviceGateway.instantiateWorkflow(workflowType.id));
+    public void useWorkflow(WorkflowType workflowType, UserRequirements requirements) {
+        ownedWorkflows.add(serviceGateway.instantiateWorkflow(workflowType.id, requirements));
     }
 
     public Trajectory getPastTrajectory() {

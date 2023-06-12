@@ -1,5 +1,7 @@
 package servicesmanagement;
 
+import mobiledevice.UserRequirements;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -19,10 +21,10 @@ public class ServiceGateway {
         return instance;
     }
 
-    public WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
+    public WorkflowInstance instantiateWorkflow(UUID workflowTypeId, UserRequirements requirements) {
         // TODO: check client permissions, location, ...
 
-        return serviceManager.instantiateWorkflow(workflowTypeId);
+        return serviceManager.instantiateWorkflow(workflowTypeId, requirements);
     }
 
     public Set<WorkflowType> getAvailableWorkflowTypes(UUID clientID) {

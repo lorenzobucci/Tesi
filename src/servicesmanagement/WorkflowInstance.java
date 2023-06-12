@@ -1,5 +1,6 @@
 package servicesmanagement;
 
+import mobiledevice.UserRequirements;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
@@ -11,10 +12,12 @@ public class WorkflowInstance {
     public final UUID id = UUID.randomUUID();
 
     public final UUID workflowTypeId;
+    public UserRequirements userRequirements;
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
-    WorkflowInstance(WorkflowType workflowType) {
+    WorkflowInstance(WorkflowType workflowType, UserRequirements userRequirements) {
         workflowTypeId = workflowType.id;
+        this.userRequirements = userRequirements;
         serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
