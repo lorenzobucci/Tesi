@@ -9,10 +9,12 @@ public class ServiceInstance {
     public final UUID id = UUID.randomUUID();
 
     public final ServiceType serviceType;
+    public final WorkflowInstance belongingWorkflow;
     private Map<String, Integer> internalState;
 
-    ServiceInstance(ServiceType serviceType) {
+    ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = new ServiceType(serviceType);
+        this.belongingWorkflow = belongingWorkflow;
     }
 
     public void syncInternalState(Map<String, Integer> internalState) {

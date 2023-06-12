@@ -26,13 +26,13 @@ public class WorkflowInstance {
 
             ServiceInstance callerService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.serviceType.id == callerServiceType.id).findAny().orElse(null);
             if (callerService == null) {
-                callerService = new ServiceInstance(callerServiceType);
+                callerService = new ServiceInstance(callerServiceType, this);
                 serviceInstanceDAG.addVertex(callerService);
             }
 
             ServiceInstance calleeService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.serviceType.id == calleeServiceType.id).findAny().orElse(null);
             if (calleeService == null) {
-                calleeService = new ServiceInstance(calleeServiceType);
+                calleeService = new ServiceInstance(calleeServiceType, this);
                 serviceInstanceDAG.addVertex(calleeService);
             }
 
