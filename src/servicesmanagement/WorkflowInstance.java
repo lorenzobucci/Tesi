@@ -12,12 +12,12 @@ public class WorkflowInstance {
     public final UUID id = UUID.randomUUID();
 
     public final UUID workflowTypeId;
+
     public UserRequirements userRequirements;
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
-    WorkflowInstance(WorkflowType workflowType, UserRequirements userRequirements) {
+    WorkflowInstance(WorkflowType workflowType) {
         workflowTypeId = workflowType.id;
-        this.userRequirements = userRequirements;
         serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
@@ -38,6 +38,10 @@ public class WorkflowInstance {
 
             serviceInstanceDAG.addEdge(callerService, calleeService);
         }
+    }
+
+    public void setUserRequirements(UserRequirements userRequirements) {
+        this.userRequirements = userRequirements;
     }
 
     Set<ServiceInstance> getServiceInstances() {

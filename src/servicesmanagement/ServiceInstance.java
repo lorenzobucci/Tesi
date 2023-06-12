@@ -1,5 +1,6 @@
 package servicesmanagement;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -10,6 +11,8 @@ public class ServiceInstance {
 
     public final ServiceType serviceType;
     public final WorkflowInstance belongingWorkflow;
+
+    public InetAddress nodeIpAddress;
     private Map<String, Integer> internalState;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {

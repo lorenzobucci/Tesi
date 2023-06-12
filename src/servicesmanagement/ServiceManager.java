@@ -1,7 +1,5 @@
 package servicesmanagement;
 
-import mobiledevice.UserRequirements;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -75,9 +73,9 @@ public class ServiceManager {
         }
     }
 
-    WorkflowInstance instantiateWorkflow(UUID workflowTypeId, UserRequirements userRequirements) {
+    WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
         try {
-            WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId), userRequirements);
+            WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
             runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
             return workflowInstance;
         } catch (NullPointerException e) {

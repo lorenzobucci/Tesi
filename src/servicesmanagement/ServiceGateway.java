@@ -24,7 +24,9 @@ public class ServiceGateway {
     public WorkflowInstance instantiateWorkflow(UUID workflowTypeId, UserRequirements requirements) {
         // TODO: check client permissions, location, ...
 
-        return serviceManager.instantiateWorkflow(workflowTypeId, requirements);
+        WorkflowInstance workflowInstance = serviceManager.instantiateWorkflow(workflowTypeId);
+        workflowInstance.setUserRequirements(requirements);
+        return workflowInstance;
     }
 
     public Set<WorkflowType> getAvailableWorkflowTypes(UUID clientID) {
