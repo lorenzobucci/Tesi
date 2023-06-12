@@ -8,11 +8,11 @@ public class ServiceInstance {
 
     public final UUID id = UUID.randomUUID();
 
-    public final UUID serviceTypeId;
+    public final ServiceType serviceType;
     private Map<String, Integer> internalState;
 
     ServiceInstance(ServiceType serviceType) {
-        serviceTypeId = serviceType.id;
+        this.serviceType = new ServiceType(serviceType);
     }
 
     public void syncInternalState(Map<String, Integer> internalState) {
@@ -23,7 +23,7 @@ public class ServiceInstance {
     public String toString() {
         return "ServiceInstance{" +
                 "id=" + id +
-                ", serviceTypeID=" + serviceTypeId +
+                ", serviceTypeID=" + serviceType.id +
                 '}';
     }
 
