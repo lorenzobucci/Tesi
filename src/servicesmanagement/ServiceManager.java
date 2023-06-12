@@ -2,6 +2,7 @@ package servicesmanagement;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class ServiceManager {
@@ -21,6 +22,16 @@ public class ServiceManager {
         if (instance == null)
             instance = new ServiceManager();
         return instance;
+    }
+
+    public void init(Set<ServiceType> providedServiceTypes, Set<WorkflowType> providedWorkflowTypes) {
+        if (this.providedServiceTypes.isEmpty() && this.providedWorkflowTypes.isEmpty()) {
+            for (ServiceType serviceType : providedServiceTypes)
+                addNewServiceType(serviceType);
+            for (WorkflowType workflowType : providedWorkflowTypes)
+                addNewWorkflowType(workflowType);
+        } else
+            throw new IllegalStateException("Cannot initialize if there are services or workflows in memory");
     }
 
 
