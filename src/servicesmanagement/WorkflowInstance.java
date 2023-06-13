@@ -14,7 +14,7 @@ public class WorkflowInstance {
     public final UUID workflowTypeId;
 
     public UserRequirements userRequirements;
-    private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
+    public final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
     WorkflowInstance(WorkflowType workflowType) {
         workflowTypeId = workflowType.id;
