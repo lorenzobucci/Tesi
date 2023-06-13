@@ -15,7 +15,7 @@ public class AllocationManager {
 
     final Map<Node, Set<ContainerInstance>> nodeContainersMap = new HashMap<>();
 
-    private AllocatorAlgorithm allocator;
+    private AllocatorAlgorithm allocator = null;
 
     private AllocationManager() {
     }
@@ -60,20 +60,23 @@ public class AllocationManager {
     }
 
     public void allocateService(ServiceInstance service) {
-        ContainerInstance containerInstance = allocator.allocateService(
-                service,
-                getAvailableNodes(),
-                getProvidedContainerTypes(),
-                getNodeContainersMap());
-        activeContainerInstances.add(containerInstance);
+        if (allocator != null) {
+            ContainerInstance containerInstance = allocator.allocateService(
+                    service,
+                    getAvailableNodes(),
+                    getProvidedContainerTypes(),
+                    getNodeContainersMap());
+            activeContainerInstances.add(containerInstance);
 
-        Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
-        if (nodeContainersMap.containsKey(selectedNode))
-            nodeContainersMap.get(selectedNode).add(containerInstance);
-        else
-            nodeContainersMap.put(selectedNode, Collections.singleton(containerInstance));
+            Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
+            if (nodeContainersMap.containsKey(selectedNode))
+                nodeContainersMap.get(selectedNode).add(containerInstance);
+            else
+                nodeContainersMap.put(selectedNode, Collections.singleton(containerInstance));
 
-        service.nodeIpAddress = selectedNode.ipAddress;
+            service.nodeIpAddress = selectedNode.ipAddress;
+        } else
+            throw new IllegalStateException("The allocation algorithm has not yet been set");
     }
 
     public void cleanInactiveContainerInstances() {
