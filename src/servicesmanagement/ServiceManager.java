@@ -53,7 +53,12 @@ public class ServiceManager {
     }
 
     public void cleanOrphanedServiceTypes() {
-        // TODO
+        for (UUID serviceTypeId : providedServiceTypes.keySet()) {
+            try {
+                removeServiceType(serviceTypeId);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
     }
 
     public void removeServiceType(UUID serviceTypeId) {
