@@ -24,7 +24,7 @@ public class MobileDevice {
 
     }
 
-    public void syncCurrentPosition(Position currentPosition) {
+    public void syncWithRealObject(Position currentPosition) {
         pastTrajectory.addPosition(currentPosition);
     }
 

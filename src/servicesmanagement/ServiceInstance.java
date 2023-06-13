@@ -20,7 +20,7 @@ public class ServiceInstance {
         this.belongingWorkflow = belongingWorkflow;
     }
 
-    public void syncInternalState(Map<String, Integer> internalState) {
+    public void syncWithRealObject(Map<String, Integer> internalState) {
         this.internalState = new HashMap<>(internalState);
     }
 
