@@ -4,7 +4,6 @@ import mobiledevice.UserRequirements;
 import servicesmanagement.ServiceInstance;
 import servicesmanagement.ServiceRequirements;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class ContainerInstance {
@@ -41,11 +40,11 @@ public class ContainerInstance {
 
         ContainerInstance that = (ContainerInstance) o;
 
-        return Objects.equals(id, that.id);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id.hashCode();
     }
 }

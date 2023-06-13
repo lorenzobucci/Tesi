@@ -17,8 +17,8 @@ public record Position(float latitude, float longitude, Timestamp timestamp) {
 
     @Override
     public int hashCode() {
-        int result = (latitude != +0.0f ? Float.floatToIntBits(latitude) : 0);
-        result = 31 * result + (longitude != +0.0f ? Float.floatToIntBits(longitude) : 0);
+        int result = (latitude != 0.0f ? Float.floatToIntBits(latitude) : 0);
+        result = 31 * result + (longitude != 0.0f ? Float.floatToIntBits(longitude) : 0);
         result = 31 * result + timestamp.hashCode();
         return result;
     }
