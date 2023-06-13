@@ -2,13 +2,12 @@ package resourcesmanagement;
 
 import servicesmanagement.ServiceInstance;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
 public class SampleAllocatorAlgorithm implements AllocatorAlgorithm {
 
     @Override
-    public ContainerInstance allocateService(ServiceInstance serviceToAllocate, Map<UUID, Node> availableNodes, Map<UUID, ContainerType> providedContainerTypes) {
-        return new ContainerInstance(providedContainerTypes.values().iterator().next(), availableNodes.values().iterator().next().id, serviceToAllocate);
+    public ContainerInstance allocateService(ServiceInstance serviceToAllocate, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
+        return new ContainerInstance(providedContainerTypes.iterator().next(), availableNodes.iterator().next().id, serviceToAllocate);
     }
 }

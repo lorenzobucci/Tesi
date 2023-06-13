@@ -61,8 +61,8 @@ public class AllocationManager {
         if (allocator != null) {
             ContainerInstance containerInstance = allocator.allocateService(
                     service,
-                    getAvailableNodes(),
-                    getProvidedContainerTypes());
+                    new HashSet<>(getAvailableNodes().values()),
+                    new HashSet<>(getProvidedContainerTypes().values()));
             activeContainerInstances.add(containerInstance);
 
             Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);

@@ -2,11 +2,10 @@ package resourcesmanagement;
 
 import servicesmanagement.ServiceInstance;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
 public interface AllocatorAlgorithm {
     ContainerInstance allocateService(ServiceInstance serviceToAllocate,
-                                      Map<UUID, Node> availableNodes,
-                                      Map<UUID, ContainerType> providedContainerTypes);
+                                      Set<Node> availableNodes,
+                                      Set<ContainerType> providedContainerTypes);
 }
