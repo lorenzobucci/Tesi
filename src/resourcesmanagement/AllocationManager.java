@@ -11,7 +11,7 @@ public class AllocationManager {
     final Map<UUID, Node> availableNodes = new HashMap<>();
 
     final Map<UUID, ContainerType> providedContainerTypes = new HashMap<>();
-    final Map<UUID, ContainerInstance> activeContainerInstances = new HashMap<>();
+    final Set<ContainerInstance> activeContainerInstances = new HashSet<>();
 
     final Map<Node, Set<ContainerInstance>> nodeContainersMap = new HashMap<>();
 
@@ -64,9 +64,8 @@ public class AllocationManager {
                 service,
                 getAvailableNodes(),
                 getProvidedContainerTypes(),
-                getActiveContainerInstances(),
                 getNodeContainersMap());
-        activeContainerInstances.put(containerInstance.id, containerInstance);
+        activeContainerInstances.add(containerInstance);
 
         Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
         if (nodeContainersMap.containsKey(selectedNode))
@@ -78,9 +77,9 @@ public class AllocationManager {
     }
 
     public void cleanInactiveContainerInstances() {
-        for (ContainerInstance containerInstance : activeContainerInstances.values()) {
+        for (ContainerInstance containerInstance : activeContainerInstances) {
             if (containerInstance.state.equals("TERMINATED")) { // or anything else
-                activeContainerInstances.remove(containerInstance.id);
+                activeContainerInstances.remove(containerInstance);
                 nodeContainersMap.get(availableNodes.get(containerInstance.belongingNodeId)).remove(containerInstance);
             }
         }
@@ -94,8 +93,8 @@ public class AllocationManager {
         return providedContainerTypes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ContainerType(e.getValue())));
     }
 
-    public Map<UUID, ContainerInstance> getActiveContainerInstances() {
-        return new HashMap<>(activeContainerInstances);
+    public Set<ContainerInstance> getActiveContainerInstances() {
+        return new HashSet<>(activeContainerInstances);
     }
 
     public Map<Node, Set<ContainerInstance>> getNodeContainersMap() {
