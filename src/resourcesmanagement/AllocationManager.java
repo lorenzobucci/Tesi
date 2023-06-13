@@ -13,8 +13,6 @@ public class AllocationManager {
     final Map<UUID, ContainerType> providedContainerTypes = new HashMap<>();
     final Set<ContainerInstance> activeContainerInstances = new HashSet<>();
 
-    final Map<Node, Set<ContainerInstance>> nodeContainersMap = new HashMap<>();
-
     private AllocatorAlgorithm allocator = null;
 
     private AllocationManager() {
@@ -64,28 +62,14 @@ public class AllocationManager {
             ContainerInstance containerInstance = allocator.allocateService(
                     service,
                     getAvailableNodes(),
-                    getProvidedContainerTypes(),
-                    getNodeContainersMap());
+                    getProvidedContainerTypes());
             activeContainerInstances.add(containerInstance);
 
             Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
-            if (nodeContainersMap.containsKey(selectedNode))
-                nodeContainersMap.get(selectedNode).add(containerInstance);
-            else
-                nodeContainersMap.put(selectedNode, Collections.singleton(containerInstance));
-
+            selectedNode.ownedContainer.add(containerInstance);
             service.nodeIpAddress = selectedNode.ipAddress;
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set");
-    }
-
-    public void cleanInactiveContainerInstances() {
-        for (ContainerInstance containerInstance : activeContainerInstances) {
-            if (containerInstance.state.equals("TERMINATED")) { // or anything else
-                activeContainerInstances.remove(containerInstance);
-                nodeContainersMap.get(availableNodes.get(containerInstance.belongingNodeId)).remove(containerInstance);
-            }
-        }
     }
 
     public Map<UUID, Node> getAvailableNodes() {
@@ -98,10 +82,6 @@ public class AllocationManager {
 
     public Set<ContainerInstance> getActiveContainerInstances() {
         return new HashSet<>(activeContainerInstances);
-    }
-
-    public Map<Node, Set<ContainerInstance>> getNodeContainersMap() {
-        return nodeContainersMap.entrySet().stream().collect(Collectors.toMap(e -> new Node(e.getKey()), Map.Entry::getValue));
     }
 
     public void setAllocatorAlgorithm(AllocatorAlgorithm allocatorAlgorithm) {

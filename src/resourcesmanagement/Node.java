@@ -2,24 +2,25 @@ package resourcesmanagement;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public class Node {
     public final UUID id;
 
+    public final NodeTechnicalProperties properties;
     public final NodeType nodeType;
-
     public enum NodeType {
         CLOUD,
         EDGE
     }
 
-    public final NodeTechnicalProperties properties;
-
     public final float latitude;
     public final float longitude;
 
+    Set<ContainerInstance> ownedContainer;
     InetAddress ipAddress = null;
 
     float memoryUsagePercentage;
@@ -31,6 +32,7 @@ public class Node {
         this.properties = properties;
         this.latitude = latitude;
         this.longitude = longitude;
+        ownedContainer = new HashSet<>();
     }
 
     public Node(Node node) {
@@ -41,6 +43,7 @@ public class Node {
         longitude = node.longitude;
         memoryUsagePercentage = node.memoryUsagePercentage;
         cpuUsagePercentage = node.cpuUsagePercentage;
+        ownedContainer = new HashSet<>(node.ownedContainer);
         if (node.ipAddress != null) {
             try {
                 ipAddress = InetAddress.getByAddress(node.ipAddress.getAddress());
@@ -56,6 +59,10 @@ public class Node {
         }
         this.memoryUsagePercentage = memoryUsagePercentage;
         this.cpuUsagePercentage = cpuUsagePercentage;
+    }
+
+    public void cleanInactiveContainer() {
+        ownedContainer.removeIf(containerInstance -> containerInstance.state.equals("TERMINATED"));   // or anything else
     }
 
     @Override
