@@ -1,6 +1,7 @@
 package servicesmanagement;
 
 import mobiledevice.UserRequirements;
+import resourcesmanagement.AllocationManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +11,8 @@ public class ServiceGateway {
 
     private static ServiceGateway instance = null;
     private final ServiceManager serviceManager = ServiceManager.getInstance();
+
+    private final AllocationManager allocationManager = AllocationManager.getInstance();
 
     private ServiceGateway() {
 
@@ -26,6 +29,10 @@ public class ServiceGateway {
 
         WorkflowInstance workflowInstance = serviceManager.instantiateWorkflow(workflowTypeId);
         workflowInstance.setUserRequirements(requirements);
+
+        for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet())
+            allocationManager.allocateService(serviceInstance);
+
         return workflowInstance;
     }
 

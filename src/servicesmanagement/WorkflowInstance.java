@@ -4,7 +4,6 @@ import mobiledevice.UserRequirements;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
-import java.util.Set;
 import java.util.UUID;
 
 public class WorkflowInstance {
@@ -42,10 +41,6 @@ public class WorkflowInstance {
 
     public void setUserRequirements(UserRequirements userRequirements) {
         this.userRequirements = userRequirements;
-    }
-
-    Set<ServiceInstance> getServiceInstances() {
-        return serviceInstanceDAG.vertexSet();
     }
 
     @Override
