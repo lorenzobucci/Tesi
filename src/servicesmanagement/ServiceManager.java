@@ -31,7 +31,7 @@ public class ServiceManager {
             for (WorkflowType workflowType : providedWorkflowTypes)
                 addNewWorkflowType(workflowType);
         } else
-            throw new IllegalStateException("Cannot initialize if there are services or workflows in memory");
+            throw new IllegalStateException("Cannot initialize if there are services or workflows in memory.");
     }
 
 
@@ -39,7 +39,7 @@ public class ServiceManager {
         if (!providedServiceTypes.containsKey(serviceType.id))
             providedServiceTypes.putIfAbsent(serviceType.id, new ServiceType(serviceType));
         else
-            throw new IllegalArgumentException("The service " + serviceType.id + " is already in memory");
+            throw new IllegalArgumentException("The service " + serviceType.id + " is already in memory.");
     }
 
     public void addNewWorkflowType(WorkflowType workflowType) {
@@ -49,7 +49,7 @@ public class ServiceManager {
                 providedServiceTypes.putIfAbsent(serviceType.id, serviceType);
             providedWorkflowTypes.put(newWorkflowType.id, newWorkflowType);
         } else
-            throw new IllegalArgumentException("The workflow " + workflowType.id + " is already in memory");
+            throw new IllegalArgumentException("The workflow " + workflowType.id + " is already in memory.");
     }
 
     public void cleanOrphanedServiceTypes() {
@@ -64,7 +64,7 @@ public class ServiceManager {
     public void removeServiceType(UUID serviceTypeId) {
         for (WorkflowType workflowType : providedWorkflowTypes.values()) {
             if (workflowType.contains(serviceTypeId))
-                throw new IllegalArgumentException("The service " + serviceTypeId + " belongs to an existent workflow");
+                throw new IllegalArgumentException("The service " + serviceTypeId + " belongs to an existent workflow.");
         }
         providedServiceTypes.remove(serviceTypeId);
     }
@@ -77,7 +77,7 @@ public class ServiceManager {
         try {
             return new ServiceType(providedServiceTypes.get(serviceTypeId));
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested service " + serviceTypeId + " does not exist");
+            throw new IllegalArgumentException("Requested service " + serviceTypeId + " does not exist.");
         }
     }
 
@@ -85,7 +85,7 @@ public class ServiceManager {
         try {
             return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist");
+            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist.");
         }
     }
 
@@ -95,7 +95,7 @@ public class ServiceManager {
             runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
             return workflowInstance;
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist");
+            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist.");
         }
     }
 

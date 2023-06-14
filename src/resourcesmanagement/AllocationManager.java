@@ -32,14 +32,14 @@ public class AllocationManager {
                 addContainerType(containerType);
             allocator = allocatorAlgorithm;
         } else
-            throw new IllegalStateException("Cannot initialize if there are nodes or containers in memory");
+            throw new IllegalStateException("Cannot initialize if there are nodes or containers in memory.");
     }
 
     public void addNode(Node node) {
         if (!availableNodes.containsKey(node.id))
             availableNodes.putIfAbsent(node.id, new Node(node));
         else
-            throw new IllegalArgumentException("The node " + node.id + " is already in memory");
+            throw new IllegalArgumentException("The node " + node.id + " is already in memory.");
     }
 
     public void removeNode(UUID nodeId) {
@@ -50,7 +50,7 @@ public class AllocationManager {
         if (!providedContainerTypes.containsKey(containerType.id))
             providedContainerTypes.putIfAbsent(containerType.id, new ContainerType(containerType));
         else
-            throw new IllegalArgumentException("The container " + containerType.id + " is already in memory");
+            throw new IllegalArgumentException("The container " + containerType.id + " is already in memory.");
     }
 
     public void removeContainerType(UUID containerTypeId) {
@@ -69,7 +69,7 @@ public class AllocationManager {
             selectedNode.ownedContainer.add(containerInstance);
             service.nodeIpAddress = selectedNode.ipAddress;
         } else
-            throw new IllegalStateException("The allocation algorithm has not yet been set");
+            throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
     public Map<UUID, Node> getAvailableNodes() {
