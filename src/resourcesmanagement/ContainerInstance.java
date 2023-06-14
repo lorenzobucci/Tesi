@@ -1,8 +1,6 @@
 package resourcesmanagement;
 
-import mobiledevice.UserRequirements;
 import servicesmanagement.ServiceInstance;
-import servicesmanagement.ServiceRequirements;
 
 import java.util.UUID;
 
@@ -27,14 +25,6 @@ public class ContainerInstance {
 
     public String getState() {
         return state;
-    }
-
-    public ServiceRequirements getServiceRequirements() {
-        return serviceInstance.serviceType.requirements;
-    }
-
-    public UserRequirements getUserRequirements() {
-        return serviceInstance.belongingWorkflow.userRequirements;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package servicesmanagement;
 
+import mobiledevice.UserRequirements;
+
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +25,15 @@ public class ServiceInstance {
     public void syncWithRealObject(Map<String, Integer> internalState) {
         this.internalState = new HashMap<>(internalState);
     }
+
+    public ServiceRequirements getServiceRequirements() {
+        return serviceType.requirements;
+    }
+
+    public UserRequirements getUserRequirements() {
+        return belongingWorkflow.userRequirements;
+    }
+
 
     @Override
     public String toString() {
