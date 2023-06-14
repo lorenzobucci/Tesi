@@ -52,7 +52,7 @@ public class Node {
         }
     }
 
-    public void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
+    void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
         try {
             this.ipAddress = InetAddress.getByAddress(ipAddress.getAddress());
         } catch (UnknownHostException ignored) {
@@ -62,7 +62,7 @@ public class Node {
     }
 
     public void cleanInactiveContainer() {
-        ownedContainer.removeIf(containerInstance -> containerInstance.state.equals("TERMINATED"));   // or anything else
+        ownedContainer.removeIf(containerInstance -> containerInstance.getState().equals("TERMINATED"));   // or anything else
     }
 
     @Override

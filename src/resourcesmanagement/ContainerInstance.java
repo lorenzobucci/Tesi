@@ -10,7 +10,7 @@ public class ContainerInstance {
     public final UUID id = UUID.randomUUID();
 
     public final ContainerType containerType;
-    public String state = "IDLE";
+    private String state = "IDLE";
     public UUID belongingNodeId;
 
     public final ServiceInstance serviceInstance;
@@ -21,8 +21,12 @@ public class ContainerInstance {
         this.serviceInstance = serviceInstance;
     }
 
-    public void syncWithRealObject(String state) {
+    void syncWithRealObject(String state) {
         this.state = state;
+    }
+
+    public String getState() {
+        return state;
     }
 
     public ServiceRequirements getServiceRequirements() {
