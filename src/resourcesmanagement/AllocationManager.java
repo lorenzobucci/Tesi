@@ -11,7 +11,7 @@ public class AllocationManager {
     final Map<UUID, Node> availableNodes = new HashMap<>();
 
     final Map<UUID, ContainerType> providedContainerTypes = new HashMap<>();
-    final Set<ContainerInstance> activeContainerInstances = new HashSet<>();
+    final Map<UUID, ContainerInstance> activeContainerInstances = new HashMap<>();
 
     private AllocatorAlgorithm allocator = null;
 
@@ -63,7 +63,7 @@ public class AllocationManager {
                     service,
                     new HashSet<>(getAvailableNodes().values()),
                     new HashSet<>(getProvidedContainerTypes().values()));
-            activeContainerInstances.add(containerInstance);
+            activeContainerInstances.put(containerInstance.id, containerInstance);
 
             Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
             selectedNode.ownedContainer.add(containerInstance);
@@ -80,8 +80,8 @@ public class AllocationManager {
         return providedContainerTypes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ContainerType(e.getValue())));
     }
 
-    public Set<ContainerInstance> getActiveContainerInstances() {
-        return new HashSet<>(activeContainerInstances);
+    public Map<UUID, ContainerInstance> getActiveContainerInstances() {
+        return new HashMap<>(activeContainerInstances);
     }
 
     public void setAllocatorAlgorithm(AllocatorAlgorithm allocatorAlgorithm) {
