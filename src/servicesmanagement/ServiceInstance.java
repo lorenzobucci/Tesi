@@ -31,7 +31,7 @@ public class ServiceInstance {
     }
 
     public UserRequirements getUserRequirements() {
-        return belongingWorkflow.userRequirements;
+        return belongingWorkflow.getUserRequirements();
     }
 
 

@@ -4,6 +4,7 @@ import mobiledevice.UserRequirements;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 public class WorkflowInstance {
@@ -12,8 +13,8 @@ public class WorkflowInstance {
 
     public final UUID workflowTypeId;
 
-    public UserRequirements userRequirements;
-    public final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
+    private UserRequirements userRequirements;
+    final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
     WorkflowInstance(WorkflowType workflowType) {
         workflowTypeId = workflowType.id;
@@ -39,7 +40,15 @@ public class WorkflowInstance {
         }
     }
 
-    public void setUserRequirements(UserRequirements userRequirements) {
+    public UserRequirements getUserRequirements() {
+        return userRequirements;
+    }
+
+    public Iterator<ServiceInstance> getServicesIterator() {
+        return serviceInstanceDAG.iterator();
+    }
+
+    void setUserRequirements(UserRequirements userRequirements) {
         this.userRequirements = userRequirements;
     }
 
