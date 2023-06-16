@@ -33,6 +33,20 @@ public class DTSynchronizer {
             throw new NoSuchElementException("The container " + containerInstanceId + " does not exist.");
     }
 
+    public static void subscribeNodeProperties(UUID nodeId, PropertyChangeListener pcl) {
+        if (manager.availableNodes.containsKey(nodeId))
+            manager.availableNodes.get(nodeId).addPropertyChangeListener(pcl);
+        else
+            throw new NoSuchElementException("The node " + nodeId + " does not exist.");
+    }
+
+    public static void unsubscribeNodeProperties(UUID nodeId, PropertyChangeListener pcl) {
+        if (manager.availableNodes.containsKey(nodeId))
+            manager.availableNodes.get(nodeId).removePropertyChangeListener(pcl);
+        else
+            throw new NoSuchElementException("The node " + nodeId + " does not exist.");
+    }
+
     public static void syncNodeProperties(UUID nodeId, InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
         if (manager.availableNodes.containsKey(nodeId))
             manager.availableNodes.get(nodeId).syncWithRealObject(ipAddress, memoryUsagePercentage, cpuUsagePercentage);

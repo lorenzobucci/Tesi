@@ -1,5 +1,7 @@
 package resourcesmanagement;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
@@ -20,11 +22,13 @@ public class Node {
     public final float latitude;
     public final float longitude;
 
-    Set<ContainerInstance> ownedContainer;
+    private final Set<ContainerInstance> ownedContainers;
     InetAddress ipAddress = null;
 
     float memoryUsagePercentage;
     float cpuUsagePercentage;
+
+    private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
     public Node(NodeType nodeType, NodeTechnicalProperties properties, float latitude, float longitude) {
         id = UUID.randomUUID();
@@ -32,7 +36,7 @@ public class Node {
         this.properties = properties;
         this.latitude = latitude;
         this.longitude = longitude;
-        ownedContainer = new HashSet<>();
+        ownedContainers = new HashSet<>();
     }
 
     public Node(Node node) {
@@ -43,13 +47,23 @@ public class Node {
         longitude = node.longitude;
         memoryUsagePercentage = node.memoryUsagePercentage;
         cpuUsagePercentage = node.cpuUsagePercentage;
-        ownedContainer = new HashSet<>(node.ownedContainer);
+        ownedContainers = new HashSet<>(node.ownedContainers);
         if (node.ipAddress != null)
             setIpAddress(node.ipAddress);
     }
 
     public void cleanInactiveContainer() {
-        ownedContainer.removeIf(containerInstance -> containerInstance.getContainerState().equals("TERMINATED"));   // or anything else
+        Set<ContainerInstance> oldOwnedContainersCopy = getOwnedContainers();
+        ownedContainers.removeIf(containerInstance -> containerInstance.getContainerState().equals("TERMINATED"));   // or anything else
+        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, getOwnedContainers());
+    }
+
+    void addPropertyChangeListener(PropertyChangeListener pcl) {
+        eventSupport.addPropertyChangeListener(pcl);
+    }
+
+    void removePropertyChangeListener(PropertyChangeListener pcl) {
+        eventSupport.removePropertyChangeListener(pcl);
     }
 
     void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
@@ -58,13 +72,29 @@ public class Node {
         this.cpuUsagePercentage = cpuUsagePercentage;
     }
 
+    void addOwnedContainer(ContainerInstance newContainer) {
+        Set<ContainerInstance> oldOwnedContainersCopy = getOwnedContainers();
+        this.ownedContainers.add(newContainer);
+        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, getOwnedContainers());
+    }
+
+    void removeOwnedContainer(ContainerInstance ownedContainer) {
+        Set<ContainerInstance> oldOwnedContainersCopy = getOwnedContainers();
+        this.ownedContainers.remove(ownedContainer);
+        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, getOwnedContainers());
+    }
+
+    public Set<ContainerInstance> getOwnedContainers() {
+        return new HashSet<>(ownedContainers);
+    }
+
     private void setIpAddress(InetAddress ipAddress) {
         try {
             this.ipAddress = InetAddress.getByAddress(ipAddress.getAddress());
         } catch (UnknownHostException ignored) {
         }
 
-        for (ContainerInstance containerInstance : ownedContainer)
+        for (ContainerInstance containerInstance : ownedContainers)
             containerInstance.serviceInstance.nodeIpAddress = this.ipAddress;
     }
 

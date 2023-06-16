@@ -66,7 +66,7 @@ public class AllocationManager {
             activeContainerInstances.put(containerInstance.id, containerInstance);
 
             Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
-            selectedNode.ownedContainer.add(containerInstance);
+            selectedNode.addOwnedContainer(containerInstance);
             service.nodeIpAddress = selectedNode.ipAddress;
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
