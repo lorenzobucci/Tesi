@@ -3,6 +3,7 @@ package servicesmanagement;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,11 +36,10 @@ public class WorkflowType {
 
     public void addRootServiceType(ServiceType rootService) {
         if (serviceTypeDAG.vertexSet().isEmpty()) {
-            try {
-                serviceTypeDAG.addVertex(rootService);
-            } catch (IllegalArgumentException e) {
+            boolean addResult = serviceTypeDAG.addVertex(rootService);
+            if (!addResult)
                 throw new IllegalArgumentException("The service " + rootService.id + " already belongs to the workflow.");
-            }
+
         } else {
             throw new IllegalStateException("The root service has already been added.");
         }
@@ -52,7 +52,7 @@ public class WorkflowType {
                 throw new IllegalArgumentException("The service " + newService.id + " already belongs to the workflow.");
             serviceTypeDAG.addEdge(callerService, newService);
         } else {
-            throw new IllegalArgumentException("Caller service " + callerService.id + " must belong to the workflow.");
+            throw new NoSuchElementException("Caller service " + callerService.id + " must belong to the workflow.");
         }
 
     }
@@ -62,9 +62,9 @@ public class WorkflowType {
             if (serviceTypeDAG.containsVertex(calleeService))
                 serviceTypeDAG.addEdge(callerService, calleeService);
             else
-                throw new IllegalArgumentException("Callee service " + calleeService.id + " must belong to the workflow.");
+                throw new NoSuchElementException("Callee service " + calleeService.id + " must belong to the workflow.");
         } else
-            throw new IllegalArgumentException("Caller service " + callerService.id + " must belong to the workflow.");
+            throw new NoSuchElementException("Caller service " + callerService.id + " must belong to the workflow.");
     }
 
     public boolean contains(UUID serviceTypeId) {
@@ -74,7 +74,7 @@ public class WorkflowType {
     public void removeServiceType(ServiceType service) {
         boolean removeResult = serviceTypeDAG.removeVertex(service);
         if (!removeResult)
-            throw new IllegalArgumentException("The service " + service.id + " does not belong to the workflow.");
+            throw new NoSuchElementException("The service " + service.id + " does not belong to the workflow.");
 
     }
 

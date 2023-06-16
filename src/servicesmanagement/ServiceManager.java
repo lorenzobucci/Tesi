@@ -1,9 +1,6 @@
 package servicesmanagement;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ServiceManager {
 
@@ -56,7 +53,7 @@ public class ServiceManager {
         for (UUID serviceTypeId : providedServiceTypes.keySet()) {
             try {
                 removeServiceType(serviceTypeId);
-            } catch (IllegalArgumentException ignored) {
+            } catch (IllegalStateException ignored) {
             }
         }
     }
@@ -64,7 +61,7 @@ public class ServiceManager {
     public void removeServiceType(UUID serviceTypeId) {
         for (WorkflowType workflowType : providedWorkflowTypes.values()) {
             if (workflowType.contains(serviceTypeId))
-                throw new IllegalArgumentException("The service " + serviceTypeId + " belongs to an existent workflow.");
+                throw new IllegalStateException("The service " + serviceTypeId + " belongs to an existent workflow.");
         }
         providedServiceTypes.remove(serviceTypeId);
     }
@@ -74,29 +71,26 @@ public class ServiceManager {
     }
 
     public ServiceType getServiceType(UUID serviceTypeId) {
-        try {
+        if (providedServiceTypes.containsKey(serviceTypeId))
             return new ServiceType(providedServiceTypes.get(serviceTypeId));
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested service " + serviceTypeId + " does not exist.");
-        }
+        else
+            throw new NoSuchElementException("Requested service " + serviceTypeId + " does not exist.");
     }
 
     public WorkflowType getWorkflowType(UUID workflowTypeId) {
-        try {
+        if (providedWorkflowTypes.containsKey(workflowTypeId))
             return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist.");
-        }
+        else
+            throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
     }
 
     WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
-        try {
+        if (providedWorkflowTypes.containsKey(workflowTypeId)) {
             WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
             runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
             return workflowInstance;
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Requested workflow " + workflowTypeId + " does not exist.");
-        }
+        } else
+            throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
     }
 
 
