@@ -89,10 +89,22 @@ public class AllocationManager {
                         new HashSet<>(getProvidedContainerTypes().values()));
                 if (!oldNode.equals(newNode)) {
                     // CONTAINER MIGRATION
-                    newNode.addOwnedContainer(container);
-                    container.belongingNodeId = newNode.id;
-                    oldNode.removeOwnedContainer(container);
-                    service.nodeIpAddress = newNode.ipAddress;
+                    String previousContainerState = container.getContainerState();
+                    container.setContainerState("SUSPENDED");
+                    try {
+                        container.acquireMigrationSemaphore();
+                        try {
+                            newNode.addOwnedContainer(container);
+                            container.belongingNodeId = newNode.id;
+                            oldNode.removeOwnedContainer(container);
+                            service.nodeIpAddress = newNode.ipAddress;
+                        } finally {
+                            container.releaseMigrationSemaphore();
+                        }
+                    } catch (InterruptedException ignored) {
+                    } finally {
+                        container.setContainerState(previousContainerState);
+                    }
                 }
             }
         } else

@@ -5,6 +5,7 @@ import servicesmanagement.ServiceInstance;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 public class ContainerInstance {
     public final UUID id = UUID.randomUUID();
@@ -16,6 +17,7 @@ public class ContainerInstance {
     public final ServiceInstance serviceInstance;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
+    private final Semaphore migrationSemaphore = new Semaphore(1);
 
     public ContainerInstance(ContainerType containerType, UUID belongingNodeId, ServiceInstance serviceInstance) {
         this.containerType = new ContainerType(containerType);
@@ -32,7 +34,19 @@ public class ContainerInstance {
     }
 
     void syncWithRealObject(String containerState) {
-        this.containerState = containerState; // NO NOTIFY
+        if (migrationSemaphore.tryAcquire()) {
+            this.containerState = containerState; // NO NOTIFY
+            migrationSemaphore.release();
+        } else
+            throw new IllegalStateException("The container is being migrated, no changes possible.");
+    }
+
+    void acquireMigrationSemaphore() throws InterruptedException {
+        migrationSemaphore.acquire();
+    }
+
+    void releaseMigrationSemaphore() {
+        migrationSemaphore.release();
     }
 
     public String getContainerState() {
