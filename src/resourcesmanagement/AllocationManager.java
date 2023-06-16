@@ -72,6 +72,42 @@ public class AllocationManager {
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
+    public void reviseServiceAllocation(ServiceInstance service) {
+        if (allocator != null) {
+            ContainerInstance container;
+            try {
+                container = activeContainerInstances.values().stream().
+                        filter(containerInstance -> containerInstance.serviceInstance.equals(service)).findAny().orElseThrow();
+            } catch (NoSuchElementException e) {
+                throw new IllegalStateException("There is no active allocation containing the service " + service.id);
+            }
+            if (!container.getContainerState().equals("TERMINATED")) { // or anything else
+                Node oldNode = availableNodes.get(container.belongingNodeId);
+                Node newNode = allocator.reviseOptimalNode(
+                        service,
+                        new HashSet<>(getAvailableNodes().values()),
+                        new HashSet<>(getProvidedContainerTypes().values()));
+                if (!oldNode.equals(newNode)) {
+                    // CONTAINER MIGRATION
+                    newNode.addOwnedContainer(container);
+                    container.belongingNodeId = newNode.id;
+                    oldNode.removeOwnedContainer(container);
+                    service.nodeIpAddress = newNode.ipAddress;
+                }
+            }
+        } else
+            throw new IllegalStateException("The allocation algorithm has not yet been set.");
+    }
+
+    public void cleanInactiveContainers() {
+        for (ContainerInstance containerInstance : activeContainerInstances.values()) {
+            if (containerInstance.getContainerState().equals("TERMINATED")) {  // or anything else
+                availableNodes.get(containerInstance.belongingNodeId).removeOwnedContainer(containerInstance);
+                activeContainerInstances.remove(containerInstance.id);
+            }
+        }
+    }
+
     public Map<UUID, Node> getAvailableNodes() {
         return availableNodes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new Node(e.getValue())));
     }

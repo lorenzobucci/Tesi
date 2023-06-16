@@ -10,4 +10,9 @@ public class SampleAllocatorAlgorithm implements AllocatorAlgorithm {
     public ContainerInstance allocateService(ServiceInstance serviceToAllocate, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
         return new ContainerInstance(providedContainerTypes.iterator().next(), availableNodes.iterator().next().id, serviceToAllocate);
     }
+
+    @Override
+    public Node reviseOptimalNode(ServiceInstance changedService, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
+        return availableNodes.iterator().next();
+    }
 }

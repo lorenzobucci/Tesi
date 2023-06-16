@@ -52,12 +52,6 @@ public class Node {
             setIpAddress(node.ipAddress);
     }
 
-    public void cleanInactiveContainer() {
-        Set<ContainerInstance> oldOwnedContainersCopy = getOwnedContainers();
-        ownedContainers.removeIf(containerInstance -> containerInstance.getContainerState().equals("TERMINATED"));   // or anything else
-        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, getOwnedContainers());
-    }
-
     void addPropertyChangeListener(PropertyChangeListener pcl) {
         eventSupport.addPropertyChangeListener(pcl);
     }

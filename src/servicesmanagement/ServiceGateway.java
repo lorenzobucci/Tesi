@@ -4,6 +4,7 @@ import mobiledevice.UserRequirements;
 import resourcesmanagement.AllocationManager;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,6 +35,17 @@ public class ServiceGateway {
             allocationManager.allocateService(serviceInstance);
 
         return workflowInstance;
+    }
+
+    public void updateWorkflowRequirements(UUID workflowInstanceId, UserRequirements newWorkflowRequirements) {
+        if (serviceManager.runningWorkflowInstances.containsKey(workflowInstanceId)) {
+            WorkflowInstance workflowInstance = serviceManager.runningWorkflowInstances.get(workflowInstanceId);
+            workflowInstance.setUserRequirements(newWorkflowRequirements);
+
+            for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet())
+                allocationManager.reviseServiceAllocation(serviceInstance);
+        } else
+            throw new NoSuchElementException("Requested workflow " + workflowInstanceId + " does not exist.");
     }
 
     public Set<WorkflowType> getAvailableWorkflowTypes(UUID clientID) {
