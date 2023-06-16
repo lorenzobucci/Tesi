@@ -13,6 +13,7 @@ public class MobileDevice {
     public final UUID id = UUID.randomUUID();
 
     private final Trajectory pastTrajectory = new Trajectory();
+    public TrajectoryForecaster trajectoryForecaster;
 
     private final ServiceGateway serviceGateway = ServiceGateway.getInstance();
 
@@ -34,6 +35,12 @@ public class MobileDevice {
 
     public void useWorkflow(WorkflowType workflowType, UserRequirements requirements) {
         ownedWorkflows.add(serviceGateway.instantiateWorkflow(workflowType.id, requirements));
+    }
+
+    public void reviseWorkflowBasedOnTrajectory(WorkflowInstance workflowInstance) {
+        Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
+        UserRequirements newUserRequirements = new UserRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
+        serviceGateway.updateWorkflowRequirements(workflowInstance.id, newUserRequirements);
     }
 
     public Trajectory getPastTrajectory() {
