@@ -62,7 +62,7 @@ public class Node {
     }
 
     public void cleanInactiveContainer() {
-        ownedContainer.removeIf(containerInstance -> containerInstance.getState().equals("TERMINATED"));   // or anything else
+        ownedContainer.removeIf(containerInstance -> containerInstance.getContainerState().equals("TERMINATED"));   // or anything else
     }
 
     @Override
