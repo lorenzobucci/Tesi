@@ -44,25 +44,28 @@ public class Node {
         memoryUsagePercentage = node.memoryUsagePercentage;
         cpuUsagePercentage = node.cpuUsagePercentage;
         ownedContainer = new HashSet<>(node.ownedContainer);
-        if (node.ipAddress != null) {
-            try {
-                ipAddress = InetAddress.getByAddress(node.ipAddress.getAddress());
-            } catch (UnknownHostException ignored) {
-            }
-        }
-    }
-
-    void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
-        try {
-            this.ipAddress = InetAddress.getByAddress(ipAddress.getAddress());
-        } catch (UnknownHostException ignored) {
-        }
-        this.memoryUsagePercentage = memoryUsagePercentage;
-        this.cpuUsagePercentage = cpuUsagePercentage;
+        if (node.ipAddress != null)
+            setIpAddress(node.ipAddress);
     }
 
     public void cleanInactiveContainer() {
         ownedContainer.removeIf(containerInstance -> containerInstance.getContainerState().equals("TERMINATED"));   // or anything else
+    }
+
+    void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
+        setIpAddress(ipAddress);
+        this.memoryUsagePercentage = memoryUsagePercentage;
+        this.cpuUsagePercentage = cpuUsagePercentage;
+    }
+
+    private void setIpAddress(InetAddress ipAddress) {
+        try {
+            this.ipAddress = InetAddress.getByAddress(ipAddress.getAddress());
+        } catch (UnknownHostException ignored) {
+        }
+
+        for (ContainerInstance containerInstance : ownedContainer)
+            containerInstance.serviceInstance.nodeIpAddress = this.ipAddress;
     }
 
     @Override
