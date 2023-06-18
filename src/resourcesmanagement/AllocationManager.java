@@ -83,10 +83,15 @@ public class AllocationManager {
             }
             if (!container.getContainerState().equals("TERMINATED")) { // or anything else
                 Node oldNode = availableNodes.get(container.belongingNodeId);
-                Node newNode = allocator.reviseOptimalNode(
+
+                Node returnedNewNode = allocator.reviseOptimalNode(
                         service,
                         new HashSet<>(getAvailableNodes().values()),
                         new HashSet<>(getProvidedContainerTypes().values()));
+                if (!availableNodes.containsKey(returnedNewNode.id))
+                    throw new RuntimeException("The allocation algorithm returned a non-existent node");
+                Node newNode = availableNodes.get(returnedNewNode.id);
+
                 if (!oldNode.equals(newNode)) {
                     // CONTAINER MIGRATION
                     String previousContainerState = container.getContainerState();
