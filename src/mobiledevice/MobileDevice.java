@@ -17,7 +17,7 @@ public class MobileDevice {
 
     private final ServiceGateway serviceGateway = ServiceGateway.getInstance();
 
-    public Set<WorkflowType> availableWorkflow = serviceGateway.getAvailableWorkflowTypes(id);
+    public Set<WorkflowType> availableWorkflows = serviceGateway.getAvailableWorkflowTypes(id);
     public final Set<WorkflowInstance> ownedWorkflows = new HashSet<>();
 
 
@@ -29,8 +29,8 @@ public class MobileDevice {
         pastTrajectory.addPosition(currentPosition);
     }
 
-    public void updateAvailableWorkflow() {
-        availableWorkflow = serviceGateway.getAvailableWorkflowTypes(id);
+    public void updateAvailableWorkflows() {
+        availableWorkflows = serviceGateway.getAvailableWorkflowTypes(id);
     }
 
     public void useWorkflow(WorkflowType workflowType, UserRequirements requirements) {
