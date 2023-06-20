@@ -1,7 +1,5 @@
 package servicesmanagement;
 
-import mobiledevice.UserRequirements;
-
 import java.net.InetAddress;
 import java.util.UUID;
 

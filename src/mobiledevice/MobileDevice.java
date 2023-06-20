@@ -1,6 +1,7 @@
 package mobiledevice;
 
 import servicesmanagement.ServiceGateway;
+import servicesmanagement.UserRequirements;
 import servicesmanagement.WorkflowInstance;
 import servicesmanagement.WorkflowType;
 

@@ -1,6 +1,5 @@
 package servicesmanagement;
 
-import mobiledevice.UserRequirements;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 

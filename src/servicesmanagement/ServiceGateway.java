@@ -1,6 +1,5 @@
 package servicesmanagement;
 
-import mobiledevice.UserRequirements;
 import resourcesmanagement.AllocationManager;
 
 import java.util.HashSet;

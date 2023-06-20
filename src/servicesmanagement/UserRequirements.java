@@ -1,4 +1,4 @@
-package mobiledevice;
+package servicesmanagement;
 
 public record UserRequirements() {
 }
