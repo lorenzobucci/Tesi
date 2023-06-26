@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.servicesmanagement;
+
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -29,7 +31,7 @@ public class ServiceGateway {
         for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet())
             // allocationManager.allocateService(serviceInstance);
 
-        return workflowInstance;
+            return workflowInstance;
     }
 
     public void updateWorkflowRequirements(UUID workflowInstanceId, UserRequirements newWorkflowRequirements) {
@@ -38,7 +40,7 @@ public class ServiceGateway {
             workflowInstance.setUserRequirements(newWorkflowRequirements);
 
             for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet())
-                // allocationManager.reviseServiceAllocation(serviceInstance);
+            // allocationManager.reviseServiceAllocation(serviceInstance);
         } else
             throw new NoSuchElementException("Requested workflow " + workflowInstanceId + " does not exist.");
     }

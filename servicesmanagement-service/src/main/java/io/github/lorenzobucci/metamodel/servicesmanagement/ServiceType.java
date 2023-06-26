@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.servicesmanagement;
+
 import java.util.UUID;
 
 public class ServiceType {
@@ -21,7 +23,7 @@ public class ServiceType {
 
     @Override
     public String toString() {
-        return "ServiceType{" +
+        return "io.github.lorenzobucci.metamodel.servicesmanagement.ServiceType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

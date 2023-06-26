@@ -1,3 +1,5 @@
+import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance;
+
 import java.util.Set;
 
 public interface AllocatorAlgorithm {

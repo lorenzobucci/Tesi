@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.servicesmanagement;
+
 import java.net.InetAddress;
 import java.util.UUID;
 
@@ -26,7 +28,7 @@ public class ServiceInstance {
 
     @Override
     public String toString() {
-        return "ServiceInstance{" +
+        return "io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance{" +
                 "id=" + id +
                 ", serviceTypeID=" + serviceType.id +
                 '}';

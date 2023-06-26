@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.servicesmanagement;
+
 import java.util.*;
 
 public class ServiceManager {

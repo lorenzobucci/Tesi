@@ -1,3 +1,5 @@
+import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.UUID;

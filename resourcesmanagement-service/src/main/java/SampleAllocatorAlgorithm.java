@@ -1,3 +1,5 @@
+import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance;
+
 import java.util.Comparator;
 import java.util.Set;
 

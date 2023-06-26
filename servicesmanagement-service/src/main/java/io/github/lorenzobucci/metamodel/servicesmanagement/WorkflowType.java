@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.servicesmanagement;
+
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
