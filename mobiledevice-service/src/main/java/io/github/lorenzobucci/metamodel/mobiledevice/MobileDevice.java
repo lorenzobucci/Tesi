@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.mobiledevice;
+
 import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceGateway;
 import io.github.lorenzobucci.metamodel.servicesmanagement.UserRequirements;
 import io.github.lorenzobucci.metamodel.servicesmanagement.WorkflowInstance;

@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.mobiledevice;
+
 import java.util.Comparator;
 import java.util.TreeSet;
 

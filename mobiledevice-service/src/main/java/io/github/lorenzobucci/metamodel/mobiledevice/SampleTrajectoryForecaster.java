@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.mobiledevice;
+
 import java.sql.Timestamp;
 
 public class SampleTrajectoryForecaster implements TrajectoryForecaster {
