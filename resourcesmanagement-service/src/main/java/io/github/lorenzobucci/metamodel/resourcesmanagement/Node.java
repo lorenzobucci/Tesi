@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.resourcesmanagement;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
@@ -12,6 +14,7 @@ public class Node {
 
     public final NodeTechnicalProperties properties;
     public final NodeType nodeType;
+
     public enum NodeType {
         CLOUD,
         EDGE

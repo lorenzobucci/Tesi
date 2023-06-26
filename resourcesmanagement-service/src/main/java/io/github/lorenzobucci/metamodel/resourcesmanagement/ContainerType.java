@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.resourcesmanagement;
+
 import java.util.Objects;
 import java.util.UUID;
 

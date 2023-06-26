@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.resourcesmanagement;
+
 import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance;
 
 import java.util.Comparator;

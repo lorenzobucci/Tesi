@@ -1,3 +1,5 @@
+package io.github.lorenzobucci.metamodel.resourcesmanagement;
+
 import java.beans.PropertyChangeListener;
 import java.net.InetAddress;
 import java.util.NoSuchElementException;
