@@ -1,9 +1,8 @@
 package io.github.lorenzobucci.metamodel.resourcesmanagement;
 
-import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.net.InetAddress;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
@@ -13,16 +12,16 @@ public class ContainerInstance {
     public final ContainerType containerType;
     private String containerState = "IDLE";
     UUID belongingNodeId;
+    private InetAddress nodeIpAddress;
 
-    public final ServiceInstance serviceInstance;
+    private UUID serviceInstanceId;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
     private final Semaphore migrationSemaphore = new Semaphore(1);
 
-    public ContainerInstance(ContainerType containerType, UUID belongingNodeId, ServiceInstance serviceInstance) {
+    public ContainerInstance(ContainerType containerType, UUID belongingNodeId) {
         this.containerType = new ContainerType(containerType);
         this.belongingNodeId = belongingNodeId;
-        this.serviceInstance = serviceInstance;
     }
 
     void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -49,8 +48,27 @@ public class ContainerInstance {
         migrationSemaphore.release();
     }
 
+    public InetAddress getNodeIpAddress() {
+        return nodeIpAddress;
+    }
+
     public String getContainerState() {
         return containerState;
+    }
+
+    void setNodeIpAddress(InetAddress nodeIpAddress) {
+        this.nodeIpAddress = nodeIpAddress;
+    }
+
+    public UUID getServiceInstanceId() {
+        return serviceInstanceId;
+    }
+
+    public void setServiceInstanceId(UUID serviceInstanceId) {
+        if (this.serviceInstanceId == null)
+            this.serviceInstanceId = serviceInstanceId;
+        else
+            throw new IllegalStateException("The service instance ID has already been set.");
     }
 
     void setContainerState(String containerState) {

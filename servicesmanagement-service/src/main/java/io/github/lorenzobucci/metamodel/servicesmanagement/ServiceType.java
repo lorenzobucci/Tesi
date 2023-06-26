@@ -1,5 +1,7 @@
 package io.github.lorenzobucci.metamodel.servicesmanagement;
 
+import io.github.lorenzobucci.metamodel.resourcesmanagement.ServiceRequirements;
+
 import java.util.UUID;
 
 public class ServiceType {

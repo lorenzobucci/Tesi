@@ -1,5 +1,9 @@
 package io.github.lorenzobucci.metamodel.servicesmanagement;
 
+import io.github.lorenzobucci.metamodel.resourcesmanagement.ContainerInstance;
+import io.github.lorenzobucci.metamodel.resourcesmanagement.ServiceRequirements;
+import io.github.lorenzobucci.metamodel.resourcesmanagement.UserRequirements;
+
 import java.net.InetAddress;
 import java.util.UUID;
 
@@ -10,7 +14,7 @@ public class ServiceInstance {
     public final ServiceType serviceType;
     public final WorkflowInstance belongingWorkflow;
 
-    public InetAddress nodeIpAddress;
+    ContainerInstance hostContainer;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = new ServiceType(serviceType);
@@ -23,6 +27,10 @@ public class ServiceInstance {
 
     public UserRequirements getUserRequirements() {
         return belongingWorkflow.getUserRequirements();
+    }
+
+    public InetAddress getIpAddress() {
+        return hostContainer.getNodeIpAddress();
     }
 
 

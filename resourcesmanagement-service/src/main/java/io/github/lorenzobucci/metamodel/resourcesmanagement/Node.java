@@ -90,7 +90,7 @@ public class Node {
         }
 
         for (ContainerInstance containerInstance : ownedContainers)
-            containerInstance.serviceInstance.nodeIpAddress = this.ipAddress;
+            containerInstance.setNodeIpAddress(this.ipAddress);
     }
 
     @Override

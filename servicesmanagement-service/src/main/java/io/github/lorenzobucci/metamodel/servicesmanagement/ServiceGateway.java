@@ -1,5 +1,8 @@
 package io.github.lorenzobucci.metamodel.servicesmanagement;
 
+import io.github.lorenzobucci.metamodel.resourcesmanagement.AllocationManager;
+import io.github.lorenzobucci.metamodel.resourcesmanagement.UserRequirements;
+
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -10,7 +13,7 @@ public class ServiceGateway {
     private static ServiceGateway instance = null;
     private final ServiceManager serviceManager = ServiceManager.getInstance();
 
-    // private final AllocationManager allocationManager = AllocationManager.getInstance();
+    private final AllocationManager allocationManager = AllocationManager.getInstance(); // TODO: USE API
 
     private ServiceGateway() {
 
@@ -28,10 +31,13 @@ public class ServiceGateway {
         WorkflowInstance workflowInstance = serviceManager.instantiateWorkflow(workflowTypeId);
         workflowInstance.setUserRequirements(requirements);
 
-        for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet())
-            // allocationManager.allocateService(serviceInstance);
+        for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet()) {
+            serviceInstance.hostContainer = allocationManager.allocateServiceContainer(
+                    serviceInstance.getServiceRequirements(), serviceInstance.getUserRequirements()); // TODO: USE API
+            serviceInstance.hostContainer.setServiceInstanceId(serviceInstance.id);
+        }
 
-            return workflowInstance;
+        return workflowInstance;
     }
 
     public void updateWorkflowRequirements(UUID workflowInstanceId, UserRequirements newWorkflowRequirements) {
@@ -40,7 +46,8 @@ public class ServiceGateway {
             workflowInstance.setUserRequirements(newWorkflowRequirements);
 
             for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet())
-            // allocationManager.reviseServiceAllocation(serviceInstance);
+                allocationManager.reviseContainerAllocation(
+                        serviceInstance.hostContainer.id, serviceInstance.getServiceRequirements(), serviceInstance.getUserRequirements()); // TODO: USE API
         } else
             throw new NoSuchElementException("Requested workflow " + workflowInstanceId + " does not exist.");
     }

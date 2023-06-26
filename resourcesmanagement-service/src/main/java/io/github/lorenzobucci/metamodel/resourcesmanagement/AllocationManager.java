@@ -1,7 +1,5 @@
 package io.github.lorenzobucci.metamodel.resourcesmanagement;
 
-import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,35 +55,39 @@ public class AllocationManager {
         providedContainerTypes.remove(containerTypeId);
     }
 
-    public void allocateService(ServiceInstance service) {
+    public ContainerInstance allocateServiceContainer(ServiceRequirements serviceRequirements, UserRequirements userRequirements) {
         if (allocator != null) {
-            ContainerInstance containerInstance = allocator.allocateService(
-                    service,
+            ContainerInstance containerInstance = allocator.allocateServiceContainer(
+                    serviceRequirements,
+                    userRequirements,
                     new HashSet<>(getAvailableNodes().values()),
                     new HashSet<>(getProvidedContainerTypes().values()));
+            Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
+
+            containerInstance.setNodeIpAddress(selectedNode.ipAddress);
             activeContainerInstances.put(containerInstance.id, containerInstance);
 
-            Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
             selectedNode.addOwnedContainer(containerInstance);
-            service.nodeIpAddress = selectedNode.ipAddress;
+
+            return containerInstance;
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
-    public void reviseServiceAllocation(ServiceInstance service) {
+    public void reviseContainerAllocation(UUID containerInstanceId, ServiceRequirements serviceRequirements, UserRequirements userRequirements) {
         if (allocator != null) {
             ContainerInstance container;
             try {
-                container = activeContainerInstances.values().stream().
-                        filter(containerInstance -> containerInstance.serviceInstance.equals(service)).findAny().orElseThrow();
+                container = activeContainerInstances.get(containerInstanceId);
             } catch (NoSuchElementException e) {
-                throw new IllegalStateException("There is no active allocation containing the service " + service.id);
+                throw new IllegalStateException("There is no active allocation containing the service " + containerInstanceId);
             }
             if (!container.getContainerState().equals("TERMINATED")) { // or anything else
                 Node oldNode = availableNodes.get(container.belongingNodeId);
 
                 Node returnedNewNode = allocator.reviseOptimalNode(
-                        service,
+                        serviceRequirements,
+                        userRequirements,
                         new HashSet<>(getAvailableNodes().values()),
                         new HashSet<>(getProvidedContainerTypes().values()));
                 if (!availableNodes.containsKey(returnedNewNode.id))
@@ -102,7 +104,7 @@ public class AllocationManager {
                             newNode.addOwnedContainer(container);
                             container.belongingNodeId = newNode.id;
                             oldNode.removeOwnedContainer(container);
-                            service.nodeIpAddress = newNode.ipAddress;
+                            container.setNodeIpAddress(newNode.ipAddress);
                         } finally {
                             container.releaseMigrationSemaphore();
                         }
