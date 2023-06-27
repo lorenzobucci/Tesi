@@ -10,6 +10,6 @@ public interface AllocatorAlgorithm {
 
     Node reviseOptimalNode(ServiceRequirements serviceRequirements,
                            UserRequirements userRequirements,
-                           Set<Node> availableNodes,
-                           Set<ContainerType> providedContainerTypes);
+                           ContainerType runningContainerType,
+                           Set<Node> availableNodes);
 }

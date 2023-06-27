@@ -11,7 +11,7 @@ public class SampleAllocatorAlgorithm implements AllocatorAlgorithm {
     }
 
     @Override
-    public Node reviseOptimalNode(ServiceRequirements serviceRequirements, UserRequirements userRequirements, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
+    public Node reviseOptimalNode(ServiceRequirements serviceRequirements, UserRequirements userRequirements, ContainerType runningContainerType, Set<Node> availableNodes) {
         return availableNodes.stream().min(Comparator.comparingInt(node -> node.getOwnedContainers().size())).orElse(null);
     }
 }

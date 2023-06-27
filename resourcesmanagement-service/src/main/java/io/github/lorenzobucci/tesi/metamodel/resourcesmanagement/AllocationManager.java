@@ -88,8 +88,8 @@ public class AllocationManager {
                 Node returnedNewNode = allocator.reviseOptimalNode(
                         serviceRequirements,
                         userRequirements,
-                        new HashSet<>(getAvailableNodes().values()),
-                        new HashSet<>(getProvidedContainerTypes().values()));
+                        new ContainerType(container.containerType),
+                        new HashSet<>(getAvailableNodes().values()));
                 if (!availableNodes.containsKey(returnedNewNode.id))
                     throw new RuntimeException("The allocation algorithm returned a non-existent node");
                 Node newNode = availableNodes.get(returnedNewNode.id);
