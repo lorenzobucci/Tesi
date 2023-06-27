@@ -1,7 +1,7 @@
-package io.github.lorenzobucci.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.metamodel.resourcesmanagement.AllocationManager;
-import io.github.lorenzobucci.metamodel.resourcesmanagement.UserRequirements;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.AllocationManager;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;

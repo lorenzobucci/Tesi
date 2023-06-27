@@ -1,9 +1,9 @@
-package io.github.lorenzobucci.metamodel.mobiledevice;
+package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
-import io.github.lorenzobucci.metamodel.resourcesmanagement.UserRequirements;
-import io.github.lorenzobucci.metamodel.servicesmanagement.ServiceGateway;
-import io.github.lorenzobucci.metamodel.servicesmanagement.WorkflowInstance;
-import io.github.lorenzobucci.metamodel.servicesmanagement.WorkflowType;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.ServiceGateway;
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.WorkflowInstance;
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.WorkflowType;
 
 import java.util.HashSet;
 import java.util.Set;

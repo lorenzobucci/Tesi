@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.metamodel.mobiledevice;
+package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
 import java.util.Comparator;
 import java.util.TreeSet;

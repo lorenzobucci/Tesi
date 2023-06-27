@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
 import java.util.*;
 

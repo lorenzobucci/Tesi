@@ -1,6 +1,6 @@
-package io.github.lorenzobucci.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.metamodel.resourcesmanagement.UserRequirements;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 

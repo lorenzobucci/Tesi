@@ -1,8 +1,8 @@
-package io.github.lorenzobucci.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.metamodel.resourcesmanagement.ContainerInstance;
-import io.github.lorenzobucci.metamodel.resourcesmanagement.ServiceRequirements;
-import io.github.lorenzobucci.metamodel.resourcesmanagement.UserRequirements;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.ContainerInstance;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.ServiceRequirements;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
 
 import java.net.InetAddress;
 import java.util.UUID;

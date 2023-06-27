@@ -1,6 +1,6 @@
-package io.github.lorenzobucci.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.metamodel.resourcesmanagement.ServiceRequirements;
+import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.ServiceRequirements;
 
 import java.util.UUID;
 
