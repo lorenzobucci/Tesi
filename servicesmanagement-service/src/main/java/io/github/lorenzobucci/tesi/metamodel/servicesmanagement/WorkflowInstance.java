@@ -1,6 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
@@ -13,7 +12,6 @@ public class WorkflowInstance {
 
     public final UUID workflowTypeId;
 
-    private UserRequirements userRequirements;
     final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG;
 
     WorkflowInstance(WorkflowType workflowType) {
@@ -40,16 +38,12 @@ public class WorkflowInstance {
         }
     }
 
-    public UserRequirements getUserRequirements() {
-        return userRequirements;
-    }
-
-    public Iterator<ServiceInstance> getServicesIterator() {
+    Iterator<ServiceInstance> getServicesIterator() {
         return serviceInstanceDAG.iterator();
     }
 
-    void setUserRequirements(UserRequirements userRequirements) {
-        this.userRequirements = userRequirements;
+    ServiceInstance getRootService() {
+        return serviceInstanceDAG.iterator().next();
     }
 
     @Override
