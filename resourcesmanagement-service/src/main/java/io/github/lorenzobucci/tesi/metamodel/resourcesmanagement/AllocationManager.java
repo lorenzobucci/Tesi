@@ -65,6 +65,7 @@ public class AllocationManager {
                     new HashSet<>(getAvailableNodes().values()),
                     new HashSet<>(getProvidedContainerTypes().values()));
             Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
+            containerInstance.associatedServiceId = associatedServiceId;
 
             activeContainerInstances.put(containerInstance.id, containerInstance);
 

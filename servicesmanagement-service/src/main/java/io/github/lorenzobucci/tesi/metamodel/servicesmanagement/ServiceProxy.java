@@ -1,7 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import org.json.JSONObject;
-
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.NoSuchElementException;
@@ -36,7 +34,7 @@ public class ServiceProxy {
             serviceInstance.determineBaseUri(containerIp);
         }
 
-        return workflowEndpoint.baseUri; // TODO: USE API
+        return workflowEndpoint.baseUri; // TODO: USE API AND RETURN ALSO WORKFLOW INSTANCE ID AKA "RUNNING SERVICE ID"
     }
 
     public URI updateServiceRequirements(UUID runningServiceId, String newUserRequirements) {

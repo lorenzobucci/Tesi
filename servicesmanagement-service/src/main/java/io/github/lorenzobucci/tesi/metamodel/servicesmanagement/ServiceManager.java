@@ -93,5 +93,7 @@ public class ServiceManager {
             throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
     }
 
-
+    public Map<UUID, WorkflowInstance> getRunningWorkflowInstances() {
+        return runningWorkflowInstances;
+    }
 }

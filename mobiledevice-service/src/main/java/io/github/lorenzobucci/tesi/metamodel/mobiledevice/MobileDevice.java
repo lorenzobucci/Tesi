@@ -1,7 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
-import org.json.JSONObject;
-
 import java.net.URI;
 import java.util.UUID;
 
