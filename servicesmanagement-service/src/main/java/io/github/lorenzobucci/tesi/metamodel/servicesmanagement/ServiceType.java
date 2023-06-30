@@ -1,7 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.ServiceRequirements;
-
 import java.util.UUID;
 
 public class ServiceType {
