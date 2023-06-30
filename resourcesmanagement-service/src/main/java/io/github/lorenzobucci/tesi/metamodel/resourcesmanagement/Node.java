@@ -60,7 +60,7 @@ public class Node {
         eventSupport.removePropertyChangeListener(pcl);
     }
 
-    void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
+    void syncWithRealObject(float memoryUsagePercentage, float cpuUsagePercentage) {
         this.memoryUsagePercentage = memoryUsagePercentage;
         this.cpuUsagePercentage = cpuUsagePercentage;
     }

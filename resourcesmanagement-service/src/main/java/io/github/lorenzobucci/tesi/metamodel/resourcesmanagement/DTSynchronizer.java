@@ -1,7 +1,6 @@
 package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
 import java.beans.PropertyChangeListener;
-import java.net.InetAddress;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -47,9 +46,9 @@ public class DTSynchronizer {
             throw new NoSuchElementException("The node " + nodeId + " does not exist.");
     }
 
-    public static void syncNodeProperties(UUID nodeId, InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
+    public static void syncNodeProperties(UUID nodeId, float memoryUsagePercentage, float cpuUsagePercentage) {
         if (manager.availableNodes.containsKey(nodeId))
-            manager.availableNodes.get(nodeId).syncWithRealObject(ipAddress, memoryUsagePercentage, cpuUsagePercentage);
+            manager.availableNodes.get(nodeId).syncWithRealObject(memoryUsagePercentage, cpuUsagePercentage);
         else
             throw new NoSuchElementException("The node " + nodeId + " does not exist.");
     }
