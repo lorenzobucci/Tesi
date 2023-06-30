@@ -1,10 +1,9 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.ContainerInstance;
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.ServiceRequirements;
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
+import org.json.JSONObject;
 
 import java.net.InetAddress;
+import java.net.URI;
 import java.util.UUID;
 
 public class ServiceInstance {
@@ -14,7 +13,9 @@ public class ServiceInstance {
     public final ServiceType serviceType;
     public final WorkflowInstance belongingWorkflow;
 
-    ContainerInstance hostContainer;
+    public URI baseUri;
+
+    JSONObject serviceParameters;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = new ServiceType(serviceType);
@@ -25,14 +26,10 @@ public class ServiceInstance {
         return serviceType.requirements;
     }
 
-    public UserRequirements getUserRequirements() {
-        return belongingWorkflow.getUserRequirements();
+    void determineBaseUri(InetAddress containerIp) {
+        // PROTOCOL AND PORT ARE DEFINED ON THE BASIS OF THE REQUIREMENTS AND OTHER VARIABLES
+        baseUri = URI.create("http://" + containerIp.getHostName() + ":8080");
     }
-
-    public InetAddress getIpAddress() {
-        return hostContainer.getNodeIpAddress();
-    }
-
 
     @Override
     public String toString() {
