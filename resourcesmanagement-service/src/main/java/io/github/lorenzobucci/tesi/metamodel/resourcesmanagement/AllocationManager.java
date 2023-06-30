@@ -1,7 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
-import org.json.JSONObject;
-
 import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,7 +56,7 @@ public class AllocationManager {
         providedContainerTypes.remove(containerTypeId);
     }
 
-    public InetAddress allocateContainer(UUID associatedServiceId, JSONObject dependabilityRequirements) {
+    public InetAddress allocateContainer(UUID associatedServiceId, String dependabilityRequirements) {
         if (allocator != null) {
             DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
 
@@ -77,7 +75,7 @@ public class AllocationManager {
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
-    public InetAddress reviseContainerAllocation(UUID associatedServiceId, JSONObject newDependabilityRequirements) {
+    public InetAddress reviseContainerAllocation(UUID associatedServiceId, String newDependabilityRequirements) {
         if (allocator != null) {
             ContainerInstance container;
             try {
@@ -134,7 +132,7 @@ public class AllocationManager {
     }
 
     public Map<UUID, Node> getAvailableNodes() {
-        return availableNodes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new Node(e.getValue(), ipAddress)));
+        return availableNodes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new Node(e.getValue())));
     }
 
     public Map<UUID, ContainerType> getProvidedContainerTypes() {

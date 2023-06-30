@@ -20,15 +20,15 @@ public class MobileDevice {
         pastTrajectory.addPosition(currentPosition);
     }
 
-    public URI useService(UUID serviceId, JSONObject parameters) {
+    public URI useService(UUID serviceId, String parameters) {
         DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
-        return serviceProxy.requestService(serviceId, parameters, requirements); // TODO: USE API
+        return ServiceProxy.getInstance().requestService(serviceId, parameters, requirements.toString()); // TODO: USE API
     }
 
     public URI optimizeService(UUID serviceId) {
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
         DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
-        return serviceProxy.updateServiceRequirements(serviceId, newDependabilityRequirements); // TODO: USE API
+        return ServiceProxy.getInstance().updateServiceRequirements(serviceId, newDependabilityRequirements.toString()); // TODO: USE API
     }
 
     public Trajectory getPastTrajectory() {

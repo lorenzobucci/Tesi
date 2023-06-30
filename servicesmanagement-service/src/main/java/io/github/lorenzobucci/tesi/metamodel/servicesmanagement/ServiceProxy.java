@@ -22,7 +22,7 @@ public class ServiceProxy {
         return instance;
     }
 
-    public URI requestService(UUID serviceId, JSONObject serviceParameters, JSONObject userRequirements) {
+    public URI requestService(UUID serviceId, String serviceParameters, String userRequirements) {
         // TODO: check client permissions, location, ...
 
         WorkflowInstance workflowInstance = serviceManager.instantiateWorkflow(serviceId);
@@ -31,21 +31,21 @@ public class ServiceProxy {
         workflowEndpoint.serviceParameters = serviceParameters;
 
         for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet()) {
-            JSONObject dependabilityRequirements = new JSONObject(); // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
-            InetAddress containerIp = allocationManager.allocateContainer(serviceInstance.id, dependabilityRequirements); // TODO: USE API
+            String dependabilityRequirements = serviceInstance.serviceType.requirements.toString() + userRequirements; // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
+            InetAddress containerIp = AllocationManager.getInstance().allocateContainer(serviceInstance.id, dependabilityRequirements); // TODO: USE API
             serviceInstance.determineBaseUri(containerIp);
         }
 
         return workflowEndpoint.baseUri; // TODO: USE API
     }
 
-    public URI updateServiceRequirements(UUID runningServiceId, JSONObject newUserRequirements) {
+    public URI updateServiceRequirements(UUID runningServiceId, String newUserRequirements) {
         if (serviceManager.runningWorkflowInstances.containsKey(runningServiceId)) {
             WorkflowInstance workflowInstance = serviceManager.runningWorkflowInstances.get(runningServiceId);
 
             for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet()) {
-                JSONObject dependabilityRequirements = new JSONObject(); // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
-                InetAddress containerIp = allocationManager.reviseContainerAllocation(serviceInstance.id, dependabilityRequirements); // TODO: USE API
+                String dependabilityRequirements = serviceInstance.serviceType.requirements.toString() + newUserRequirements; // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
+                InetAddress containerIp = AllocationManager.getInstance().reviseContainerAllocation(serviceInstance.id, dependabilityRequirements); // TODO: USE API
                 serviceInstance.determineBaseUri(containerIp);
             }
 

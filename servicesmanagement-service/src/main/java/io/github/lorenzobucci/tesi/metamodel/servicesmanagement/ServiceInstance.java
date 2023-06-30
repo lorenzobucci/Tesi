@@ -1,7 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-import org.json.JSONObject;
-
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.UUID;
@@ -15,7 +13,7 @@ public class ServiceInstance {
 
     public URI baseUri;
 
-    JSONObject serviceParameters;
+    String serviceParameters;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = new ServiceType(serviceType);
