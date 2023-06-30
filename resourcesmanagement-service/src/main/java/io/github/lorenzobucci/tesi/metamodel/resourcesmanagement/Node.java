@@ -3,7 +3,6 @@ package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -24,16 +23,17 @@ public class Node {
     public final float longitude;
 
     private final Set<ContainerInstance> ownedContainers;
-    InetAddress ipAddress = null;
+    final InetAddress ipAddress;
 
     float memoryUsagePercentage;
     float cpuUsagePercentage;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
-    public Node(NodeType nodeType, NodeTechnicalProperties properties, float latitude, float longitude) {
+    public Node(NodeType nodeType, InetAddress ipAddress, NodeTechnicalProperties properties, float latitude, float longitude) {
         id = UUID.randomUUID();
         this.nodeType = nodeType;
+        this.ipAddress = ipAddress;
         this.properties = properties;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,14 +43,13 @@ public class Node {
     public Node(Node node) {
         id = node.id;
         nodeType = node.nodeType;
+        ipAddress = node.ipAddress;
         properties = node.properties;
         latitude = node.latitude;
         longitude = node.longitude;
         memoryUsagePercentage = node.memoryUsagePercentage;
         cpuUsagePercentage = node.cpuUsagePercentage;
         ownedContainers = new HashSet<>(node.ownedContainers);
-        if (node.ipAddress != null)
-            setIpAddress(node.ipAddress);
     }
 
     void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -62,7 +61,6 @@ public class Node {
     }
 
     void syncWithRealObject(InetAddress ipAddress, float memoryUsagePercentage, float cpuUsagePercentage) {
-        setIpAddress(ipAddress);
         this.memoryUsagePercentage = memoryUsagePercentage;
         this.cpuUsagePercentage = cpuUsagePercentage;
     }
@@ -81,16 +79,6 @@ public class Node {
 
     public Set<ContainerInstance> getOwnedContainers() {
         return new HashSet<>(ownedContainers);
-    }
-
-    private void setIpAddress(InetAddress ipAddress) {
-        try {
-            this.ipAddress = InetAddress.getByAddress(ipAddress.getAddress());
-        } catch (UnknownHostException ignored) {
-        }
-
-        for (ContainerInstance containerInstance : ownedContainers)
-            containerInstance.setNodeIpAddress(this.ipAddress);
     }
 
     @Override
