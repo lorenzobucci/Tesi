@@ -1,4 +1,4 @@
 package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
-public record ServiceRequirements() {
+public record DependabilityRequirements() {
 }
