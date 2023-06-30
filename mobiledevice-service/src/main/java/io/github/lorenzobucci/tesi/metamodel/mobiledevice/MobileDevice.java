@@ -1,12 +1,8 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.UserRequirements;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.ServiceGateway;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.WorkflowInstance;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.WorkflowType;
+import org.json.JSONObject;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.net.URI;
 import java.util.UUID;
 
 public class MobileDevice {
@@ -16,12 +12,6 @@ public class MobileDevice {
     private final Trajectory pastTrajectory = new Trajectory();
     public TrajectoryForecaster trajectoryForecaster;
 
-    private final ServiceGateway serviceGateway = ServiceGateway.getInstance();  // TODO: USE API
-
-    public Set<WorkflowType> availableWorkflows = serviceGateway.getAvailableWorkflowTypes(id); // TODO: USE API
-    public final Set<WorkflowInstance> ownedWorkflows = new HashSet<>();
-
-
     public MobileDevice() {
 
     }
@@ -30,18 +20,15 @@ public class MobileDevice {
         pastTrajectory.addPosition(currentPosition);
     }
 
-    public void updateAvailableWorkflows() {
-        availableWorkflows = serviceGateway.getAvailableWorkflowTypes(id); // TODO: USE API
+    public URI useService(UUID serviceId, JSONObject parameters) {
+        DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
+        return serviceProxy.requestService(serviceId, parameters, requirements); // TODO: USE API
     }
 
-    public void useWorkflow(WorkflowType workflowType, UserRequirements requirements) {
-        ownedWorkflows.add(serviceGateway.instantiateWorkflow(workflowType.id, requirements)); // TODO: USE API
-    }
-
-    public void reviseWorkflowBasedOnTrajectory(WorkflowInstance workflowInstance) {
+    public URI optimizeService(UUID serviceId) {
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
-        UserRequirements newUserRequirements = new UserRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
-        serviceGateway.updateWorkflowRequirements(workflowInstance.id, newUserRequirements); // TODO: USE API
+        DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
+        return serviceProxy.updateServiceRequirements(serviceId, newDependabilityRequirements); // TODO: USE API
     }
 
     public Trajectory getPastTrajectory() {
