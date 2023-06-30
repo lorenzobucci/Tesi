@@ -12,16 +12,17 @@ public class ContainerInstance {
     public final ContainerType containerType;
     private String containerState = "IDLE";
     UUID belongingNodeId;
-    private InetAddress nodeIpAddress;
+    InetAddress nodeIpAddress;
 
-    private UUID serviceInstanceId;
+    UUID associatedServiceId;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
     private final Semaphore migrationSemaphore = new Semaphore(1);
 
-    public ContainerInstance(ContainerType containerType, UUID belongingNodeId) {
+    public ContainerInstance(ContainerType containerType, UUID belongingNodeId, InetAddress nodeIpAddress) {
         this.containerType = new ContainerType(containerType);
         this.belongingNodeId = belongingNodeId;
+        this.nodeIpAddress = nodeIpAddress;
     }
 
     void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -48,27 +49,8 @@ public class ContainerInstance {
         migrationSemaphore.release();
     }
 
-    public InetAddress getNodeIpAddress() {
-        return nodeIpAddress;
-    }
-
     public String getContainerState() {
         return containerState;
-    }
-
-    void setNodeIpAddress(InetAddress nodeIpAddress) {
-        this.nodeIpAddress = nodeIpAddress;
-    }
-
-    public UUID getServiceInstanceId() {
-        return serviceInstanceId;
-    }
-
-    public void setServiceInstanceId(UUID serviceInstanceId) {
-        if (this.serviceInstanceId == null)
-            this.serviceInstanceId = serviceInstanceId;
-        else
-            throw new IllegalStateException("The service instance ID has already been set.");
     }
 
     void setContainerState(String containerState) {
