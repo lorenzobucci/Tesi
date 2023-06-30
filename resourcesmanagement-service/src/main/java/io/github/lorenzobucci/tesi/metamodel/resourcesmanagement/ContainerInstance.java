@@ -7,14 +7,14 @@ import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 public class ContainerInstance {
-    public final UUID id = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
 
-    public final ContainerType containerType;
+    private final ContainerType containerType;
     private String containerState = "IDLE";
-    UUID belongingNodeId;
-    InetAddress nodeIpAddress;
+    private UUID belongingNodeId;
+    private InetAddress nodeIpAddress;
 
-    UUID associatedServiceId;
+    private UUID associatedServiceId;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
     private final Semaphore migrationSemaphore = new Semaphore(1);
@@ -49,8 +49,40 @@ public class ContainerInstance {
         migrationSemaphore.release();
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public String getContainerState() {
         return containerState;
+    }
+
+    public ContainerType getContainerType() {
+        return containerType;
+    }
+
+    public UUID getBelongingNodeId() {
+        return belongingNodeId;
+    }
+
+    void setBelongingNodeId(UUID belongingNodeId) {
+        this.belongingNodeId = belongingNodeId;
+    }
+
+    public InetAddress getNodeIpAddress() {
+        return nodeIpAddress;
+    }
+
+    void setNodeIpAddress(InetAddress nodeIpAddress) {
+        this.nodeIpAddress = nodeIpAddress;
+    }
+
+    public UUID getAssociatedServiceId() {
+        return associatedServiceId;
+    }
+
+    void setAssociatedServiceId(UUID associatedServiceId) {
+        this.associatedServiceId = associatedServiceId;
     }
 
     void setContainerState(String containerState) {

@@ -6,22 +6,18 @@ import java.util.UUID;
 
 public class ServiceInstance {
 
-    public final UUID id = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
 
-    public final ServiceType serviceType;
-    public final WorkflowInstance belongingWorkflow;
+    private final ServiceType serviceType;
+    private final WorkflowInstance belongingWorkflow;
 
-    public URI baseUri;
+    private URI baseUri;
 
-    String serviceParameters;
+    private String serviceParameters;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = new ServiceType(serviceType);
         this.belongingWorkflow = belongingWorkflow;
-    }
-
-    public ServiceRequirements getServiceRequirements() {
-        return serviceType.requirements;
     }
 
     void determineBaseUri(InetAddress containerIp) {
@@ -29,11 +25,39 @@ public class ServiceInstance {
         baseUri = URI.create("http://" + containerIp.getHostName() + ":8080");
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public ServiceType getServiceType() {
+        return serviceType;
+    }
+
+    public WorkflowInstance getBelongingWorkflow() {
+        return belongingWorkflow;
+    }
+
+    public URI getBaseUri() {
+        return baseUri;
+    }
+
+    public String getServiceParameters() {
+        return serviceParameters;
+    }
+
+    void setServiceParameters(String serviceParameters) {
+        this.serviceParameters = serviceParameters;
+    }
+
+    public ServiceRequirements getServiceRequirements() {
+        return serviceType.getRequirements();
+    }
+
     @Override
     public String toString() {
         return "io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance{" +
                 "id=" + id +
-                ", serviceTypeID=" + serviceType.id +
+                ", serviceTypeID=" + serviceType.getId() +
                 '}';
     }
 

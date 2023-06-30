@@ -2,15 +2,14 @@ package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
 import java.net.InetAddress;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AllocationManager {
     private static AllocationManager instance = null;
 
-    final Map<UUID, Node> availableNodes = new HashMap<>();
+    private final Map<UUID, Node> availableNodes = new HashMap<>();
 
-    final Map<UUID, ContainerType> providedContainerTypes = new HashMap<>();
-    final Map<UUID, ContainerInstance> activeContainerInstances = new HashMap<>();
+    private final Map<UUID, ContainerType> providedContainerTypes = new HashMap<>();
+    private final Map<UUID, ContainerInstance> activeContainerInstances = new HashMap<>();
 
     private AllocatorAlgorithm allocator = null;
 
@@ -35,10 +34,10 @@ public class AllocationManager {
     }
 
     public void addNode(Node node) {
-        if (!availableNodes.containsKey(node.id))
-            availableNodes.putIfAbsent(node.id, new Node(node));
+        if (!availableNodes.containsKey(node.getId()))
+            availableNodes.putIfAbsent(node.getId(), new Node(node));
         else
-            throw new IllegalArgumentException("The node " + node.id + " is already in memory.");
+            throw new IllegalArgumentException("The node " + node.getId() + " is already in memory.");
     }
 
     public void removeNode(UUID nodeId) {
@@ -46,10 +45,10 @@ public class AllocationManager {
     }
 
     public void addContainerType(ContainerType containerType) {
-        if (!providedContainerTypes.containsKey(containerType.id))
-            providedContainerTypes.putIfAbsent(containerType.id, new ContainerType(containerType));
+        if (!providedContainerTypes.containsKey(containerType.getId()))
+            providedContainerTypes.putIfAbsent(containerType.getId(), new ContainerType(containerType));
         else
-            throw new IllegalArgumentException("The container " + containerType.id + " is already in memory.");
+            throw new IllegalArgumentException("The container " + containerType.getId() + " is already in memory.");
     }
 
     public void removeContainerType(UUID containerTypeId) {
@@ -64,14 +63,14 @@ public class AllocationManager {
                     requirements,
                     new HashSet<>(getAvailableNodes().values()),
                     new HashSet<>(getProvidedContainerTypes().values()));
-            Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
-            containerInstance.associatedServiceId = associatedServiceId;
+            Node selectedNode = availableNodes.get(containerInstance.getBelongingNodeId());
+            containerInstance.setAssociatedServiceId(associatedServiceId);
 
-            activeContainerInstances.put(containerInstance.id, containerInstance);
+            activeContainerInstances.put(containerInstance.getId(), containerInstance);
 
             selectedNode.addOwnedContainer(containerInstance);
 
-            return containerInstance.nodeIpAddress;
+            return containerInstance.getNodeIpAddress();
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
@@ -81,22 +80,22 @@ public class AllocationManager {
             ContainerInstance container;
             try {
                 container = activeContainerInstances.values().stream().
-                        filter(containerInstance -> containerInstance.associatedServiceId.equals(associatedServiceId)).findAny().orElseThrow();
+                        filter(containerInstance -> containerInstance.getAssociatedServiceId().equals(associatedServiceId)).findAny().orElseThrow();
             } catch (NoSuchElementException e) {
                 throw new IllegalStateException("There is no active allocation containing the service " + associatedServiceId);
             }
             if (!container.getContainerState().equals("TERMINATED")) { // or anything else
-                Node oldNode = availableNodes.get(container.belongingNodeId);
+                Node oldNode = availableNodes.get(container.getBelongingNodeId());
 
                 DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
 
                 Node returnedNewNode = allocator.reviseOptimalNode(
                         requirements,
-                        new ContainerType(container.containerType),
+                        new ContainerType(container.getContainerType()),
                         new HashSet<>(getAvailableNodes().values()));
-                if (!availableNodes.containsKey(returnedNewNode.id))
+                if (!availableNodes.containsKey(returnedNewNode.getId()))
                     throw new RuntimeException("The allocation algorithm returned a non-existent node");
-                Node newNode = availableNodes.get(returnedNewNode.id);
+                Node newNode = availableNodes.get(returnedNewNode.getId());
 
                 if (!oldNode.equals(newNode)) {
                     // CONTAINER MIGRATION
@@ -106,9 +105,9 @@ public class AllocationManager {
                         container.acquireMigrationSemaphore();
                         try {
                             newNode.addOwnedContainer(container);
-                            container.belongingNodeId = newNode.id;
+                            container.setBelongingNodeId(newNode.getId());
                             oldNode.removeOwnedContainer(container);
-                            container.nodeIpAddress = newNode.ipAddress;
+                            container.setNodeIpAddress(newNode.getIpAddress());
                         } finally {
                             container.releaseMigrationSemaphore();
                         }
@@ -118,7 +117,7 @@ public class AllocationManager {
                     }
                 }
             }
-            return container.nodeIpAddress;
+            return container.getNodeIpAddress();
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
@@ -126,22 +125,26 @@ public class AllocationManager {
     public void cleanInactiveContainers() {
         for (ContainerInstance containerInstance : activeContainerInstances.values()) {
             if (containerInstance.getContainerState().equals("TERMINATED")) {  // or anything else
-                availableNodes.get(containerInstance.belongingNodeId).removeOwnedContainer(containerInstance);
-                activeContainerInstances.remove(containerInstance.id);
+                availableNodes.get(containerInstance.getBelongingNodeId()).removeOwnedContainer(containerInstance);
+                activeContainerInstances.remove(containerInstance.getId());
             }
         }
     }
 
     public Map<UUID, Node> getAvailableNodes() {
-        return availableNodes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new Node(e.getValue())));
+        return availableNodes;
     }
 
     public Map<UUID, ContainerType> getProvidedContainerTypes() {
-        return providedContainerTypes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new ContainerType(e.getValue())));
+        return providedContainerTypes;
     }
 
     public Map<UUID, ContainerInstance> getActiveContainerInstances() {
-        return new HashMap<>(activeContainerInstances);
+        return activeContainerInstances;
+    }
+
+    public AllocatorAlgorithm getAllocator() {
+        return allocator;
     }
 
     public void setAllocatorAlgorithm(AllocatorAlgorithm allocatorAlgorithm) {

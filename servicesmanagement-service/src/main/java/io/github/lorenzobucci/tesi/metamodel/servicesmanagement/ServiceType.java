@@ -4,10 +4,10 @@ import java.util.UUID;
 
 public class ServiceType {
 
-    public final UUID id;
+    private final UUID id;
 
-    public final String name;
-    public final ServiceRequirements requirements;
+    private final String name;
+    private final ServiceRequirements requirements;
 
     public ServiceType(String name, ServiceRequirements requirements) {
         this.name = name;
@@ -19,6 +19,18 @@ public class ServiceType {
         name = serviceType.name;
         id = serviceType.id;
         requirements = serviceType.requirements;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ServiceRequirements getRequirements() {
+        return requirements;
     }
 
     @Override

@@ -26,28 +26,28 @@ public class ServiceProxy {
         WorkflowInstance workflowInstance = serviceManager.instantiateWorkflow(serviceId);
 
         ServiceInstance workflowEndpoint = workflowInstance.getRootService();
-        workflowEndpoint.serviceParameters = serviceParameters;
+        workflowEndpoint.setServiceParameters(serviceParameters);
 
-        for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet()) {
-            String dependabilityRequirements = serviceInstance.serviceType.requirements.toString() + userRequirements; // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
-            InetAddress containerIp = AllocationManager.getInstance().allocateContainer(serviceInstance.id, dependabilityRequirements); // TODO: USE API
+        for (ServiceInstance serviceInstance : workflowInstance.getDAG().vertexSet()) {
+            String dependabilityRequirements = serviceInstance.getServiceType().getRequirements().toString() + userRequirements; // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
+            InetAddress containerIp = AllocationManager.getInstance().allocateContainer(serviceInstance.getId(), dependabilityRequirements); // TODO: USE API
             serviceInstance.determineBaseUri(containerIp);
         }
 
-        return workflowEndpoint.baseUri; // TODO: USE API AND RETURN ALSO WORKFLOW INSTANCE ID AKA "RUNNING SERVICE ID"
+        return workflowEndpoint.getBaseUri(); // TODO: USE API AND RETURN ALSO WORKFLOW INSTANCE ID AKA "RUNNING SERVICE ID"
     }
 
     public URI updateServiceRequirements(UUID runningServiceId, String newUserRequirements) {
-        if (serviceManager.runningWorkflowInstances.containsKey(runningServiceId)) {
-            WorkflowInstance workflowInstance = serviceManager.runningWorkflowInstances.get(runningServiceId);
+        if (serviceManager.getRunningWorkflowInstances().containsKey(runningServiceId)) {
+            WorkflowInstance workflowInstance = serviceManager.getRunningWorkflowInstances().get(runningServiceId);
 
-            for (ServiceInstance serviceInstance : workflowInstance.serviceInstanceDAG.vertexSet()) {
-                String dependabilityRequirements = serviceInstance.serviceType.requirements.toString() + newUserRequirements; // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
-                InetAddress containerIp = AllocationManager.getInstance().reviseContainerAllocation(serviceInstance.id, dependabilityRequirements); // TODO: USE API
+            for (ServiceInstance serviceInstance : workflowInstance.getDAG().vertexSet()) {
+                String dependabilityRequirements = serviceInstance.getServiceType().getRequirements().toString() + newUserRequirements; // MERGE SERVICE REQUIREMENTS + USER REQUIREMENTS
+                InetAddress containerIp = AllocationManager.getInstance().reviseContainerAllocation(serviceInstance.getId(), dependabilityRequirements); // TODO: USE API
                 serviceInstance.determineBaseUri(containerIp);
             }
 
-            return workflowInstance.getRootService().baseUri;
+            return workflowInstance.getRootService().getBaseUri();
         } else
             throw new NoSuchElementException("Requested workflow " + runningServiceId + " does not exist.");
     }

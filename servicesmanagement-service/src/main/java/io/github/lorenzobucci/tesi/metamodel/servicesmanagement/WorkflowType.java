@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class WorkflowType {
 
-    public final UUID id;
+    private final UUID id;
 
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG;
 
@@ -23,9 +23,9 @@ public class WorkflowType {
 
         serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
-        for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
-            ServiceType callerServiceType = new ServiceType(workflowType.getDAG().getEdgeSource(edge));
-            ServiceType calleeServiceType = new ServiceType(workflowType.getDAG().getEdgeTarget(edge));
+        for (DefaultEdge edge : workflowType.serviceTypeDAG.edgeSet()) {
+            ServiceType callerServiceType = new ServiceType(workflowType.serviceTypeDAG.getEdgeSource(edge));
+            ServiceType calleeServiceType = new ServiceType(workflowType.serviceTypeDAG.getEdgeTarget(edge));
 
             serviceTypeDAG.addVertex(callerServiceType);
             serviceTypeDAG.addVertex(calleeServiceType);
@@ -38,7 +38,7 @@ public class WorkflowType {
         if (serviceTypeDAG.vertexSet().isEmpty()) {
             boolean addResult = serviceTypeDAG.addVertex(rootService);
             if (!addResult)
-                throw new IllegalArgumentException("The service " + rootService.id + " already belongs to the workflow.");
+                throw new IllegalArgumentException("The service " + rootService.getId() + " already belongs to the workflow.");
 
         } else {
             throw new IllegalStateException("The root service has already been added.");
@@ -49,10 +49,10 @@ public class WorkflowType {
         if (serviceTypeDAG.containsVertex(callerService)) {
             boolean addResult = serviceTypeDAG.addVertex(newService);
             if (!addResult)
-                throw new IllegalArgumentException("The service " + newService.id + " already belongs to the workflow.");
+                throw new IllegalArgumentException("The service " + newService.getId() + " already belongs to the workflow.");
             serviceTypeDAG.addEdge(callerService, newService);
         } else {
-            throw new NoSuchElementException("Caller service " + callerService.id + " must belong to the workflow.");
+            throw new NoSuchElementException("Caller service " + callerService.getId() + " must belong to the workflow.");
         }
 
     }
@@ -62,19 +62,19 @@ public class WorkflowType {
             if (serviceTypeDAG.containsVertex(calleeService))
                 serviceTypeDAG.addEdge(callerService, calleeService);
             else
-                throw new NoSuchElementException("Callee service " + calleeService.id + " must belong to the workflow.");
+                throw new NoSuchElementException("Callee service " + calleeService.getId() + " must belong to the workflow.");
         } else
-            throw new NoSuchElementException("Caller service " + callerService.id + " must belong to the workflow.");
+            throw new NoSuchElementException("Caller service " + callerService.getId() + " must belong to the workflow.");
     }
 
     public boolean contains(UUID serviceTypeId) {
-        return serviceTypeDAG.vertexSet().stream().anyMatch(serviceType -> serviceType.id == serviceTypeId);
+        return serviceTypeDAG.vertexSet().stream().anyMatch(serviceType -> serviceType.getId().equals(serviceTypeId));
     }
 
     public void removeServiceType(ServiceType service) {
         boolean removeResult = serviceTypeDAG.removeVertex(service);
         if (!removeResult)
-            throw new NoSuchElementException("The service " + service.id + " does not belong to the workflow.");
+            throw new NoSuchElementException("The service " + service.getId() + " does not belong to the workflow.");
 
     }
 
@@ -82,8 +82,12 @@ public class WorkflowType {
         return serviceTypeDAG;
     }
 
-    Set<ServiceType> getServiceTypes() {
+    public Set<ServiceType> getServiceTypes() {
         return serviceTypeDAG.vertexSet();
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override

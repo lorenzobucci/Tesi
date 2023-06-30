@@ -5,10 +5,10 @@ import java.util.UUID;
 
 public class MobileDevice {
 
-    public final UUID id = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
 
     private final Trajectory pastTrajectory = new Trajectory();
-    public TrajectoryForecaster trajectoryForecaster;
+    private TrajectoryForecaster trajectoryForecaster;
 
     public MobileDevice() {
 
@@ -37,5 +37,11 @@ public class MobileDevice {
         return pastTrajectory.getPositionsSet().last();
     }
 
+    public UUID getId() {
+        return id;
+    }
 
+    public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) {
+        this.trajectoryForecaster = trajectoryForecaster;
+    }
 }

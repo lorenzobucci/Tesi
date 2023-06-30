@@ -6,10 +6,10 @@ public class ServiceManager {
 
     private static ServiceManager instance = null;
 
-    final Map<UUID, ServiceType> providedServiceTypes = new HashMap<>();
-    final Map<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
+    private final Map<UUID, ServiceType> providedServiceTypes = new HashMap<>();
+    private final Map<UUID, WorkflowType> providedWorkflowTypes = new HashMap<>();
 
-    final Map<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
+    private final Map<UUID, WorkflowInstance> runningWorkflowInstances = new HashMap<>();
 
     private ServiceManager() {
 
@@ -33,20 +33,20 @@ public class ServiceManager {
 
 
     public void addNewServiceType(ServiceType serviceType) {
-        if (!providedServiceTypes.containsKey(serviceType.id))
-            providedServiceTypes.putIfAbsent(serviceType.id, new ServiceType(serviceType));
+        if (!providedServiceTypes.containsKey(serviceType.getId()))
+            providedServiceTypes.putIfAbsent(serviceType.getId(), new ServiceType(serviceType));
         else
-            throw new IllegalArgumentException("The service " + serviceType.id + " is already in memory.");
+            throw new IllegalArgumentException("The service " + serviceType.getId() + " is already in memory.");
     }
 
     public void addNewWorkflowType(WorkflowType workflowType) {
-        if (!providedWorkflowTypes.containsKey(workflowType.id)) {
+        if (!providedWorkflowTypes.containsKey(workflowType.getId())) {
             WorkflowType newWorkflowType = new WorkflowType(workflowType);
             for (ServiceType serviceType : newWorkflowType.getServiceTypes())
-                providedServiceTypes.putIfAbsent(serviceType.id, serviceType);
-            providedWorkflowTypes.put(newWorkflowType.id, newWorkflowType);
+                providedServiceTypes.putIfAbsent(serviceType.getId(), serviceType);
+            providedWorkflowTypes.put(newWorkflowType.getId(), newWorkflowType);
         } else
-            throw new IllegalArgumentException("The workflow " + workflowType.id + " is already in memory.");
+            throw new IllegalArgumentException("The workflow " + workflowType.getId() + " is already in memory.");
     }
 
     public void cleanOrphanedServiceTypes() {
@@ -70,6 +70,15 @@ public class ServiceManager {
         providedWorkflowTypes.remove(workflowTypeId);
     }
 
+    WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
+        if (providedWorkflowTypes.containsKey(workflowTypeId)) {
+            WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
+            runningWorkflowInstances.put(workflowInstance.getId(), workflowInstance);
+            return workflowInstance;
+        } else
+            throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
+    }
+
     public ServiceType getServiceType(UUID serviceTypeId) {
         if (providedServiceTypes.containsKey(serviceTypeId))
             return new ServiceType(providedServiceTypes.get(serviceTypeId));
@@ -81,15 +90,6 @@ public class ServiceManager {
         if (providedWorkflowTypes.containsKey(workflowTypeId))
             return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
         else
-            throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
-    }
-
-    WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
-        if (providedWorkflowTypes.containsKey(workflowTypeId)) {
-            WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));
-            runningWorkflowInstances.put(workflowInstance.id, workflowInstance);
-            return workflowInstance;
-        } else
             throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
     }
 

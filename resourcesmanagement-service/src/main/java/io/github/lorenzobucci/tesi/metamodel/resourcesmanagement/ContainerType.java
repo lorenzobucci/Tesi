@@ -4,9 +4,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ContainerType {
-    public final UUID id;
-    public final String imageName;
-    public final String imageVersion;
+    private final UUID id;
+    private final String imageName;
+    private final String imageVersion;
 
     public ContainerType(String imageName, String imageVersion) {
         id = UUID.randomUUID();
@@ -18,6 +18,18 @@ public class ContainerType {
         id = containerType.id;
         imageName = containerType.imageName;
         imageVersion = containerType.imageVersion;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public String getImageVersion() {
+        return imageVersion;
     }
 
     @Override

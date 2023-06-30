@@ -9,24 +9,23 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Node {
-    public final UUID id;
-
-    public final NodeTechnicalProperties properties;
-    public final NodeType nodeType;
+    private final UUID id;
 
     public enum NodeType {
         CLOUD,
         EDGE
     }
 
-    public final float latitude;
-    public final float longitude;
+    private final NodeType nodeType;
+    private final NodeTechnicalProperties properties;
+    private final InetAddress ipAddress;
+    private final float latitude;
+    private final float longitude;
+
+    private float memoryUsagePercentage;
+    private float cpuUsagePercentage;
 
     private final Set<ContainerInstance> ownedContainers;
-    final InetAddress ipAddress;
-
-    float memoryUsagePercentage;
-    float cpuUsagePercentage;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
@@ -66,19 +65,51 @@ public class Node {
     }
 
     void addOwnedContainer(ContainerInstance newContainer) {
-        Set<ContainerInstance> oldOwnedContainersCopy = getOwnedContainers();
+        Set<ContainerInstance> oldOwnedContainersCopy = new HashSet<>(ownedContainers);
         this.ownedContainers.add(newContainer);
-        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, getOwnedContainers());
+        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, ownedContainers);
     }
 
     void removeOwnedContainer(ContainerInstance ownedContainer) {
-        Set<ContainerInstance> oldOwnedContainersCopy = getOwnedContainers();
+        Set<ContainerInstance> oldOwnedContainersCopy = new HashSet<>(ownedContainers);
         this.ownedContainers.remove(ownedContainer);
-        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, getOwnedContainers());
+        eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, ownedContainers);
     }
 
-    public Set<ContainerInstance> getOwnedContainers() {
-        return new HashSet<>(ownedContainers);
+    public UUID getId() {
+        return id;
+    }
+
+    public NodeTechnicalProperties getProperties() {
+        return properties;
+    }
+
+    public NodeType getNodeType() {
+        return nodeType;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public InetAddress getIpAddress() {
+        return ipAddress;
+    }
+
+    public float getMemoryUsagePercentage() {
+        return memoryUsagePercentage;
+    }
+
+    public float getCpuUsagePercentage() {
+        return cpuUsagePercentage;
+    }
+
+    public int getOwnedContainersSize() {
+        return ownedContainers.size();
     }
 
     @Override

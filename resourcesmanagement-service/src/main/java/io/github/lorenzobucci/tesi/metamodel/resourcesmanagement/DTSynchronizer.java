@@ -12,43 +12,43 @@ public class DTSynchronizer {
     }
 
     public static void subscribeContainerInstanceProperties(UUID containerInstanceId, PropertyChangeListener pcl) {
-        if (manager.activeContainerInstances.containsKey(containerInstanceId))
-            manager.activeContainerInstances.get(containerInstanceId).addPropertyChangeListener(pcl);
+        if (manager.getActiveContainerInstances().containsKey(containerInstanceId))
+            manager.getActiveContainerInstances().get(containerInstanceId).addPropertyChangeListener(pcl);
         else
             throw new NoSuchElementException("The container " + containerInstanceId + " does not exist.");
     }
 
     public static void unsubscribeContainerInstanceProperties(UUID containerInstanceId, PropertyChangeListener pcl) {
-        if (manager.activeContainerInstances.containsKey(containerInstanceId))
-            manager.activeContainerInstances.get(containerInstanceId).removePropertyChangeListener(pcl);
+        if (manager.getActiveContainerInstances().containsKey(containerInstanceId))
+            manager.getActiveContainerInstances().get(containerInstanceId).removePropertyChangeListener(pcl);
         else
             throw new NoSuchElementException("The container " + containerInstanceId + " does not exist.");
     }
 
     public static void syncContainerInstanceProperties(UUID containerInstanceId, String containerState) {
-        if (manager.activeContainerInstances.containsKey(containerInstanceId))
-            manager.activeContainerInstances.get(containerInstanceId).syncWithRealObject(containerState);
+        if (manager.getActiveContainerInstances().containsKey(containerInstanceId))
+            manager.getActiveContainerInstances().get(containerInstanceId).syncWithRealObject(containerState);
         else
             throw new NoSuchElementException("The container " + containerInstanceId + " does not exist.");
     }
 
     public static void subscribeNodeProperties(UUID nodeId, PropertyChangeListener pcl) {
-        if (manager.availableNodes.containsKey(nodeId))
-            manager.availableNodes.get(nodeId).addPropertyChangeListener(pcl);
+        if (manager.getAvailableNodes().containsKey(nodeId))
+            manager.getAvailableNodes().get(nodeId).addPropertyChangeListener(pcl);
         else
             throw new NoSuchElementException("The node " + nodeId + " does not exist.");
     }
 
     public static void unsubscribeNodeProperties(UUID nodeId, PropertyChangeListener pcl) {
-        if (manager.availableNodes.containsKey(nodeId))
-            manager.availableNodes.get(nodeId).removePropertyChangeListener(pcl);
+        if (manager.getAvailableNodes().containsKey(nodeId))
+            manager.getAvailableNodes().get(nodeId).removePropertyChangeListener(pcl);
         else
             throw new NoSuchElementException("The node " + nodeId + " does not exist.");
     }
 
     public static void syncNodeProperties(UUID nodeId, float memoryUsagePercentage, float cpuUsagePercentage) {
-        if (manager.availableNodes.containsKey(nodeId))
-            manager.availableNodes.get(nodeId).syncWithRealObject(memoryUsagePercentage, cpuUsagePercentage);
+        if (manager.getAvailableNodes().containsKey(nodeId))
+            manager.getAvailableNodes().get(nodeId).syncWithRealObject(memoryUsagePercentage, cpuUsagePercentage);
         else
             throw new NoSuchElementException("The node " + nodeId + " does not exist.");
     }
