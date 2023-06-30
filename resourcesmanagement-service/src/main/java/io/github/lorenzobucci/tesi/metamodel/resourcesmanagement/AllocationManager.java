@@ -1,5 +1,8 @@
 package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
+import org.json.JSONObject;
+
+import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,39 +58,41 @@ public class AllocationManager {
         providedContainerTypes.remove(containerTypeId);
     }
 
-    public ContainerInstance allocateServiceContainer(ServiceRequirements serviceRequirements, UserRequirements userRequirements) {
+    public InetAddress allocateContainer(UUID associatedServiceId, JSONObject dependabilityRequirements) {
         if (allocator != null) {
+            DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
+
             ContainerInstance containerInstance = allocator.allocateServiceContainer(
-                    serviceRequirements,
-                    userRequirements,
+                    requirements,
                     new HashSet<>(getAvailableNodes().values()),
                     new HashSet<>(getProvidedContainerTypes().values()));
             Node selectedNode = availableNodes.get(containerInstance.belongingNodeId);
 
-            containerInstance.setNodeIpAddress(selectedNode.ipAddress);
             activeContainerInstances.put(containerInstance.id, containerInstance);
 
             selectedNode.addOwnedContainer(containerInstance);
 
-            return containerInstance;
+            return containerInstance.nodeIpAddress;
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
-    public void reviseContainerAllocation(UUID containerInstanceId, ServiceRequirements serviceRequirements, UserRequirements userRequirements) {
+    public InetAddress reviseContainerAllocation(UUID associatedServiceId, JSONObject newDependabilityRequirements) {
         if (allocator != null) {
             ContainerInstance container;
             try {
-                container = activeContainerInstances.get(containerInstanceId);
+                container = activeContainerInstances.values().stream().
+                        filter(containerInstance -> containerInstance.associatedServiceId.equals(associatedServiceId)).findAny().orElseThrow();
             } catch (NoSuchElementException e) {
-                throw new IllegalStateException("There is no active allocation containing the service " + containerInstanceId);
+                throw new IllegalStateException("There is no active allocation containing the service " + associatedServiceId);
             }
             if (!container.getContainerState().equals("TERMINATED")) { // or anything else
                 Node oldNode = availableNodes.get(container.belongingNodeId);
 
+                DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
+
                 Node returnedNewNode = allocator.reviseOptimalNode(
-                        serviceRequirements,
-                        userRequirements,
+                        requirements,
                         new ContainerType(container.containerType),
                         new HashSet<>(getAvailableNodes().values()));
                 if (!availableNodes.containsKey(returnedNewNode.id))
@@ -104,7 +109,7 @@ public class AllocationManager {
                             newNode.addOwnedContainer(container);
                             container.belongingNodeId = newNode.id;
                             oldNode.removeOwnedContainer(container);
-                            container.setNodeIpAddress(newNode.ipAddress);
+                            container.nodeIpAddress = newNode.ipAddress;
                         } finally {
                             container.releaseMigrationSemaphore();
                         }
@@ -114,6 +119,7 @@ public class AllocationManager {
                     }
                 }
             }
+            return container.nodeIpAddress;
         } else
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
@@ -128,7 +134,7 @@ public class AllocationManager {
     }
 
     public Map<UUID, Node> getAvailableNodes() {
-        return availableNodes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new Node(e.getValue())));
+        return availableNodes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> new Node(e.getValue(), ipAddress)));
     }
 
     public Map<UUID, ContainerType> getProvidedContainerTypes() {
