@@ -14,10 +14,6 @@ public class MobileDevice {
 
     }
 
-    public void syncWithRealObject(Position currentPosition) {
-        pastTrajectory.addPosition(currentPosition);
-    }
-
     public URI useService(UUID serviceId, String parameters) {
         DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
         return ServiceProxy.getInstance().requestService(serviceId, parameters, requirements.toString()); // TODO: USE API
@@ -27,6 +23,10 @@ public class MobileDevice {
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
         DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
         return ServiceProxy.getInstance().updateServiceRequirements(serviceId, newDependabilityRequirements.toString()); // TODO: USE API
+    }
+
+    void syncWithRealObject(Position currentPosition) {
+        pastTrajectory.addPosition(currentPosition);
     }
 
     public Trajectory getPastTrajectory() {
