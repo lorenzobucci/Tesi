@@ -39,18 +39,6 @@ public class Node {
         ownedContainers = new HashSet<>();
     }
 
-    public Node(Node node) {
-        id = node.id;
-        nodeType = node.nodeType;
-        ipAddress = node.ipAddress;
-        properties = node.properties;
-        latitude = node.latitude;
-        longitude = node.longitude;
-        memoryUsagePercentage = node.memoryUsagePercentage;
-        cpuUsagePercentage = node.cpuUsagePercentage;
-        ownedContainers = new HashSet<>(node.ownedContainers);
-    }
-
     void addPropertyChangeListener(PropertyChangeListener pcl) {
         eventSupport.addPropertyChangeListener(pcl);
     }

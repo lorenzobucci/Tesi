@@ -16,7 +16,7 @@ public class ServiceInstance {
     private String serviceParameters;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
-        this.serviceType = new ServiceType(serviceType);
+        this.serviceType = serviceType;
         this.belongingWorkflow = belongingWorkflow;
     }
 

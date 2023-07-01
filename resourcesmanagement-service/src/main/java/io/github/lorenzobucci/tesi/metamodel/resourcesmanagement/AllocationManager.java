@@ -35,7 +35,7 @@ public class AllocationManager {
 
     public void addNode(Node node) {
         if (!availableNodes.containsKey(node.getId()))
-            availableNodes.putIfAbsent(node.getId(), new Node(node));
+            availableNodes.putIfAbsent(node.getId(), node);
         else
             throw new IllegalArgumentException("The node " + node.getId() + " is already in memory.");
     }
@@ -46,7 +46,7 @@ public class AllocationManager {
 
     public void addContainerType(ContainerType containerType) {
         if (!providedContainerTypes.containsKey(containerType.getId()))
-            providedContainerTypes.putIfAbsent(containerType.getId(), new ContainerType(containerType));
+            providedContainerTypes.putIfAbsent(containerType.getId(), containerType);
         else
             throw new IllegalArgumentException("The container " + containerType.getId() + " is already in memory.");
     }
@@ -61,8 +61,8 @@ public class AllocationManager {
 
             ContainerInstance containerInstance = allocator.allocateServiceContainer(
                     requirements,
-                    new HashSet<>(getAvailableNodes().values()),
-                    new HashSet<>(getProvidedContainerTypes().values()));
+                    new HashSet<>(availableNodes.values()),
+                    new HashSet<>(providedContainerTypes.values()));
             Node selectedNode = availableNodes.get(containerInstance.getBelongingNodeId());
             containerInstance.setAssociatedServiceId(associatedServiceId);
 
@@ -89,13 +89,12 @@ public class AllocationManager {
 
                 DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
 
-                Node returnedNewNode = allocator.reviseOptimalNode(
+                Node newNode = allocator.reviseOptimalNode(
                         requirements,
-                        new ContainerType(container.getContainerType()),
-                        new HashSet<>(getAvailableNodes().values()));
-                if (!availableNodes.containsKey(returnedNewNode.getId()))
+                        container.getContainerType(),
+                        new HashSet<>(availableNodes.values()));
+                if (!availableNodes.containsKey(newNode.getId()))
                     throw new RuntimeException("The allocation algorithm returned a non-existent node");
-                Node newNode = availableNodes.get(returnedNewNode.getId());
 
                 if (!oldNode.equals(newNode)) {
                     // CONTAINER MIGRATION

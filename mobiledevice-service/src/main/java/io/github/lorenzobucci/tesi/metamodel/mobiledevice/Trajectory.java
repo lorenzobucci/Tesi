@@ -7,16 +7,16 @@ public class Trajectory {
 
     private final TreeSet<Position> positionsSet;
 
-    public Trajectory(Trajectory trajectory) {
-        positionsSet = trajectory.getPositionsSet();
-    }
-
     public Trajectory() {
         positionsSet = new TreeSet<>(Comparator.comparing(Position::timestamp));
     }
 
-    public TreeSet<Position> getPositionsSet() {
-        return new TreeSet<>(positionsSet);
+    public Trajectory(Trajectory trajectory) {
+        positionsSet = new TreeSet<>(trajectory.positionsSet);
+    }
+
+    TreeSet<Position> getPositionsSet() {
+        return positionsSet;
     }
 
     public void addPosition(Position position) {

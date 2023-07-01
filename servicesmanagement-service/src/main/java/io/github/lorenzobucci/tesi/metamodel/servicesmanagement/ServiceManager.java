@@ -34,17 +34,16 @@ public class ServiceManager {
 
     public void addNewServiceType(ServiceType serviceType) {
         if (!providedServiceTypes.containsKey(serviceType.getId()))
-            providedServiceTypes.putIfAbsent(serviceType.getId(), new ServiceType(serviceType));
+            providedServiceTypes.putIfAbsent(serviceType.getId(), serviceType);
         else
             throw new IllegalArgumentException("The service " + serviceType.getId() + " is already in memory.");
     }
 
     public void addNewWorkflowType(WorkflowType workflowType) {
         if (!providedWorkflowTypes.containsKey(workflowType.getId())) {
-            WorkflowType newWorkflowType = new WorkflowType(workflowType);
-            for (ServiceType serviceType : newWorkflowType.getServiceTypes())
+            for (ServiceType serviceType : workflowType.getServiceTypes())
                 providedServiceTypes.putIfAbsent(serviceType.getId(), serviceType);
-            providedWorkflowTypes.put(newWorkflowType.getId(), newWorkflowType);
+            providedWorkflowTypes.put(workflowType.getId(), workflowType);
         } else
             throw new IllegalArgumentException("The workflow " + workflowType.getId() + " is already in memory.");
     }
@@ -81,14 +80,14 @@ public class ServiceManager {
 
     public ServiceType getServiceType(UUID serviceTypeId) {
         if (providedServiceTypes.containsKey(serviceTypeId))
-            return new ServiceType(providedServiceTypes.get(serviceTypeId));
+            return providedServiceTypes.get(serviceTypeId);
         else
             throw new NoSuchElementException("Requested service " + serviceTypeId + " does not exist.");
     }
 
     public WorkflowType getWorkflowType(UUID workflowTypeId) {
         if (providedWorkflowTypes.containsKey(workflowTypeId))
-            return new WorkflowType(providedWorkflowTypes.get(workflowTypeId));
+            return providedWorkflowTypes.get(workflowTypeId);
         else
             throw new NoSuchElementException("Requested workflow " + workflowTypeId + " does not exist.");
     }

@@ -18,22 +18,6 @@ public class WorkflowType {
         id = UUID.randomUUID();
     }
 
-    public WorkflowType(WorkflowType workflowType) {
-        id = workflowType.id;
-
-        serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
-
-        for (DefaultEdge edge : workflowType.serviceTypeDAG.edgeSet()) {
-            ServiceType callerServiceType = new ServiceType(workflowType.serviceTypeDAG.getEdgeSource(edge));
-            ServiceType calleeServiceType = new ServiceType(workflowType.serviceTypeDAG.getEdgeTarget(edge));
-
-            serviceTypeDAG.addVertex(callerServiceType);
-            serviceTypeDAG.addVertex(calleeServiceType);
-
-            serviceTypeDAG.addEdge(callerServiceType, calleeServiceType);
-        }
-    }
-
     public void addRootServiceType(ServiceType rootService) {
         if (serviceTypeDAG.vertexSet().isEmpty()) {
             boolean addResult = serviceTypeDAG.addVertex(rootService);

@@ -15,12 +15,6 @@ public class ServiceType {
         this.requirements = requirements;
     }
 
-    public ServiceType(ServiceType serviceType) {
-        name = serviceType.name;
-        id = serviceType.id;
-        requirements = serviceType.requirements;
-    }
-
     public UUID getId() {
         return id;
     }
