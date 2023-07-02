@@ -6,7 +6,7 @@ import java.util.Set;
 public class SampleAllocatorAlgorithm implements AllocatorAlgorithm {
 
     @Override
-    public ContainerInstance allocateServiceContainer(DependabilityRequirements dependabilityRequirements, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
+    public ContainerInstance allocateContainer(DependabilityRequirements dependabilityRequirements, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
         Node selectedNode = availableNodes.iterator().next();
         return new ContainerInstance(providedContainerTypes.iterator().next(), selectedNode.getId(), selectedNode.getIpAddress());
     }

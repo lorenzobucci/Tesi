@@ -59,7 +59,7 @@ public class AllocationManager {
         if (allocator != null) {
             DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
 
-            ContainerInstance containerInstance = allocator.allocateServiceContainer(
+            ContainerInstance containerInstance = allocator.allocateContainer(
                     requirements,
                     new HashSet<>(availableNodes.values()),
                     new HashSet<>(providedContainerTypes.values()));
