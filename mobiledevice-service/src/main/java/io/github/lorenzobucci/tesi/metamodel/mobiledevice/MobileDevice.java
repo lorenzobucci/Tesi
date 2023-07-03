@@ -1,13 +1,21 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
+import jakarta.persistence.*;
+
 import java.net.URI;
 import java.util.UUID;
 
+@Entity(name = "mobile_device")
 public class MobileDevice {
 
-    private final UUID id = UUID.randomUUID();
+    @Id
+    private UUID id = UUID.randomUUID();
 
-    private final Trajectory pastTrajectory = new Trajectory();
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "past_trajectory_id")
+    private Trajectory pastTrajectory = new Trajectory();
+
+    @Transient // MAYBE NOT
     private TrajectoryForecaster trajectoryForecaster;
 
     public MobileDevice() {

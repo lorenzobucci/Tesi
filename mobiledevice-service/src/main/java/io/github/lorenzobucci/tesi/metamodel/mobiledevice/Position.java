@@ -1,8 +1,52 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
-import java.sql.Timestamp;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
-public record Position(float latitude, float longitude, Timestamp timestamp) {
+import java.sql.Timestamp;
+import java.util.UUID;
+
+@Entity(name = "position")
+public class Position implements Comparable<Position> {
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    private float latitude;
+    private float longitude;
+
+    @Column(nullable = false)
+    private Timestamp timestamp;
+
+    public Position(float latitude, float longitude, Timestamp timestamp) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.timestamp = timestamp;
+    }
+
+    protected Position() {
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public int compareTo(Position o) {
+        return this.timestamp.compareTo(o.getTimestamp());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,16 +1,27 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
-import java.util.Comparator;
-import java.util.TreeSet;
+import jakarta.persistence.*;
+import org.hibernate.annotations.SortNatural;
 
+import java.util.TreeSet;
+import java.util.UUID;
+
+@Entity(name = "trajectory")
 public class Trajectory {
 
-    private final TreeSet<Position> positionsSet;
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @SortNatural
+    @JoinTable(inverseJoinColumns = @JoinColumn(name = "position_id"), name = "trajectory_positions")
+    private TreeSet<Position> positionsSet = new TreeSet<>();
 
     public Trajectory() {
-        positionsSet = new TreeSet<>(Comparator.comparing(Position::timestamp));
     }
 
+    @SuppressWarnings("CopyConstructorMissesField")
     public Trajectory(Trajectory trajectory) {
         positionsSet = new TreeSet<>(trajectory.positionsSet);
     }
