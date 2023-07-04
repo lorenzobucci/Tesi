@@ -1,5 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
+import jakarta.persistence.*;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
@@ -8,35 +10,49 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+@Entity(name = "node")
 public class Node {
-    private final UUID id;
+
+    @Id
+    private UUID id = UUID.randomUUID();
 
     public enum NodeType {
         CLOUD,
         EDGE
     }
 
-    private final NodeType nodeType;
-    private final NodeTechnicalProperties properties;
-    private final InetAddress ipAddress;
-    private final float latitude;
-    private final float longitude;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "node_type", nullable = false)
+    private NodeType nodeType;
 
+    @Embedded
+    private NodeTechnicalProperties properties;
+
+    @Column(name = "ip_address", nullable = false)
+    private InetAddress ipAddress;
+    private float latitude;
+    private float longitude;
+
+    @Transient
     private float memoryUsagePercentage;
+
+    @Transient
     private float cpuUsagePercentage;
 
-    private final Set<ContainerInstance> ownedContainers;
+    @OneToMany(mappedBy = "belongingNode")
+    private Set<ContainerInstance> ownedContainers = new HashSet<>();
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
     public Node(NodeType nodeType, InetAddress ipAddress, NodeTechnicalProperties properties, float latitude, float longitude) {
-        id = UUID.randomUUID();
         this.nodeType = nodeType;
         this.ipAddress = ipAddress;
         this.properties = properties;
         this.latitude = latitude;
         this.longitude = longitude;
-        ownedContainers = new HashSet<>();
+    }
+
+    protected Node() {
     }
 
     void addPropertyChangeListener(PropertyChangeListener pcl) {

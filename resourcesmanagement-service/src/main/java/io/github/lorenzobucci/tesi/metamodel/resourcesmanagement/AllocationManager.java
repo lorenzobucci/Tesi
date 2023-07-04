@@ -63,7 +63,7 @@ public class AllocationManager {
                     requirements,
                     new HashSet<>(availableNodes.values()),
                     new HashSet<>(providedContainerTypes.values()));
-            Node selectedNode = availableNodes.get(containerInstance.getBelongingNodeId());
+            Node selectedNode = containerInstance.getBelongingNode();
             containerInstance.setAssociatedServiceId(associatedServiceId);
 
             activeContainerInstances.put(containerInstance.getId(), containerInstance);
@@ -85,7 +85,7 @@ public class AllocationManager {
                 throw new IllegalStateException("There is no active allocation containing the service " + associatedServiceId);
             }
             if (!container.getContainerState().equals("TERMINATED")) { // or anything else
-                Node oldNode = availableNodes.get(container.getBelongingNodeId());
+                Node oldNode = container.getBelongingNode();
 
                 DependabilityRequirements requirements = new DependabilityRequirements(); // PARSE JSON
 
@@ -104,9 +104,8 @@ public class AllocationManager {
                         container.acquireMigrationSemaphore();
                         try {
                             newNode.addOwnedContainer(container);
-                            container.setBelongingNodeId(newNode.getId());
+                            container.setBelongingNode(newNode);
                             oldNode.removeOwnedContainer(container);
-                            container.setNodeIpAddress(newNode.getIpAddress());
                         } finally {
                             container.releaseMigrationSemaphore();
                         }
@@ -124,7 +123,7 @@ public class AllocationManager {
     public void cleanInactiveContainers() {
         for (ContainerInstance containerInstance : activeContainerInstances.values()) {
             if (containerInstance.getContainerState().equals("TERMINATED")) {  // or anything else
-                availableNodes.get(containerInstance.getBelongingNodeId()).removeOwnedContainer(containerInstance);
+                containerInstance.getBelongingNode().removeOwnedContainer(containerInstance);
                 activeContainerInstances.remove(containerInstance.getId());
             }
         }

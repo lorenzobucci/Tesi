@@ -1,23 +1,31 @@
 package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity(name = "container_type")
 public class ContainerType {
-    private final UUID id;
-    private final String imageName;
-    private final String imageVersion;
+
+    @Id
+    private UUID id = UUID.randomUUID();
+
+    @Column(name = "image_name", nullable = false)
+    private String imageName;
+
+    @Column(name = "image_version", nullable = false)
+    private String imageVersion;
 
     public ContainerType(String imageName, String imageVersion) {
-        id = UUID.randomUUID();
         this.imageName = imageName;
         this.imageVersion = imageVersion;
     }
 
-    public ContainerType(ContainerType containerType) {
-        id = containerType.id;
-        imageName = containerType.imageName;
-        imageVersion = containerType.imageVersion;
+    protected ContainerType() {
+
     }
 
     public UUID getId() {
