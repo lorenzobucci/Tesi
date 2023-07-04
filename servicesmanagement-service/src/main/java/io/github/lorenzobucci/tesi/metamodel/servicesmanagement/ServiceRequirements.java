@@ -1,4 +1,9 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
-public record ServiceRequirements() {
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+public class ServiceRequirements {
+
+
 }

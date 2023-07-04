@@ -1,23 +1,39 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
+import jakarta.persistence.*;
+
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.UUID;
 
+@Entity
+@Table(name = "service_instance")
 public class ServiceInstance {
 
-    private final UUID id = UUID.randomUUID();
+    @Id
+    private UUID id = UUID.randomUUID();
 
-    private final ServiceType serviceType;
-    private final WorkflowInstance belongingWorkflow;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "service_type_id", nullable = false)
+    private ServiceType serviceType;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "belonging_workflow_id", nullable = false)
+    private WorkflowInstance belongingWorkflow;
+
+    @Column(name = "base_uri")
     private URI baseUri;
 
+    @Column(name = "service_parameters")
     private String serviceParameters;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = serviceType;
         this.belongingWorkflow = belongingWorkflow;
+    }
+
+    protected ServiceInstance() {
+
     }
 
     void determineBaseUri(InetAddress containerIp) {
@@ -55,7 +71,7 @@ public class ServiceInstance {
 
     @Override
     public String toString() {
-        return "io.github.lorenzobucci.metamodel.servicesmanagement.ServiceInstance{" +
+        return "io.github.lorenzobucci.tesi.metamodel.servicesmanagement.ServiceInstance{" +
                 "id=" + id +
                 ", serviceTypeID=" + serviceType.getId() +
                 '}';

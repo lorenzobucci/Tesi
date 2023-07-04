@@ -1,18 +1,29 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
+@Entity
+@Table(name = "service_type")
 public class ServiceType {
 
-    private final UUID id;
+    @Id
+    private UUID id = UUID.randomUUID();
 
-    private final String name;
-    private final ServiceRequirements requirements;
+    @Column(nullable = false)
+    private String name;
+
+    @Embedded
+    private ServiceRequirements requirements;
 
     public ServiceType(String name, ServiceRequirements requirements) {
         this.name = name;
-        id = UUID.randomUUID();
         this.requirements = requirements;
+    }
+
+    protected ServiceType() {
+
     }
 
     public UUID getId() {
@@ -29,7 +40,7 @@ public class ServiceType {
 
     @Override
     public String toString() {
-        return "io.github.lorenzobucci.metamodel.servicesmanagement.ServiceType{" +
+        return "io.github.lorenzobucci.tesi.metamodel.servicesmanagement.ServiceType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

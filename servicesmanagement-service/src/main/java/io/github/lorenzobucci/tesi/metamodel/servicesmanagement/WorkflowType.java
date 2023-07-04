@@ -1,21 +1,25 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
+import jakarta.persistence.*;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
+@Entity
+@Table(name = "workflow_type")
 public class WorkflowType {
 
-    private final UUID id;
-
-    private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG;
+    @Transient // PERSISTED USING PROPERTY MODE
+    private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
+    @Id
+    private UUID id = UUID.randomUUID();
 
     public WorkflowType() {
-        serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
-        id = UUID.randomUUID();
+
     }
 
     public void addRootServiceType(ServiceType rootService) {
@@ -74,6 +78,33 @@ public class WorkflowType {
         return id;
     }
 
+    @Access(AccessType.PROPERTY)
+    @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(
+            name = "workflow_types_graphs",
+            joinColumns = @JoinColumn(name = "workflow_type_id", referencedColumnName = "id"))
+    @AttributeOverrides({
+            @AttributeOverride(name = "firstElement", column = @Column(name = "caller_service_type_id")),
+            @AttributeOverride(name = "secondElement", column = @Column(name = "callee_service_type_id"))
+    })
+    protected Set<ServiceTypePair> getGraphEdges() {
+        Set<ServiceTypePair> set = new HashSet<>();
+        for (DefaultEdge edge : serviceTypeDAG.edgeSet()) {
+            ServiceTypePair pair = new ServiceTypePair(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge));
+            set.add(pair);
+        }
+        return set;
+    }
+
+    protected void setGraphEdges(Set<ServiceTypePair> graphEdges) {
+        for (ServiceTypePair pair : graphEdges) {
+            serviceTypeDAG.addVertex(pair.firstElement);
+            serviceTypeDAG.addVertex(pair.secondElement);
+            serviceTypeDAG.addEdge(pair.firstElement, pair.secondElement);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,5 +118,27 @@ public class WorkflowType {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    @Embeddable
+    static
+    class ServiceTypePair {
+
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "first_element_id", nullable = false)
+        private ServiceType firstElement;
+
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "second_element_id", nullable = false)
+        private ServiceType secondElement;
+
+        ServiceTypePair(ServiceType firstElement, ServiceType secondElement) {
+            this.firstElement = firstElement;
+            this.secondElement = secondElement;
+        }
+
+        protected ServiceTypePair() {
+
+        }
     }
 }
