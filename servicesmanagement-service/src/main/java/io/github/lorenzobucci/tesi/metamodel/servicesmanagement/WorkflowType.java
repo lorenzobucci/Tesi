@@ -91,10 +91,8 @@ public class WorkflowType {
     })
     protected Set<ServiceTypePair> getGraphEdges() {
         Set<ServiceTypePair> set = new HashSet<>();
-        for (DefaultEdge edge : serviceTypeDAG.edgeSet()) {
-            ServiceTypePair pair = new ServiceTypePair(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge));
-            set.add(pair);
-        }
+        for (DefaultEdge edge : serviceTypeDAG.edgeSet())
+            set.add(new ServiceTypePair(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge)));
         return set;
     }
 
