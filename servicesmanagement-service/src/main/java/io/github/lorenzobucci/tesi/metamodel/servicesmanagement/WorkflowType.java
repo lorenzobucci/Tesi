@@ -13,10 +13,11 @@ import java.util.UUID;
 @Table(name = "workflow_type")
 public class WorkflowType {
 
-    @Transient // PERSISTED USING PROPERTY MODE
-    private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
     @Id
     private UUID id = UUID.randomUUID();
+
+    @Transient // PERSISTED USING PROPERTY MODE
+    private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
     public WorkflowType() {
 
@@ -80,7 +81,7 @@ public class WorkflowType {
 
     @Access(AccessType.PROPERTY)
     @Column(nullable = false)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "workflow_types_graphs",
             joinColumns = @JoinColumn(name = "workflow_type_id", referencedColumnName = "id"))

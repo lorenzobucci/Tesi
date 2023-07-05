@@ -13,11 +13,12 @@ import java.util.UUID;
 @Table(name = "workflow_instance")
 public class WorkflowInstance {
 
-    @Transient // PERSISTED USING PROPERTY MODE
-    private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
     @Id
     private UUID id = UUID.randomUUID();
-    @ManyToOne(optional = false)
+
+    @Transient // PERSISTED USING PROPERTY MODE
+    private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "workflow_type_id", nullable = false)
     private WorkflowType workflowType;
 
@@ -74,7 +75,7 @@ public class WorkflowInstance {
 
     @Access(AccessType.PROPERTY)
     @Column(nullable = false)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "workflow_instances_graphs",
             joinColumns = @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id"))
@@ -116,11 +117,11 @@ public class WorkflowInstance {
     static
     class ServiceInstancePair {
 
-        @ManyToOne(optional = false)
+        @ManyToOne(cascade = CascadeType.ALL, optional = false)
         @JoinColumn(name = "first_element_id", nullable = false)
         private ServiceInstance firstElement;
 
-        @ManyToOne(optional = false)
+        @ManyToOne(cascade = CascadeType.ALL, optional = false)
         @JoinColumn(name = "second_element_id", nullable = false)
         private ServiceInstance secondElement;
 

@@ -17,14 +17,14 @@ public class ContainerInstance {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "container_type_id", nullable = false)
     private ContainerType containerType;
 
     @Column(name = "container_state", nullable = false)
     private String containerState = "IDLE";
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belonging_node_id")
     private Node belongingNode;
 

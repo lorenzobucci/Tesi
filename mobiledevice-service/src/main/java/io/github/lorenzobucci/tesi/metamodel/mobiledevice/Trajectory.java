@@ -13,7 +13,7 @@ public class Trajectory {
     @GeneratedValue
     private UUID id;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @SortNatural
     @JoinTable(inverseJoinColumns = @JoinColumn(name = "position_id"), name = "trajectory_positions")
     private TreeSet<Position> positionsSet = new TreeSet<>();

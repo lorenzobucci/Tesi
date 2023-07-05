@@ -17,7 +17,7 @@ public class ServiceInstance {
     @JoinColumn(name = "service_type_id", nullable = false)
     private ServiceType serviceType;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "belonging_workflow_id", nullable = false)
     private WorkflowInstance belongingWorkflow;
 
