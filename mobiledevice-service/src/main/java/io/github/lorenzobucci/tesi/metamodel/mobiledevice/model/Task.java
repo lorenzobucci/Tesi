@@ -19,15 +19,23 @@ public class Task {
     @Embedded
     private DependabilityRequirements requirements;
 
+    @Column(name = "associated_task_id", unique = true)
+    private UUID associatedTaskId;
+
     public Task(URI endpoint, String parameters, DependabilityRequirements requirements) {
         this.endpoint = endpoint;
         this.parameters = parameters;
         this.requirements = requirements;
-        ServiceProxy.getInstance().requestService(this.toString()); // TODO: ADJUST AND USE API
+        associatedTaskId = ServiceProxy.getInstance().requestService(this.toString()); // TODO: ADJUST AND USE API
     }
 
     protected Task() {
 
+    }
+
+    public void updateRequirements(DependabilityRequirements requirements) {
+        this.requirements = requirements;
+        ServiceProxy.getInstance().updateServiceRequirements(associatedTaskId, this.toString()); // TODO: ADJUST USE API
     }
 
     public URI getEndpoint() {
@@ -42,9 +50,8 @@ public class Task {
         return requirements;
     }
 
-    public void updateRequirements(DependabilityRequirements requirements) {
-        this.requirements = requirements;
-        ServiceProxy.getInstance().updateServiceRequirements(this.toString()); // TODO: ADJUST USE API
+    public UUID getAssociatedTaskId() {
+        return associatedTaskId;
     }
 
     @Override
