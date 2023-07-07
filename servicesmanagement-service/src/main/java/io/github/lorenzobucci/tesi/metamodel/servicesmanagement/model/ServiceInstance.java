@@ -2,30 +2,23 @@ package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model;
 
 import jakarta.persistence.*;
 
-import java.net.InetAddress;
-import java.net.URI;
 import java.util.UUID;
 
 @Entity
 @Table(name = "service_instance")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ServiceInstance {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    protected UUID id = UUID.randomUUID();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "service_type_id", nullable = false)
-    private ServiceType serviceType;
+    protected ServiceType serviceType;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "belonging_workflow_id", nullable = false)
-    private WorkflowInstance belongingWorkflow;
-
-    @Column(name = "base_uri")
-    private URI baseUri;
-
-    @Column(name = "service_parameters")
-    private String serviceParameters;
+    protected WorkflowInstance belongingWorkflow;
 
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = serviceType;
@@ -34,11 +27,6 @@ public class ServiceInstance {
 
     protected ServiceInstance() {
 
-    }
-
-    void determineBaseUri(InetAddress containerIp) {
-        // PROTOCOL AND PORT ARE DEFINED ON THE BASIS OF THE REQUIREMENTS AND OTHER VARIABLES
-        baseUri = URI.create("http://" + containerIp.getHostName() + ":8080");
     }
 
     public UUID getId() {
@@ -51,18 +39,6 @@ public class ServiceInstance {
 
     public WorkflowInstance getBelongingWorkflow() {
         return belongingWorkflow;
-    }
-
-    public URI getBaseUri() {
-        return baseUri;
-    }
-
-    public String getServiceParameters() {
-        return serviceParameters;
-    }
-
-    void setServiceParameters(String serviceParameters) {
-        this.serviceParameters = serviceParameters;
     }
 
     public ServiceRequirements getServiceRequirements() {

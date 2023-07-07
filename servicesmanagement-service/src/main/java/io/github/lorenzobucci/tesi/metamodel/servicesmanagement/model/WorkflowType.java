@@ -19,19 +19,12 @@ public class WorkflowType {
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "endpoint_service_type_id", nullable = false)
+    private EndpointServiceType endpointServiceType;
+
     public WorkflowType() {
 
-    }
-
-    public void addRootServiceType(ServiceType rootService) {
-        if (serviceTypeDAG.vertexSet().isEmpty()) {
-            boolean addResult = serviceTypeDAG.addVertex(rootService);
-            if (!addResult)
-                throw new IllegalArgumentException("The service " + rootService.getId() + " already belongs to the workflow.");
-
-        } else {
-            throw new IllegalStateException("The root service has already been added.");
-        }
     }
 
     public void addServiceType(ServiceType newService, ServiceType callerService) {
@@ -56,15 +49,21 @@ public class WorkflowType {
             throw new NoSuchElementException("Caller service " + callerService.getId() + " must belong to the workflow.");
     }
 
-    public boolean contains(UUID serviceTypeId) {
-        return serviceTypeDAG.vertexSet().stream().anyMatch(serviceType -> serviceType.getId().equals(serviceTypeId));
+    public boolean contains(ServiceType serviceType) {
+        return serviceTypeDAG.vertexSet().contains(serviceType);
     }
 
     public void removeServiceType(ServiceType service) {
-        boolean removeResult = serviceTypeDAG.removeVertex(service);
-        if (!removeResult)
-            throw new NoSuchElementException("The service " + service.getId() + " does not belong to the workflow.");
+        if (!service.equals(endpointServiceType)) {
+            boolean removeResult = serviceTypeDAG.removeVertex(service);
+            if (!removeResult)
+                throw new NoSuchElementException("The service " + service.getId() + " does not belong to the workflow.");
+        } else
+            throw new IllegalArgumentException("Cannot remove the endpoint service.");
+    }
 
+    public EndpointServiceType getEndpointServiceType() {
+        return endpointServiceType;
     }
 
     DirectedAcyclicGraph<ServiceType, DefaultEdge> getDAG() {
@@ -73,6 +72,22 @@ public class WorkflowType {
 
     public Set<ServiceType> getServiceTypes() {
         return serviceTypeDAG.vertexSet();
+    }
+
+    public void setEndpointServiceType(EndpointServiceType endpointServiceType) {
+        if (!serviceTypeDAG.containsVertex(endpointServiceType)) {
+            if (serviceTypeDAG.vertexSet().isEmpty()) {
+                serviceTypeDAG.addVertex(endpointServiceType);
+                this.endpointServiceType = endpointServiceType;
+            } else {
+                serviceTypeDAG.addVertex(endpointServiceType);
+                for (ServiceType descendant : serviceTypeDAG.getDescendants(this.endpointServiceType))
+                    serviceTypeDAG.addEdge(endpointServiceType, descendant);
+                serviceTypeDAG.removeVertex(this.endpointServiceType);
+                this.endpointServiceType = endpointServiceType;
+            }
+        } else
+            throw new NoSuchElementException("The service " + endpointServiceType.getId() + " already belongs to the workflow.");
     }
 
     public UUID getId() {

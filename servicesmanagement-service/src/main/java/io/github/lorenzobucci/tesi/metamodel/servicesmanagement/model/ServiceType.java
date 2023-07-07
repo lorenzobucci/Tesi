@@ -6,16 +6,17 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "service_type")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ServiceType {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    protected UUID id = UUID.randomUUID();
 
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "service_name", nullable = false)
+    protected String name;
 
     @Embedded
-    private ServiceRequirements requirements;
+    protected ServiceRequirements requirements;
 
     public ServiceType(String name, ServiceRequirements requirements) {
         this.name = name;

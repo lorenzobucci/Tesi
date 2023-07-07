@@ -18,22 +18,20 @@ public class WorkflowInstance {
 
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "endpoint_service_instance_id", nullable = false)
+    private EndpointServiceInstance endpointServiceInstance;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "workflow_type_id", nullable = false)
     private WorkflowType workflowType;
 
-    WorkflowInstance(WorkflowType workflowType) {
+    WorkflowInstance(WorkflowType workflowType, String endpointParameters) {
         this.workflowType = workflowType;
 
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
-            ServiceType callerServiceType = workflowType.getDAG().getEdgeSource(edge);
             ServiceType calleeServiceType = workflowType.getDAG().getEdgeTarget(edge);
-
-            ServiceInstance callerService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(callerServiceType)).findAny().orElse(null);
-            if (callerService == null) {
-                callerService = new ServiceInstance(callerServiceType, this);
-                serviceInstanceDAG.addVertex(callerService);
-            }
 
             ServiceInstance calleeService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(calleeServiceType)).findAny().orElse(null);
             if (calleeService == null) {
@@ -41,7 +39,22 @@ public class WorkflowInstance {
                 serviceInstanceDAG.addVertex(calleeService);
             }
 
-            serviceInstanceDAG.addEdge(callerService, calleeService);
+            ServiceType callerServiceType = workflowType.getDAG().getEdgeSource(edge);
+
+            if (!callerServiceType.equals(workflowType.getEndpointServiceType())) {
+                ServiceInstance callerService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(callerServiceType)).findAny().orElse(null);
+                if (callerService == null) {
+                    callerService = new ServiceInstance(callerServiceType, this);
+                    serviceInstanceDAG.addVertex(callerService);
+                }
+                serviceInstanceDAG.addEdge(callerService, calleeService);
+            } else {
+                if (endpointServiceInstance == null) {
+                    endpointServiceInstance = new EndpointServiceInstance(workflowType.getEndpointServiceType(), this, endpointParameters);
+                    serviceInstanceDAG.addVertex(endpointServiceInstance);
+                }
+                serviceInstanceDAG.addEdge(endpointServiceInstance, calleeService);
+            }
         }
     }
 
@@ -57,12 +70,12 @@ public class WorkflowInstance {
         return serviceInstanceDAG.iterator();
     }
 
-    public ServiceInstance getRootService() {
-        return serviceInstanceDAG.iterator().next();
-    }
-
     public Set<ServiceInstance> getServiceInstances() {
         return serviceInstanceDAG.vertexSet();
+    }
+
+    public EndpointServiceInstance getEndpointServiceInstance() {
+        return endpointServiceInstance;
     }
 
     public UUID getId() {
