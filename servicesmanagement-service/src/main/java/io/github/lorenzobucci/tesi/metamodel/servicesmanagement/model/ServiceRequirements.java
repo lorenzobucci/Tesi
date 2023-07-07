@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model;
 
 import jakarta.persistence.Embeddable;
 

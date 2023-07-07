@@ -1,6 +1,8 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
 
+import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.MobileDevice;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

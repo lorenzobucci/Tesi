@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model;
 
 import jakarta.persistence.*;
 
@@ -40,7 +40,7 @@ public class ServiceType {
 
     @Override
     public String toString() {
-        return "io.github.lorenzobucci.tesi.metamodel.servicesmanagement.ServiceType{" +
+        return "io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

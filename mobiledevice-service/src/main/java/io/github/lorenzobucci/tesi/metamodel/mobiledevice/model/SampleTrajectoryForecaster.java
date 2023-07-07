@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
+package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
 
 import java.sql.Timestamp;
 

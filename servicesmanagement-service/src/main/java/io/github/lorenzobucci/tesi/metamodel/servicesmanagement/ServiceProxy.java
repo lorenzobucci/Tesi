@@ -1,5 +1,8 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceInstance;
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowInstance;
+
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.NoSuchElementException;

@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
+package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.SortNatural;

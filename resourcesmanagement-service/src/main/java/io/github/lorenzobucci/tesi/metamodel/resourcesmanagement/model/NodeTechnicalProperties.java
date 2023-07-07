@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

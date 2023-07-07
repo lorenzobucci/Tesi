@@ -1,5 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
+import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.Position;
+
 import java.util.NoSuchElementException;
 import java.util.UUID;
 

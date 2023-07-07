@@ -1,5 +1,9 @@
 package io.github.lorenzobucci.tesi.metamodel.servicesmanagement;
 
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceType;
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowInstance;
+import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowType;
+
 import java.util.*;
 
 public class ServiceManager {
