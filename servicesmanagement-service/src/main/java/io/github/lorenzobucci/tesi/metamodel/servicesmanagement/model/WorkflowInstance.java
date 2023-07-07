@@ -27,8 +27,12 @@ public class WorkflowInstance {
     @JoinColumn(name = "workflow_type_id", nullable = false)
     private WorkflowType workflowType;
 
-    WorkflowInstance(WorkflowType workflowType, String endpointParameters) {
+    @Embedded
+    private WorkflowRequirements workflowRequirements;
+
+    WorkflowInstance(WorkflowType workflowType, String endpointParameters, WorkflowRequirements workflowRequirements) {
         this.workflowType = workflowType;
+        this.workflowRequirements = workflowRequirements;
 
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
             ServiceType calleeServiceType = workflowType.getDAG().getEdgeTarget(edge);
@@ -76,6 +80,10 @@ public class WorkflowInstance {
 
     public EndpointServiceInstance getEndpointServiceInstance() {
         return endpointServiceInstance;
+    }
+
+    public WorkflowRequirements getWorkflowRequirements() {
+        return workflowRequirements;
     }
 
     public UUID getId() {
