@@ -26,8 +26,9 @@ public class ServiceInstance {
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = serviceType;
         this.belongingWorkflow = belongingWorkflow;
+
         String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
-        Container container = AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
+        this.container = new Container(dependabilityRequirements);
     }
 
     protected ServiceInstance() {
@@ -36,7 +37,7 @@ public class ServiceInstance {
 
     public void optimize() {
         String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
-        container.setIpAddress(AllocationManager.getInstance().reviseContainerAllocation(container.getAssociatedContainerId(), dependabilityRequirements)); // TODO: ADJUST AND USE API
+        container.optimize(dependabilityRequirements);
     }
 
     public UUID getId() {

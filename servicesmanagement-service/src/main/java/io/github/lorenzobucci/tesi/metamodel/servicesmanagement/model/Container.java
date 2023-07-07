@@ -9,20 +9,24 @@ import java.util.UUID;
 @Embeddable
 public class Container {
 
-    @Column(name = "associated_container_id")
+    @Column(name = "associated_container_id", unique = true)
     private UUID associatedContainerId;
 
 
     @Column(name = "container_ip_address")
     private InetAddress ipAddress;
 
-    public Container(UUID associatedContainerId, InetAddress ipAddress) {
-        this.associatedContainerId = associatedContainerId;
-        this.ipAddress = ipAddress;
+    public Container(String dependabilityRequirements) {
+        (associatedContainerId, ipAddress) =
+        AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 
     protected Container() {
 
+    }
+
+    public void optimize(String dependabilityRequirements) {
+        ipAddress = AllocationManager.getInstance().reviseContainerAllocation(associatedContainerId, dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 
     public UUID getAssociatedContainerId() {
@@ -31,9 +35,5 @@ public class Container {
 
     public InetAddress getIpAddress() {
         return ipAddress;
-    }
-
-    public void setIpAddress(InetAddress ipAddress) {
-        this.ipAddress = ipAddress;
     }
 }
