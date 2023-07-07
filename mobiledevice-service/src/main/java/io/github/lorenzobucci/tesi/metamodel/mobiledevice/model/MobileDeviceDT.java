@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "mobile_device")
-public class MobileDevice {
+public class MobileDeviceDT {
 
     @Id
     private UUID id = UUID.randomUUID();
@@ -16,25 +18,32 @@ public class MobileDevice {
     @JoinColumn(name = "past_trajectory_id")
     private Trajectory pastTrajectory = new Trajectory();
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(inverseJoinColumns = @JoinColumn(name = "task_id"), name = "mobile_device_running_tasks")
+    private Set<Task> runningTasks = new HashSet<>();
+
     @Transient // CLASS INSTANCE PERSISTED USING PROPERTY MODE
     private TrajectoryForecaster trajectoryForecaster;
 
-    public MobileDevice() {
+    public MobileDeviceDT() {
 
     }
 
-    public URI useService(UUID serviceId, String parameters) {
+    public void taskInvoked(URI endpoint, String parameters) {
         DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
-        return ServiceProxy.getInstance().requestService(serviceId, parameters, requirements.toString()); // TODO: USE API
+        Task invokedTask = new Task(endpoint, parameters, requirements);
+        runningTasks.add(invokedTask);
     }
 
-    public URI optimizeService(UUID serviceId) {
+    public void requestTaskOptimization(URI endpoint) {
+        Task taskToOptimize = runningTasks.stream().filter(task -> task.getEndpoint().equals(endpoint)).findAny().orElseThrow();
+
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
         DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
-        return ServiceProxy.getInstance().updateServiceRequirements(serviceId, newDependabilityRequirements.toString()); // TODO: USE API
+        taskToOptimize.updateRequirements(newDependabilityRequirements);
     }
 
-    void syncWithRealObject(Position currentPosition) {
+    public void syncWithRealObject(Position currentPosition) {
         pastTrajectory.addPosition(currentPosition);
     }
 

@@ -1,7 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice;
 
 
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.MobileDevice;
+import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.MobileDeviceDT;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.UUID;
 public class MobileDeviceManager {
     private static MobileDeviceManager instance = null;
 
-    private final Map<UUID, MobileDevice> mobileDevices = new HashMap<>();
+    private final Map<UUID, MobileDeviceDT> mobileDevices = new HashMap<>();
 
     private MobileDeviceManager() {
     }
@@ -22,26 +22,26 @@ public class MobileDeviceManager {
         return instance;
     }
 
-    public void init(Set<MobileDevice> mobileDevices) {
+    public void init(Set<MobileDeviceDT> mobileDeviceDTS) {
         if (this.mobileDevices.isEmpty()) {
-            for (MobileDevice mobileDevice : mobileDevices)
-                addMobileDevice(mobileDevice);
+            for (MobileDeviceDT mobileDeviceDT : mobileDeviceDTS)
+                addMobileDevice(mobileDeviceDT);
         } else
             throw new IllegalStateException("Cannot initialize if there are mobile devices in memory.");
     }
 
-    public void addMobileDevice(MobileDevice mobileDevice) {
-        if (!mobileDevices.containsKey(mobileDevice.getId()))
-            mobileDevices.putIfAbsent(mobileDevice.getId(), mobileDevice);
+    public void addMobileDevice(MobileDeviceDT mobileDeviceDT) {
+        if (!mobileDevices.containsKey(mobileDeviceDT.getId()))
+            mobileDevices.putIfAbsent(mobileDeviceDT.getId(), mobileDeviceDT);
         else
-            throw new IllegalArgumentException("The mobile device " + mobileDevice.getId() + " is already in memory.");
+            throw new IllegalArgumentException("The mobile device " + mobileDeviceDT.getId() + " is already in memory.");
     }
 
     public void removeMobileDevice(UUID mobileDeviceId) {
         mobileDevices.remove(mobileDeviceId);
     }
 
-    public Map<UUID, MobileDevice> getMobileDevices() {
+    public Map<UUID, MobileDeviceDT> getMobileDevices() {
         return mobileDevices;
     }
 }

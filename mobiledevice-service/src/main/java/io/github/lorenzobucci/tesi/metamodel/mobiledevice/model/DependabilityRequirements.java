@@ -1,4 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
 
-public record DependabilityRequirements() {
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+public class DependabilityRequirements {
 }
