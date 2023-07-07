@@ -20,13 +20,23 @@ public class ServiceInstance {
     @JoinColumn(name = "belonging_workflow_id", nullable = false)
     protected WorkflowInstance belongingWorkflow;
 
+    @Embedded
+    protected Container container;
+
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = serviceType;
         this.belongingWorkflow = belongingWorkflow;
+        String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
+        Container container = AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 
     protected ServiceInstance() {
 
+    }
+
+    public void optimize() {
+        String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
+        container.setIpAddress(AllocationManager.getInstance().reviseContainerAllocation(container.getAssociatedContainerId(), dependabilityRequirements)); // TODO: ADJUST AND USE API
     }
 
     public UUID getId() {
@@ -43,6 +53,10 @@ public class ServiceInstance {
 
     public ServiceRequirements getServiceRequirements() {
         return serviceType.getRequirements();
+    }
+
+    public Container getContainer() {
+        return container;
     }
 
     @Override

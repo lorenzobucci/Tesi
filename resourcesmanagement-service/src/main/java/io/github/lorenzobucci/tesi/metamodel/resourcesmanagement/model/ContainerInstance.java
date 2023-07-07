@@ -30,9 +30,6 @@ public class ContainerInstance {
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
-    @Column(name = "associated_service_id")
-    private UUID associatedServiceId;
-
     public ContainerInstance(ContainerType containerType, Node belongingNode) {
         this.containerType = containerType;
         this.belongingNode = belongingNode;
@@ -88,14 +85,6 @@ public class ContainerInstance {
 
     public InetAddress getNodeIpAddress() {
         return belongingNode.getIpAddress();
-    }
-
-    public UUID getAssociatedServiceId() {
-        return associatedServiceId;
-    }
-
-    void setAssociatedServiceId(UUID associatedServiceId) {
-        this.associatedServiceId = associatedServiceId;
     }
 
     void setContainerState(String containerState) {

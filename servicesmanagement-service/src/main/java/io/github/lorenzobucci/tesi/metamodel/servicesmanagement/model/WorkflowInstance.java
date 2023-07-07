@@ -66,6 +66,13 @@ public class WorkflowInstance {
 
     }
 
+    public void updateWorkflowRequirements(WorkflowRequirements workflowRequirements) {
+        this.workflowRequirements = workflowRequirements;
+        for (ServiceInstance serviceInstance : serviceInstanceDAG)
+            serviceInstance.optimize();
+    }
+
+
     DirectedAcyclicGraph<ServiceInstance, DefaultEdge> getDAG() {
         return serviceInstanceDAG;
     }
