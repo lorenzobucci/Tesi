@@ -15,7 +15,7 @@ public class MobileDeviceDTDao {
     private EntityManager em;
 
     @Transactional
-    public void add(MobileDeviceDT newMobileDevice) {
+    public void create(MobileDeviceDT newMobileDevice) {
         em.persist(newMobileDevice);
     }
 
@@ -25,18 +25,16 @@ public class MobileDeviceDTDao {
     }
 
     @Transactional
-    public void save(MobileDeviceDT mobileDevice) {
+    public void update(MobileDeviceDT mobileDevice) {
         em.merge(mobileDevice);
     }
 
-    @Transactional
-    public List<MobileDeviceDT> getAllMobileDevices() {
+    public List<MobileDeviceDT> findAll() {
         TypedQuery<MobileDeviceDT> query = em.createQuery("from mobile_device ", MobileDeviceDT.class);
         return query.getResultList();
     }
 
-    @Transactional
-    public MobileDeviceDT getById(UUID mobileDeviceId) {
+    public MobileDeviceDT findById(UUID mobileDeviceId) {
         return em.find(MobileDeviceDT.class, mobileDeviceId);
     }
 
