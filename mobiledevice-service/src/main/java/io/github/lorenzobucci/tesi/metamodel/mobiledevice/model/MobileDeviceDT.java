@@ -52,7 +52,7 @@ public class MobileDeviceDT {
     }
 
     public Position getCurrentPosition() {
-        return pastTrajectory.getPositionsSet().last();
+        return pastTrajectory.getLastPosition();
     }
 
     public UUID getId() {

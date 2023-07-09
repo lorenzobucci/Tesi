@@ -22,7 +22,7 @@ public class Task {
     @Column(name = "associated_task_id", unique = true)
     private UUID associatedTaskId;
 
-    public Task(URI endpoint, String parameters, DependabilityRequirements requirements) {
+    Task(URI endpoint, String parameters, DependabilityRequirements requirements) {
         this.endpoint = endpoint;
         this.parameters = parameters;
         this.requirements = requirements;
@@ -33,7 +33,7 @@ public class Task {
 
     }
 
-    public void updateRequirements(DependabilityRequirements requirements) {
+    void updateRequirements(DependabilityRequirements requirements) {
         this.requirements = requirements;
         ServiceProxy.getInstance().updateServiceRequirements(associatedTaskId, this.toString()); // TODO: ADJUST USE API
     }
