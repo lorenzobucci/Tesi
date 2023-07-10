@@ -23,7 +23,12 @@ public class WorkflowType {
     @JoinColumn(name = "endpoint_service_type_id", nullable = false)
     private EndpointServiceType endpointServiceType;
 
-    public WorkflowType() {
+    public WorkflowType(EndpointServiceType endpointServiceType) {
+        serviceTypeDAG.addVertex(endpointServiceType);
+        this.endpointServiceType = endpointServiceType;
+    }
+
+    protected WorkflowType() {
 
     }
 
@@ -62,19 +67,7 @@ public class WorkflowType {
             throw new IllegalArgumentException("Cannot remove the endpoint service.");
     }
 
-    public EndpointServiceType getEndpointServiceType() {
-        return endpointServiceType;
-    }
-
-    DirectedAcyclicGraph<ServiceType, DefaultEdge> getDAG() {
-        return serviceTypeDAG;
-    }
-
-    public Set<ServiceType> getServiceTypes() {
-        return serviceTypeDAG.vertexSet();
-    }
-
-    public void setEndpointServiceType(EndpointServiceType endpointServiceType) {
+    public void updateEndpointServiceType(EndpointServiceType endpointServiceType) {
         if (!serviceTypeDAG.containsVertex(endpointServiceType)) {
             if (serviceTypeDAG.vertexSet().isEmpty()) {
                 serviceTypeDAG.addVertex(endpointServiceType);
@@ -90,12 +83,23 @@ public class WorkflowType {
             throw new NoSuchElementException("The service " + endpointServiceType.getId() + " already belongs to the workflow.");
     }
 
+    public EndpointServiceType getEndpointServiceType() {
+        return endpointServiceType;
+    }
+
+    DirectedAcyclicGraph<ServiceType, DefaultEdge> getDAG() {
+        return serviceTypeDAG;
+    }
+
+    public Set<ServiceType> getServiceTypes() {
+        return serviceTypeDAG.vertexSet();
+    }
+
     public UUID getId() {
         return id;
     }
 
     @Access(AccessType.PROPERTY)
-    @Column(nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "workflow_types_graphs",
@@ -108,14 +112,18 @@ public class WorkflowType {
         Set<ServiceTypePair> set = new HashSet<>();
         for (DefaultEdge edge : serviceTypeDAG.edgeSet())
             set.add(new ServiceTypePair(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge)));
+        if (set.isEmpty()) // WORKFLOW WITH ONLY THE ENDPOINT
+            set.add(new ServiceTypePair(null, endpointServiceType));
         return set;
     }
 
     protected void setGraphEdges(Set<ServiceTypePair> graphEdges) {
         for (ServiceTypePair pair : graphEdges) {
-            serviceTypeDAG.addVertex(pair.firstElement);
             serviceTypeDAG.addVertex(pair.secondElement);
-            serviceTypeDAG.addEdge(pair.firstElement, pair.secondElement);
+            if (!(pair.firstElement == null)) { // WORKFLOW WITH 2 OR MORE SERVICES
+                serviceTypeDAG.addVertex(pair.firstElement);
+                serviceTypeDAG.addEdge(pair.firstElement, pair.secondElement);
+            }
         }
     }
 
@@ -138,12 +146,12 @@ public class WorkflowType {
     static
     class ServiceTypePair {
 
-        @ManyToOne(optional = false)
-        @JoinColumn(name = "first_element_id", nullable = false)
+        @ManyToOne
+        @JoinColumn(name = "first_element_id")
         private ServiceType firstElement;
 
         @ManyToOne(optional = false)
-        @JoinColumn(name = "second_element_id", nullable = false)
+        @JoinColumn(name = "second_element_id")
         private ServiceType secondElement;
 
         ServiceTypePair(ServiceType firstElement, ServiceType secondElement) {
