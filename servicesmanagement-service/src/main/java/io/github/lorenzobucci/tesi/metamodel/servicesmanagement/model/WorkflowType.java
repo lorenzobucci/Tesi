@@ -104,9 +104,9 @@ public class WorkflowType {
     @CollectionTable(
             name = "workflow_types_graphs",
             joinColumns = @JoinColumn(name = "workflow_type_id", referencedColumnName = "id"))
-    @AttributeOverrides({
-            @AttributeOverride(name = "firstElement", column = @Column(name = "caller_service_type_id")),
-            @AttributeOverride(name = "secondElement", column = @Column(name = "callee_service_type_id"))
+    @AssociationOverrides({
+            @AssociationOverride(name = "firstElement", joinColumns = @JoinColumn(name = "caller_service_type_id")),
+            @AssociationOverride(name = "secondElement", joinColumns = @JoinColumn(name = "callee_service_type_id"))
     })
     protected Set<ServiceTypePair> getGraphEdges() {
         Set<ServiceTypePair> set = new HashSet<>();

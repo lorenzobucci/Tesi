@@ -106,9 +106,9 @@ public class WorkflowInstance {
     @CollectionTable(
             name = "workflow_instances_graphs",
             joinColumns = @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id"))
-    @AttributeOverrides({
-            @AttributeOverride(name = "firstElement", column = @Column(name = "caller_service_instance_id")),
-            @AttributeOverride(name = "secondElement", column = @Column(name = "callee_service_instance_id"))
+    @AssociationOverrides({
+            @AssociationOverride(name = "firstElement", joinColumns = @JoinColumn(name = "caller_service_instance_id")),
+            @AssociationOverride(name = "secondElement", joinColumns = @JoinColumn(name = "callee_service_instance_id"))
     })
     protected Set<ServiceInstancePair> getGraphEdges() {
         Set<ServiceInstancePair> set = new HashSet<>();
