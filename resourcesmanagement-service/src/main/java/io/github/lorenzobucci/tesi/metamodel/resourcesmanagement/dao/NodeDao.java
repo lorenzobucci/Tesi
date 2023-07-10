@@ -30,7 +30,7 @@ public class NodeDao {
     }
 
     public List<Node> findAll() {
-        TypedQuery<Node> query = em.createQuery("from node ", Node.class);
+        TypedQuery<Node> query = em.createQuery("from Node ", Node.class);
         return query.getResultList();
     }
 

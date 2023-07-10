@@ -8,7 +8,8 @@ import java.net.InetAddress;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
-@Entity(name = "container_instance")
+@Entity
+@Table(name = "container_instance")
 public class ContainerInstance {
 
     @Transient

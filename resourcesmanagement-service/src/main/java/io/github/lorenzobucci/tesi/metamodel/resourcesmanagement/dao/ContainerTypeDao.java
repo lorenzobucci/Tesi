@@ -25,7 +25,7 @@ public class ContainerTypeDao {
     }
 
     public List<ContainerType> findAll() {
-        TypedQuery<ContainerType> query = em.createQuery("from container_type ", ContainerType.class);
+        TypedQuery<ContainerType> query = em.createQuery("from ContainerType ", ContainerType.class);
         return query.getResultList();
     }
 

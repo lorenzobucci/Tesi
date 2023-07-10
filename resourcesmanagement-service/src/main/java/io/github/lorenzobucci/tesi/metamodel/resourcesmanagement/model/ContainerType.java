@@ -3,11 +3,13 @@ package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity(name = "container_type")
+@Entity
+@Table(name = "container_type")
 public class ContainerType {
 
     @Id

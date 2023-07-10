@@ -6,7 +6,8 @@ import org.hibernate.annotations.SortNatural;
 import java.util.TreeSet;
 import java.util.UUID;
 
-@Entity(name = "trajectory")
+@Entity
+@Table(name = "trajectory")
 public class Trajectory {
 
     @Id

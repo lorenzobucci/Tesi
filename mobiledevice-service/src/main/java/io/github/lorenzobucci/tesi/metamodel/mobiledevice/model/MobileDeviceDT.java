@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "mobile_device")
+@Entity
+@Table(name = "mobile_device")
 public class MobileDeviceDT {
 
     @Id

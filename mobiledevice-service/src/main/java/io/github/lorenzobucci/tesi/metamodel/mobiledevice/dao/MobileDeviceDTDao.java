@@ -30,7 +30,7 @@ public class MobileDeviceDTDao {
     }
 
     public List<MobileDeviceDT> findAll() {
-        TypedQuery<MobileDeviceDT> query = em.createQuery("from mobile_device ", MobileDeviceDT.class);
+        TypedQuery<MobileDeviceDT> query = em.createQuery("from MobileDeviceDT ", MobileDeviceDT.class);
         return query.getResultList();
     }
 

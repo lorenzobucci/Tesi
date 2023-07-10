@@ -10,7 +10,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "node")
+@Entity
+@Table(name = "node")
 public class Node {
 
     @Id

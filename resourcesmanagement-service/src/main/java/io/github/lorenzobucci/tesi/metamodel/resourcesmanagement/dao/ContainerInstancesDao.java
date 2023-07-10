@@ -30,7 +30,7 @@ public class ContainerInstancesDao {
     }
 
     public List<ContainerInstance> findAll() {
-        TypedQuery<ContainerInstance> query = em.createQuery("from container_instance ", ContainerInstance.class);
+        TypedQuery<ContainerInstance> query = em.createQuery("from ContainerInstance ", ContainerInstance.class);
         return query.getResultList();
     }
 
