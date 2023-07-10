@@ -39,7 +39,11 @@ public class Node {
     @Transient
     private float cpuUsagePercentage;
 
-    @OneToMany(mappedBy = "belongingNode")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "node_container_instances",
+            joinColumns = {@JoinColumn(name = "node_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "container_instance_id", referencedColumnName = "id")}
+    )
     private Set<ContainerInstance> ownedContainers = new HashSet<>();
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
@@ -55,26 +59,26 @@ public class Node {
     protected Node() {
     }
 
-    void addPropertyChangeListener(PropertyChangeListener pcl) {
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
         eventSupport.addPropertyChangeListener(pcl);
     }
 
-    void removePropertyChangeListener(PropertyChangeListener pcl) {
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
         eventSupport.removePropertyChangeListener(pcl);
     }
 
-    void syncWithRealObject(float memoryUsagePercentage, float cpuUsagePercentage) {
+    public void syncWithRealObject(float memoryUsagePercentage, float cpuUsagePercentage) {
         this.memoryUsagePercentage = memoryUsagePercentage;
         this.cpuUsagePercentage = cpuUsagePercentage;
     }
 
-    void addOwnedContainer(ContainerInstance newContainer) {
+    public void addOwnedContainer(ContainerInstance newContainer) {
         Set<ContainerInstance> oldOwnedContainersCopy = new HashSet<>(ownedContainers);
         this.ownedContainers.add(newContainer);
         eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, ownedContainers);
     }
 
-    void removeOwnedContainer(ContainerInstance ownedContainer) {
+    public void removeOwnedContainer(ContainerInstance ownedContainer) {
         Set<ContainerInstance> oldOwnedContainersCopy = new HashSet<>(ownedContainers);
         this.ownedContainers.remove(ownedContainer);
         eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, ownedContainers);

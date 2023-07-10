@@ -24,8 +24,13 @@ public class ContainerInstance {
     @Column(name = "container_state", nullable = false)
     private String containerState = "IDLE";
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "belonging_node_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinTable(name = "node_container_instances",
+            joinColumns = {@JoinColumn(name = "container_instance_id", insertable = false,
+                    updatable = false, referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "node_id", insertable = false,
+                    updatable = false, referencedColumnName = "id")}
+    )
     private Node belongingNode;
 
     private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
@@ -39,15 +44,15 @@ public class ContainerInstance {
 
     }
 
-    void addPropertyChangeListener(PropertyChangeListener pcl) {
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
         eventSupport.addPropertyChangeListener(pcl);
     }
 
-    void removePropertyChangeListener(PropertyChangeListener pcl) {
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
         eventSupport.removePropertyChangeListener(pcl);
     }
 
-    void syncWithRealObject(String containerState) {
+    public void syncWithRealObject(String containerState) {
         if (migrationSemaphore.tryAcquire()) {
             this.containerState = containerState; // NO NOTIFY
             migrationSemaphore.release();
@@ -55,11 +60,11 @@ public class ContainerInstance {
             throw new IllegalStateException("The container is being migrated, no changes possible.");
     }
 
-    void acquireMigrationSemaphore() throws InterruptedException {
+    public void acquireMigrationSemaphore() throws InterruptedException {
         migrationSemaphore.acquire();
     }
 
-    void releaseMigrationSemaphore() {
+    public void releaseMigrationSemaphore() {
         migrationSemaphore.release();
     }
 
@@ -79,7 +84,7 @@ public class ContainerInstance {
         return belongingNode;
     }
 
-    void setBelongingNode(Node belongingNode) {
+    public void setBelongingNode(Node belongingNode) {
         this.belongingNode = belongingNode;
     }
 
@@ -87,7 +92,7 @@ public class ContainerInstance {
         return belongingNode.getIpAddress();
     }
 
-    void setContainerState(String containerState) {
+    public void setContainerState(String containerState) {
         eventSupport.firePropertyChange("containerState", this.containerState, containerState);
         this.containerState = containerState;
     }

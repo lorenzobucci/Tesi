@@ -9,7 +9,7 @@ public class NodeTechnicalProperties {
     @Column(name = "memory_MB", nullable = false)
     private int memoryMB;
 
-    @Column(name = "cup_cores_number", nullable = false)
+    @Column(name = "cpu_cores_number", nullable = false)
     private int cpuCoresNumber;
 
     @Column(name = "cpu_frequency_ghz", nullable = false)
