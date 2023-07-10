@@ -102,7 +102,6 @@ public class WorkflowInstance {
     }
 
     @Access(AccessType.PROPERTY)
-    @Column(nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "workflow_instances_graphs",
@@ -115,14 +114,18 @@ public class WorkflowInstance {
         Set<ServiceInstancePair> set = new HashSet<>();
         for (DefaultEdge edge : serviceInstanceDAG.edgeSet())
             set.add(new ServiceInstancePair(serviceInstanceDAG.getEdgeSource(edge), serviceInstanceDAG.getEdgeTarget(edge)));
+        if (set.isEmpty()) // WORKFLOW WITH ONLY THE ENDPOINT
+            set.add(new ServiceInstancePair(null, endpointServiceInstance));
         return set;
     }
 
     protected void setGraphEdges(Set<ServiceInstancePair> graphEdges) {
         for (ServiceInstancePair pair : graphEdges) {
-            serviceInstanceDAG.addVertex(pair.firstElement);
             serviceInstanceDAG.addVertex(pair.secondElement);
-            serviceInstanceDAG.addEdge(pair.firstElement, pair.secondElement);
+            if (!(pair.firstElement == null)) { // WORKFLOW WITH 2 OR MORE SERVICES
+                serviceInstanceDAG.addVertex(pair.firstElement);
+                serviceInstanceDAG.addEdge(pair.firstElement, pair.secondElement);
+            }
         }
     }
 
@@ -145,8 +148,8 @@ public class WorkflowInstance {
     static
     class ServiceInstancePair {
 
-        @ManyToOne(cascade = CascadeType.ALL, optional = false)
-        @JoinColumn(name = "first_element_id", nullable = false)
+        @ManyToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "first_element_id")
         private ServiceInstance firstElement;
 
         @ManyToOne(cascade = CascadeType.ALL, optional = false)
