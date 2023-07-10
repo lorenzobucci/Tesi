@@ -37,27 +37,6 @@ public class AllocationManager {
             throw new IllegalStateException("Cannot initialize if there are nodes or containers in memory.");
     }
 
-    public void addNode(Node node) {
-        if (!availableNodes.containsKey(node.getId()))
-            availableNodes.putIfAbsent(node.getId(), node);
-        else
-            throw new IllegalArgumentException("The node " + node.getId() + " is already in memory.");
-    }
-
-    public void removeNode(UUID nodeId) {
-        availableNodes.remove(nodeId);
-    }
-
-    public void addContainerType(ContainerType containerType) {
-        if (!providedContainerTypes.containsKey(containerType.getId()))
-            providedContainerTypes.putIfAbsent(containerType.getId(), containerType);
-        else
-            throw new IllegalArgumentException("The container " + containerType.getId() + " is already in memory.");
-    }
-
-    public void removeContainerType(UUID containerTypeId) {
-        providedContainerTypes.remove(containerTypeId);
-    }
 
     public InetAddress allocateContainer(UUID associatedServiceId, String dependabilityRequirements) {
         if (allocator != null) {
@@ -133,17 +112,6 @@ public class AllocationManager {
         }
     }
 
-    public Map<UUID, Node> getAvailableNodes() {
-        return availableNodes;
-    }
-
-    public Map<UUID, ContainerType> getProvidedContainerTypes() {
-        return providedContainerTypes;
-    }
-
-    public Map<UUID, ContainerInstance> getActiveContainerInstances() {
-        return activeContainerInstances;
-    }
 
     public AllocatorAlgorithm getAllocator() {
         return allocator;
