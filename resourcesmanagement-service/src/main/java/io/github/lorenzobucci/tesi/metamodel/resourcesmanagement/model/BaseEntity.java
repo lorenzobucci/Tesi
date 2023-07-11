@@ -15,6 +15,10 @@ public abstract class BaseEntity {
 
     protected UUID uuid = UUID.randomUUID();
 
+    public long getId() {
+        return id;
+    }
+
     public UUID getUuid() {
         return uuid;
     }
