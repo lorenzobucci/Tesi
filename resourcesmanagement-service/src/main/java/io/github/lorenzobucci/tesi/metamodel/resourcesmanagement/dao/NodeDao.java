@@ -7,7 +7,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 public class NodeDao {
 
@@ -34,7 +33,7 @@ public class NodeDao {
         return query.getResultList();
     }
 
-    public Node findById(UUID nodeId) {
+    public Node findById(long nodeId) {
         return em.find(Node.class, nodeId);
     }
 }

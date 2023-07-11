@@ -2,18 +2,11 @@ package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "container_type")
-public class ContainerType {
-
-    @Id
-    private UUID id = UUID.randomUUID();
+public class ContainerType extends BaseEntity {
 
     @Column(name = "image_name", nullable = false)
     private String imageName;
@@ -30,10 +23,6 @@ public class ContainerType {
 
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public String getImageName() {
         return imageName;
     }
@@ -42,18 +31,4 @@ public class ContainerType {
         return imageVersion;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ContainerType that = (ContainerType) o;
-
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
 }

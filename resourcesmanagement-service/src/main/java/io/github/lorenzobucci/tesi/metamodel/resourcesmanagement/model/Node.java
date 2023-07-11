@@ -6,16 +6,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "node")
-public class Node {
-
-    @Id
-    private UUID id = UUID.randomUUID();
+public class Node extends BaseEntity {
 
     public enum NodeType {
         CLOUD,
@@ -85,10 +80,6 @@ public class Node {
         eventSupport.firePropertyChange("ownedContainers", oldOwnedContainersCopy, ownedContainers);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public NodeTechnicalProperties getProperties() {
         return properties;
     }
@@ -121,18 +112,4 @@ public class Node {
         return ownedContainers.size();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Node node = (Node) o;
-
-        return Objects.equals(id, node.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
 }

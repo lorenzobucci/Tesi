@@ -7,7 +7,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ContainerTypeDao {
 
@@ -29,7 +28,7 @@ public class ContainerTypeDao {
         return query.getResultList();
     }
 
-    public ContainerType findById(UUID containerTypeId) {
+    public ContainerType findById(long containerTypeId) {
         return em.find(ContainerType.class, containerTypeId);
     }
 }

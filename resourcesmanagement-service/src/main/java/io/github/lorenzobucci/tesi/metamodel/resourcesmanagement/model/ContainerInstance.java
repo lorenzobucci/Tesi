@@ -5,18 +5,14 @@ import jakarta.persistence.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
-import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 @Entity
 @Table(name = "container_instance")
-public class ContainerInstance {
+public class ContainerInstance extends BaseEntity {
 
     @Transient
     private final Semaphore migrationSemaphore = new Semaphore(1);
-
-    @Id
-    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "container_type_id", nullable = false)
@@ -69,10 +65,6 @@ public class ContainerInstance {
         migrationSemaphore.release();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public String getContainerState() {
         return containerState;
     }
@@ -98,18 +90,4 @@ public class ContainerInstance {
         this.containerState = containerState;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ContainerInstance that = (ContainerInstance) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }

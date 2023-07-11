@@ -34,7 +34,14 @@ public class ContainerInstancesDao {
         return query.getResultList();
     }
 
-    public ContainerInstance findById(UUID containerInstanceId) {
+    public ContainerInstance findById(long containerInstanceId) {
         return em.find(ContainerInstance.class, containerInstanceId);
+    }
+
+    public ContainerInstance findByUuid(UUID containerInstanceUuid) {
+        TypedQuery<ContainerInstance> query =
+                em.createQuery("from ContainerInstance where uuid = :containerUuid", ContainerInstance.class)
+                        .setParameter("containerUuid", containerInstanceUuid);
+        return query.getSingleResult();
     }
 }
