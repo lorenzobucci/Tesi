@@ -16,7 +16,7 @@ public class WorkflowInstance extends BaseEntity {
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "endpoint_service_instance_id", nullable = false)
+    @JoinColumn(name = "endpoint_service_instance_id", nullable = false, unique = true)
     private EndpointServiceInstance endpointServiceInstance;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -26,7 +26,7 @@ public class WorkflowInstance extends BaseEntity {
     @Embedded
     private WorkflowRequirements workflowRequirements;
 
-    WorkflowInstance(WorkflowType workflowType, String endpointParameters, WorkflowRequirements workflowRequirements) {
+    public WorkflowInstance(WorkflowType workflowType, String endpointParameters, WorkflowRequirements workflowRequirements) {
         this.workflowType = workflowType;
         this.workflowRequirements = workflowRequirements;
 
@@ -66,11 +66,6 @@ public class WorkflowInstance extends BaseEntity {
         this.workflowRequirements = workflowRequirements;
         for (ServiceInstance serviceInstance : serviceInstanceDAG)
             serviceInstance.optimize();
-    }
-
-
-    DirectedAcyclicGraph<ServiceInstance, DefaultEdge> getDAG() {
-        return serviceInstanceDAG;
     }
 
     public Iterator<ServiceInstance> getServicesIterator() {

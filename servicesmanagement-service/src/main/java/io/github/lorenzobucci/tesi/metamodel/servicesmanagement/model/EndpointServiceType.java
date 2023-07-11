@@ -10,7 +10,7 @@ import java.net.URI;
 @Table(name = "endpoint_service_type")
 public class EndpointServiceType extends ServiceType {
 
-    @Column(name = "physical_endpoint_uri", nullable = false)
+    @Column(name = "physical_endpoint_uri", nullable = false, unique = true)
     private URI physicalEndpointURI;
 
     public EndpointServiceType(String name, ServiceRequirements requirements, URI physicalEndpointURI) {

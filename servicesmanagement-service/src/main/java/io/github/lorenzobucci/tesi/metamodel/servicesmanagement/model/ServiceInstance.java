@@ -30,7 +30,7 @@ public class ServiceInstance extends BaseEntity {
 
     }
 
-    public void optimize() {
+    void optimize() {
         String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
         container.optimize(dependabilityRequirements);
     }

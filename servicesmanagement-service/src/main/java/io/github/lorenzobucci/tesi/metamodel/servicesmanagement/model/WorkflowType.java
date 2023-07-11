@@ -15,8 +15,8 @@ public class WorkflowType extends BaseEntity {
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "endpoint_service_type_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = false)
+    @JoinColumn(name = "endpoint_service_type_id", nullable = false, unique = true)
     private EndpointServiceType endpointServiceType;
 
     public WorkflowType(EndpointServiceType endpointServiceType) {
@@ -123,12 +123,12 @@ public class WorkflowType extends BaseEntity {
     static
     class ServiceTypePair {
 
-        @ManyToOne
+        @ManyToOne(cascade = CascadeType.PERSIST)
         @JoinColumn(name = "first_element_id")
         private ServiceType firstElement;
 
-        @ManyToOne(optional = false)
-        @JoinColumn(name = "second_element_id")
+        @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+        @JoinColumn(name = "second_element_id", nullable = false)
         private ServiceType secondElement;
 
         ServiceTypePair(ServiceType firstElement, ServiceType secondElement) {

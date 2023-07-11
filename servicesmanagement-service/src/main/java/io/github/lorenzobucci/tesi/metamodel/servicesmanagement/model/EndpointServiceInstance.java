@@ -13,7 +13,7 @@ public class EndpointServiceInstance extends ServiceInstance {
     @Column(name = "endpoint_parameters")
     private String parameters;
 
-    public EndpointServiceInstance(EndpointServiceType endpointServiceType, WorkflowInstance belongingWorkflow, String endpointParameters) {
+    EndpointServiceInstance(EndpointServiceType endpointServiceType, WorkflowInstance belongingWorkflow, String endpointParameters) {
         super(endpointServiceType, belongingWorkflow);
         this.endpointServiceType = endpointServiceType;
         this.parameters = endpointParameters;
