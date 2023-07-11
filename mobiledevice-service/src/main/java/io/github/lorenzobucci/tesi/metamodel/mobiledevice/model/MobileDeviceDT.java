@@ -6,21 +6,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "mobile_device")
-public class MobileDeviceDT {
-
-    @Id
-    private UUID id = UUID.randomUUID();
+public class MobileDeviceDT extends BaseEntity {
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "past_trajectory_id")
     private Trajectory pastTrajectory = new Trajectory();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(inverseJoinColumns = @JoinColumn(name = "task_id"), name = "mobile_device_running_tasks")
+    @JoinTable(joinColumns = @JoinColumn(name = "mobile_device_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id"), name = "mobile_device_running_tasks")
     private Set<Task> runningTasks = new HashSet<>();
 
     @Transient // CLASS INSTANCE PERSISTED USING PROPERTY MODE
@@ -54,10 +51,6 @@ public class MobileDeviceDT {
 
     public Position getCurrentPosition() {
         return pastTrajectory.getLastPosition();
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) {

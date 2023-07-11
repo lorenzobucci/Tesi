@@ -1,17 +1,14 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Entity
 @Table(name = "position")
-public class Position implements Comparable<Position> {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Position extends BaseEntity implements Comparable<Position> {
 
     private float latitude;
     private float longitude;

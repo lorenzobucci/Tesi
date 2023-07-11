@@ -1,17 +1,16 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.net.URI;
 import java.util.UUID;
 
 @Entity
 @Table(name = "task")
-public class Task {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Task extends BaseEntity {
 
     @Column(nullable = false)
     private URI endpoint;
@@ -20,7 +19,7 @@ public class Task {
     @Embedded
     private DependabilityRequirements requirements;
 
-    @Column(name = "associated_task_id", unique = true)
+    @Column(name = "associated_task_id")
     private UUID associatedTaskId;
 
     Task(URI endpoint, String parameters, DependabilityRequirements requirements) {

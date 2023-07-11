@@ -4,19 +4,15 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.SortNatural;
 
 import java.util.TreeSet;
-import java.util.UUID;
 
 @Entity
 @Table(name = "trajectory")
-public class Trajectory {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Trajectory extends BaseEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @SortNatural
-    @JoinTable(inverseJoinColumns = @JoinColumn(name = "position_id"), name = "trajectory_positions")
+    @JoinTable(joinColumns = @JoinColumn(name = "trajectory_id"),
+            inverseJoinColumns = @JoinColumn(name = "position_id"), name = "trajectory_positions")
     private TreeSet<Position> positionsSet = new TreeSet<>();
 
     @SuppressWarnings("CopyConstructorMissesField")
