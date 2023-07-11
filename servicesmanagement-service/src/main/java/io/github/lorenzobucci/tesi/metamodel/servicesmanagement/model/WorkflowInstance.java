@@ -7,14 +7,10 @@ import org.jgrapht.graph.DirectedAcyclicGraph;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "workflow_instance")
-public class WorkflowInstance {
-
-    @Id
-    private UUID id = UUID.randomUUID();
+public class WorkflowInstance extends BaseEntity {
 
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
@@ -93,10 +89,6 @@ public class WorkflowInstance {
         return workflowRequirements;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public WorkflowType getWorkflowType() {
         return workflowType;
     }
@@ -127,21 +119,6 @@ public class WorkflowInstance {
                 serviceInstanceDAG.addEdge(pair.firstElement, pair.secondElement);
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        WorkflowInstance that = (WorkflowInstance) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 
     @Embeddable

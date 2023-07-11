@@ -2,15 +2,10 @@ package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model;
 
 import jakarta.persistence.*;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "service_type")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class ServiceType {
-
-    @Id
-    protected UUID id = UUID.randomUUID();
+public class ServiceType extends BaseEntity {
 
     @Column(name = "service_name", nullable = false)
     protected String name;
@@ -27,10 +22,6 @@ public class ServiceType {
 
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -42,23 +33,9 @@ public class ServiceType {
     @Override
     public String toString() {
         return "io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceType{" +
-                "id=" + id +
+                "uuid=" + getUuid() +
                 ", name='" + name + '\'' +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ServiceType that = (ServiceType) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }

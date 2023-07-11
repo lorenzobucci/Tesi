@@ -7,14 +7,10 @@ import org.jgrapht.graph.DirectedAcyclicGraph;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "workflow_type")
-public class WorkflowType {
-
-    @Id
-    private UUID id = UUID.randomUUID();
+public class WorkflowType extends BaseEntity {
 
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
@@ -95,10 +91,6 @@ public class WorkflowType {
         return serviceTypeDAG.vertexSet();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     @Access(AccessType.PROPERTY)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -125,21 +117,6 @@ public class WorkflowType {
                 serviceTypeDAG.addEdge(pair.firstElement, pair.secondElement);
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        WorkflowType that = (WorkflowType) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 
     @Embeddable
