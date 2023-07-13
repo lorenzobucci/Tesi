@@ -9,10 +9,11 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    protected UUID uuid = UUID.randomUUID();
     @Id
     @GeneratedValue
     private long id;
+
+    protected UUID uuid = UUID.randomUUID();
 
     public long getId() {
         return id;

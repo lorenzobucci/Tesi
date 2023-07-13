@@ -1,5 +1,6 @@
 package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -13,6 +14,7 @@ public abstract class BaseEntity {
     @GeneratedValue
     private long id;
 
+    @Column(nullable = false, unique = true)
     protected UUID uuid = UUID.randomUUID();
 
     public long getId() {
