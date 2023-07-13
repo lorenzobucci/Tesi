@@ -11,8 +11,7 @@ public class Trajectory extends BaseEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @SortNatural
-    @JoinTable(joinColumns = @JoinColumn(name = "trajectory_id"),
-            inverseJoinColumns = @JoinColumn(name = "position_id"), name = "trajectory_positions")
+    @JoinColumn(name = "trajectory_id", referencedColumnName = "id")
     private TreeSet<Position> positionsSet = new TreeSet<>();
 
     @SuppressWarnings("CopyConstructorMissesField")
