@@ -37,14 +37,6 @@ public class ServiceManager {
         }
     }
 
-    public void removeServiceType(UUID serviceTypeId) {
-        for (WorkflowType workflowType : providedWorkflowTypes.values()) {
-            if (workflowType.contains(serviceTypeId))
-                throw new IllegalStateException("The service " + serviceTypeId + " belongs to an existent workflow.");
-        }
-        providedServiceTypes.remove(serviceTypeId);
-    }
-
     WorkflowInstance instantiateWorkflow(UUID workflowTypeId) {
         if (providedWorkflowTypes.containsKey(workflowTypeId)) {
             WorkflowInstance workflowInstance = new WorkflowInstance(providedWorkflowTypes.get(workflowTypeId));

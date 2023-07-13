@@ -89,51 +89,46 @@ public class WorkflowInstance extends BaseEntity {
     }
 
     @Access(AccessType.PROPERTY)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "workflow_instances_graphs",
-            joinColumns = @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id"))
-    @AssociationOverrides({
-            @AssociationOverride(name = "firstElement", joinColumns = @JoinColumn(name = "caller_service_instance_id")),
-            @AssociationOverride(name = "secondElement", joinColumns = @JoinColumn(name = "callee_service_instance_id"))
-    })
-    protected Set<ServiceInstancePair> getGraphEdges() {
-        Set<ServiceInstancePair> set = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id", nullable = false)
+    protected Set<ServiceInstanceGraphEdge> getGraphEdges() {
+        Set<ServiceInstanceGraphEdge> set = new HashSet<>();
         for (DefaultEdge edge : serviceInstanceDAG.edgeSet())
-            set.add(new ServiceInstancePair(serviceInstanceDAG.getEdgeSource(edge), serviceInstanceDAG.getEdgeTarget(edge)));
-        if (set.isEmpty()) // WORKFLOW WITH ONLY THE ENDPOINT
-            set.add(new ServiceInstancePair(null, endpointServiceInstance));
+            set.add(new ServiceInstanceGraphEdge(serviceInstanceDAG.getEdgeSource(edge), serviceInstanceDAG.getEdgeTarget(edge)));
+        if (set.isEmpty() && endpointServiceInstance != null) // WORKFLOW WITH ONLY THE ENDPOINT
+            set.add(new ServiceInstanceGraphEdge(null, endpointServiceInstance));
         return set;
     }
 
-    protected void setGraphEdges(Set<ServiceInstancePair> graphEdges) {
-        for (ServiceInstancePair pair : graphEdges) {
-            serviceInstanceDAG.addVertex(pair.secondElement);
-            if (!(pair.firstElement == null)) { // WORKFLOW WITH 2 OR MORE SERVICES
-                serviceInstanceDAG.addVertex(pair.firstElement);
-                serviceInstanceDAG.addEdge(pair.firstElement, pair.secondElement);
+    protected void setGraphEdges(Set<ServiceInstanceGraphEdge> graphEdges) {
+        for (ServiceInstanceGraphEdge edge : graphEdges) {
+            serviceInstanceDAG.addVertex(edge.calleeService);
+            if (edge.callerService != null) { // WORKFLOW WITH 2 OR MORE SERVICES
+                serviceInstanceDAG.addVertex(edge.callerService);
+                serviceInstanceDAG.addEdge(edge.callerService, edge.calleeService);
             }
         }
     }
 
-    @Embeddable
+    @Entity
+    @Table(name = "service_instance_graph_edge")
     static
-    class ServiceInstancePair {
+    class ServiceInstanceGraphEdge extends BaseEntity {
 
         @ManyToOne(cascade = CascadeType.ALL)
-        @JoinColumn(name = "first_element_id")
-        private ServiceInstance firstElement;
+        @JoinColumn(name = "caller_service")
+        private ServiceInstance callerService;
 
         @ManyToOne(cascade = CascadeType.ALL, optional = false)
-        @JoinColumn(name = "second_element_id", nullable = false)
-        private ServiceInstance secondElement;
+        @JoinColumn(name = "callee_service", nullable = false)
+        private ServiceInstance calleeService;
 
-        ServiceInstancePair(ServiceInstance firstElement, ServiceInstance secondElement) {
-            this.firstElement = firstElement;
-            this.secondElement = secondElement;
+        ServiceInstanceGraphEdge(ServiceInstance callerService, ServiceInstance calleeService) {
+            this.callerService = callerService;
+            this.calleeService = calleeService;
         }
 
-        protected ServiceInstancePair() {
+        protected ServiceInstanceGraphEdge() {
 
         }
     }
