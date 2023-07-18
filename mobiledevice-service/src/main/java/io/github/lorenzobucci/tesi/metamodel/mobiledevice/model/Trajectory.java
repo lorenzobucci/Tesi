@@ -26,7 +26,7 @@ public class Trajectory extends BaseEntity {
         positionsSet.add(position);
     }
 
-    TreeSet<Position> getPositionsSet() {
+    public TreeSet<Position> getPositionsSet() {
         return positionsSet;
     }
 

@@ -32,7 +32,7 @@ public class MobileDeviceDT extends BaseEntity {
         runningTasks.add(invokedTask);
     }
 
-    public void requestTaskOptimization(URI endpoint) {
+    public void requestTaskOptimization(URI endpoint) { // BUSINESS LOGIC OR EXTERNAL CALL?
         Task taskToOptimize = runningTasks.stream().filter(task -> task.getEndpoint().equals(endpoint)).findAny().orElseThrow();
 
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
@@ -52,7 +52,11 @@ public class MobileDeviceDT extends BaseEntity {
         return pastTrajectory.getLastPosition();
     }
 
-    public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) {
+    public Set<Task> getRunningTasks() {
+        return runningTasks;
+    }
+
+    public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) { // BUSINESS LOGIC OR EXTERNAL CALL?
         this.trajectoryForecaster = trajectoryForecaster;
     }
 

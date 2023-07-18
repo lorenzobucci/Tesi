@@ -26,7 +26,7 @@ public class Task extends BaseEntity {
         this.endpoint = endpoint;
         this.parameters = parameters;
         this.requirements = requirements;
-        associatedTaskId = ServiceProxy.getInstance().requestService(this.toString()); // TODO: ADJUST AND USE API
+        //associatedTaskId = ServiceProxy.getInstance().requestService(this.toString()); // TODO: ADJUST AND USE API
     }
 
     protected Task() {
@@ -35,7 +35,7 @@ public class Task extends BaseEntity {
 
     void updateRequirements(DependabilityRequirements requirements) {
         this.requirements = requirements;
-        ServiceProxy.getInstance().updateServiceRequirements(associatedTaskId, this.toString()); // TODO: ADJUST USE API
+        //ServiceProxy.getInstance().updateServiceRequirements(associatedTaskId, this.toString()); // TODO: ADJUST USE API
     }
 
     public URI getEndpoint() {
