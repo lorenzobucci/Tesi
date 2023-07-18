@@ -7,6 +7,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MobileDeviceDTDao {
 
@@ -35,6 +36,13 @@ public class MobileDeviceDTDao {
 
     public MobileDeviceDT findById(long mobileDeviceId) {
         return em.find(MobileDeviceDT.class, mobileDeviceId);
+    }
+
+    public MobileDeviceDT findByUuid(UUID mobileDeviceUuid) {
+        TypedQuery<MobileDeviceDT> query =
+                em.createQuery("from MobileDeviceDT where uuid = :mobileDeviceUuid", MobileDeviceDT.class)
+                        .setParameter("mobileDeviceUuid", mobileDeviceUuid);
+        return query.getSingleResult();
     }
 
 }
