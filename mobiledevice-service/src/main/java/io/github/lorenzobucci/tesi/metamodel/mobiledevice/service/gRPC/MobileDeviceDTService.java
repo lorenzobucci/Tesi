@@ -27,10 +27,13 @@ public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDevic
 
     @Override
     public void getMobileDeviceDT(MobileDevice.MobileDeviceDTDTO request, StreamObserver<MobileDevice.MobileDeviceDTDTO> responseObserver) {
-        MobileDeviceDT mobileDeviceDT = mobileDeviceDTController.getMobileDeviceDT(request.getId());
-
-        responseObserver.onNext(buildMobileDeviceDTDTO(mobileDeviceDT));
-        responseObserver.onCompleted();
+        try {
+            MobileDeviceDT mobileDeviceDT = mobileDeviceDTController.getMobileDeviceDT(request.getId());
+            responseObserver.onNext(buildMobileDeviceDTDTO(mobileDeviceDT));
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
     }
 
     @Override
@@ -47,25 +50,37 @@ public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDevic
 
     @Override
     public void removeMobileDeviceDT(MobileDevice.MobileDeviceDTDTO request, StreamObserver<Empty> responseObserver) {
-        mobileDeviceDTController.removeMobileDeviceDT(request.getId());
-        responseObserver.onCompleted();
+        try {
+            mobileDeviceDTController.removeMobileDeviceDT(request.getId());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
     }
 
     @Override
     public void signalMobileDeviceEndpointInvocation(MobileDevice.EndpointInvocationParameters request, StreamObserver<Empty> responseObserver) {
-        mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDT().getId(),
-                URI.create(request.getInvokedEndpoint()),
-                request.getParameters());
-        responseObserver.onCompleted();
+        try {
+            mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDT().getId(),
+                    URI.create(request.getInvokedEndpoint()),
+                    request.getParameters());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
     }
 
     @Override
     public void syncMobileDeviceDTProperties(MobileDevice.MobileDeviceDTSyncParameters request, StreamObserver<Empty> responseObserver) {
-        MobileDevice.PositionDTO positionDTO = request.getCurrentPosition();
-        Position position = new Position(positionDTO.getLatitude(), positionDTO.getLongitude(), new Timestamp(Timestamps.toMillis(positionDTO.getTimestamp())));
+        try {
+            MobileDevice.PositionDTO positionDTO = request.getCurrentPosition();
+            Position position = new Position(positionDTO.getLatitude(), positionDTO.getLongitude(), new Timestamp(Timestamps.toMillis(positionDTO.getTimestamp())));
 
-        mobileDeviceDTController.syncMobileDeviceDTProperties(request.getMobileDeviceDT().getId(), position);
-        responseObserver.onCompleted();
+            mobileDeviceDTController.syncMobileDeviceDTProperties(request.getMobileDeviceDT().getId(), position);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
     }
 
     private MobileDevice.MobileDeviceDTDTO buildMobileDeviceDTDTO(MobileDeviceDT mobileDeviceDT) {

@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MobileDeviceDTController {
 
@@ -19,25 +20,29 @@ public class MobileDeviceDTController {
         return mobileDeviceDTDao.findByUuid(mobileDeviceDT.getUuid()).getId();
     }
 
-    public MobileDeviceDT getMobileDeviceDT(long mobileDeviceDTId) {
-        return mobileDeviceDTDao.findById(mobileDeviceDTId);
+    public MobileDeviceDT getMobileDeviceDT(long mobileDeviceDTId) throws NoSuchElementException {
+        MobileDeviceDT mobileDeviceDT = mobileDeviceDTDao.findById(mobileDeviceDTId);
+        if (mobileDeviceDT != null)
+            return mobileDeviceDT;
+        else
+            throw new NoSuchElementException("MobileDeviceDT with id=" + mobileDeviceDTId + " does not exist.");
     }
 
     public List<MobileDeviceDT> retrieveMobileDeviceDTs() {
         return mobileDeviceDTDao.findAll();
     }
 
-    public void removeMobileDeviceDT(long mobileDeviceDTId) {
+    public void removeMobileDeviceDT(long mobileDeviceDTId) throws NoSuchElementException {
         mobileDeviceDTDao.delete(getMobileDeviceDT(mobileDeviceDTId));
     }
 
-    public void signalMobileDeviceEndpointInvocation(long mobileDeviceDTId, URI invokedEndpoint, String sentParameters) {
+    public void signalMobileDeviceEndpointInvocation(long mobileDeviceDTId, URI invokedEndpoint, String sentParameters) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
         mobileDeviceDT.taskInvoked(invokedEndpoint, sentParameters);
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 
-    public void syncMobileDeviceDTProperties(long mobileDeviceDTId, Position currentPosition) {
+    public void syncMobileDeviceDTProperties(long mobileDeviceDTId, Position currentPosition) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
         mobileDeviceDT.syncWithRealObject(currentPosition);
         mobileDeviceDTDao.update(mobileDeviceDT);

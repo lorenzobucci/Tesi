@@ -15,15 +15,19 @@ public class TaskService extends TaskServiceGrpc.TaskServiceImplBase {
 
     @Override
     public void getTask(MobileDevice.TaskDTO request, StreamObserver<MobileDevice.TaskDTO> responseObserver) {
-        Task task = taskController.getTask(request.getId());
+        try {
+            Task task = taskController.getTask(request.getId());
 
-        MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
-                .setEndpointURI(task.getEndpoint().toString())
-                .setParameters(task.getParameters())
-                .build();
+            MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
+                    .setEndpointURI(task.getEndpoint().toString())
+                    .setParameters(task.getParameters())
+                    .build();
 
-        responseObserver.onNext(taskDTO);
-        responseObserver.onCompleted();
+            responseObserver.onNext(taskDTO);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
     }
 
     @Override
