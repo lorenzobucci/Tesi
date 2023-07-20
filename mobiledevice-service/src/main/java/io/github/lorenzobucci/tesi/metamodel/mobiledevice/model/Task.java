@@ -38,6 +38,10 @@ public class Task extends BaseEntity {
         //ServiceProxy.getInstance().updateServiceRequirements(associatedTaskId, this.toString()); // TODO: ADJUST USE API
     }
 
+    void onCompleted() {
+        //ServiceProxy.getInstance().workflowcompleted; // TODO: ADJUST USE API
+    }
+
     public URI getEndpoint() {
         return endpoint;
     }

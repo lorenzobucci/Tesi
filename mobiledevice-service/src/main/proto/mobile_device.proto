@@ -13,6 +13,7 @@ service MobileDeviceDTService {
   rpc RetrieveMobileDeviceDTs(google.protobuf.Empty) returns (MobileDeviceDTList) {}
   rpc RemoveMobileDeviceDT(MobileDeviceDTDTO) returns (google.protobuf.Empty) {}
   rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty) {}
+  rpc SignalMobileDeviceTaskCompletion(TaskCompletionParameters) returns (google.protobuf.Empty) {}
   rpc SyncMobileDeviceDTProperties(MobileDeviceDTSyncParameters) returns (google.protobuf.Empty) {}
 
 }
@@ -40,6 +41,11 @@ message EndpointInvocationParameters {
   MobileDeviceDTDTO mobileDeviceDT = 1;
   string invokedEndpoint = 2;
   string parameters = 3;
+}
+
+message TaskCompletionParameters {
+  MobileDeviceDTDTO mobileDeviceDT = 1;
+  TaskDTO completedTask = 2;
 }
 
 message MobileDeviceDTSyncParameters {

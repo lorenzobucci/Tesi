@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Entity
@@ -38,6 +39,14 @@ public class MobileDeviceDT extends BaseEntity {
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
         DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
         taskToOptimize.updateRequirements(newDependabilityRequirements);
+    }
+
+    public void taskCompleted(Task task) throws NoSuchElementException {
+        if (runningTasks.contains(task)) {
+            task.onCompleted();
+            runningTasks.remove(task);
+        } else
+            throw new NoSuchElementException("Task " + task.getId() + " does not belong to this mobile device.");
     }
 
     public void syncWithRealObject(Position currentPosition) {

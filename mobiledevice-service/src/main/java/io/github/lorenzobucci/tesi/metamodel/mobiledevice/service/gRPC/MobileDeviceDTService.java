@@ -71,6 +71,16 @@ public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDevic
     }
 
     @Override
+    public void signalMobileDeviceTaskCompletion(MobileDevice.TaskCompletionParameters request, StreamObserver<Empty> responseObserver) {
+        try {
+            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDT().getId(), request.getCompletedTask().getId());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+    }
+
+    @Override
     public void syncMobileDeviceDTProperties(MobileDevice.MobileDeviceDTSyncParameters request, StreamObserver<Empty> responseObserver) {
         try {
             MobileDevice.PositionDTO positionDTO = request.getCurrentPosition();
