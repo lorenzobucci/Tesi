@@ -20,8 +20,8 @@ public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDevic
 
     @Override
     public void addMobileDeviceDT(MobileDevice.MobileDeviceDTConstructorParameters request, StreamObserver<MobileDevice.MobileDeviceDTDTO> responseObserver) {
-        long mobileDeviceDTId = mobileDeviceDTController.addMobileDeviceDT();
-        responseObserver.onNext(MobileDevice.MobileDeviceDTDTO.newBuilder().setId(mobileDeviceDTId).build());
+        MobileDeviceDT mobileDeviceDT = mobileDeviceDTController.addMobileDeviceDT();
+        responseObserver.onNext(MobileDevice.MobileDeviceDTDTO.newBuilder().setId(mobileDeviceDT.getId()).build());
         responseObserver.onCompleted();
     }
 

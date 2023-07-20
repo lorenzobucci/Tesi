@@ -14,10 +14,10 @@ public class MobileDeviceDTController {
     @Inject
     private MobileDeviceDTDao mobileDeviceDTDao;
 
-    public long addMobileDeviceDT() {
+    public MobileDeviceDT addMobileDeviceDT() {
         MobileDeviceDT mobileDeviceDT = new MobileDeviceDT();
         mobileDeviceDTDao.create(mobileDeviceDT);
-        return mobileDeviceDTDao.findByUuid(mobileDeviceDT.getUuid()).getId();
+        return mobileDeviceDTDao.findByUuid(mobileDeviceDT.getUuid());
     }
 
     public MobileDeviceDT getMobileDeviceDT(long mobileDeviceDTId) throws NoSuchElementException {
