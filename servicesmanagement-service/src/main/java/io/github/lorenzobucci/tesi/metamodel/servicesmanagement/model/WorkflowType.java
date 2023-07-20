@@ -15,8 +15,7 @@ public class WorkflowType extends BaseEntity {
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "endpoint_service_type_id", nullable = false, unique = true)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     private EndpointServiceType endpointServiceType;
 
     public WorkflowType(EndpointServiceType endpointServiceType) {
@@ -28,7 +27,7 @@ public class WorkflowType extends BaseEntity {
 
     }
 
-    public void addServiceType(ServiceType newService, ServiceType callerService) {
+    public void addServiceType(ServiceType newService, ServiceType callerService) throws IllegalArgumentException, NoSuchElementException {
         if (serviceTypeDAG.containsVertex(callerService)) {
             boolean addResult = serviceTypeDAG.addVertex(newService);
             if (!addResult)
@@ -40,7 +39,7 @@ public class WorkflowType extends BaseEntity {
 
     }
 
-    public void addRPC(ServiceType callerService, ServiceType calleeService) {
+    public void addRPC(ServiceType callerService, ServiceType calleeService) throws NoSuchElementException {
         if (serviceTypeDAG.containsVertex(callerService)) {
             if (serviceTypeDAG.containsVertex(calleeService))
                 serviceTypeDAG.addEdge(callerService, calleeService);
@@ -54,7 +53,7 @@ public class WorkflowType extends BaseEntity {
         return serviceTypeDAG.vertexSet().contains(serviceType);
     }
 
-    public void removeServiceType(ServiceType service) {
+    public void removeServiceType(ServiceType service) throws NoSuchElementException, IllegalArgumentException {
         if (!service.equals(endpointServiceType)) {
             boolean removeResult = serviceTypeDAG.removeVertex(service);
             if (!removeResult)
@@ -118,11 +117,11 @@ public class WorkflowType extends BaseEntity {
     static
     class ServiceTypeGraphEdge extends BaseEntity {
 
-        @ManyToOne(cascade = CascadeType.PERSIST)
+        @ManyToOne
         @JoinColumn(name = "caller_service")
         private ServiceType callerService;
 
-        @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+        @ManyToOne(optional = false)
         @JoinColumn(name = "callee_service", nullable = false)
         private ServiceType calleeService;
 

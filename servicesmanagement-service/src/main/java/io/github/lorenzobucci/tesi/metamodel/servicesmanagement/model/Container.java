@@ -17,8 +17,7 @@ public class Container {
     private InetAddress ipAddress;
 
     public Container(String dependabilityRequirements) {
-        (associatedContainerId, ipAddress) =
-        AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
+        //(associatedContainerId, ipAddress) =AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 
     protected Container() {
@@ -26,7 +25,7 @@ public class Container {
     }
 
     public void optimize(String dependabilityRequirements) {
-        ipAddress = AllocationManager.getInstance().reviseContainerAllocation(associatedContainerId, dependabilityRequirements); // TODO: ADJUST AND USE API
+        //ipAddress = AllocationManager.getInstance().reviseContainerAllocation(associatedContainerId, dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 
     public UUID getAssociatedContainerId() {
