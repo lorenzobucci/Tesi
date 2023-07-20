@@ -1,9 +1,9 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice.service.gRPC;
+package io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC;
 
 import com.google.protobuf.Empty;
 import com.google.protobuf.util.Timestamps;
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.controller.MobileDeviceDTController;
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.Position;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.MobileDeviceDTController;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
 import io.grpc.stub.StreamObserver;
 import jakarta.inject.Inject;
 

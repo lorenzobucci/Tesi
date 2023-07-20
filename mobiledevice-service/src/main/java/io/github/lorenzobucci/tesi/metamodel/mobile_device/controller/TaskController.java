@@ -1,7 +1,7 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice.controller;
+package io.github.lorenzobucci.tesi.metamodel.mobile_device.controller;
 
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.dao.TaskDao;
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.Task;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.dao.TaskDao;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Task;
 import jakarta.inject.Inject;
 
 import java.util.List;

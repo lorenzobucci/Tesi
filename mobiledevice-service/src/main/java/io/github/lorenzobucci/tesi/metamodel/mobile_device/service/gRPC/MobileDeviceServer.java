@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice.service.gRPC;
+package io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC;
 
 
 import io.grpc.Grpc;

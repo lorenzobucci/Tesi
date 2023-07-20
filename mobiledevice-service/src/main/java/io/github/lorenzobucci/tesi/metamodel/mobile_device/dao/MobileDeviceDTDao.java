@@ -1,6 +1,6 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice.dao;
+package io.github.lorenzobucci.tesi.metamodel.mobile_device.dao;
 
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.MobileDeviceDT;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

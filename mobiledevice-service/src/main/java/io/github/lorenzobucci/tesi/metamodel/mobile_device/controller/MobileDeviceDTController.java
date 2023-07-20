@@ -1,8 +1,8 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice.controller;
+package io.github.lorenzobucci.tesi.metamodel.mobile_device.controller;
 
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.dao.MobileDeviceDTDao;
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.MobileDeviceDT;
-import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.Position;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.dao.MobileDeviceDTDao;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
 import jakarta.inject.Inject;
 
 import java.net.URI;

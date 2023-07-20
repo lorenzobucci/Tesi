@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.mobiledevice.model;
+package io.github.lorenzobucci.tesi.metamodel.mobile_device.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
