@@ -1,7 +1,7 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.dao;
+package io.github.lorenzobucci.tesi.metamodel.services_management.dao;
 
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.EndpointServiceType;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowType;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.EndpointServiceType;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

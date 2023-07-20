@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model;
+package io.github.lorenzobucci.tesi.metamodel.services_management.model;
 
 import jakarta.persistence.*;
 import org.jgrapht.graph.DefaultEdge;

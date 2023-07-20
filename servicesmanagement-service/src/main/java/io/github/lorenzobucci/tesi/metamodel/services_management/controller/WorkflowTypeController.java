@@ -1,8 +1,8 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.controller;
+package io.github.lorenzobucci.tesi.metamodel.services_management.controller;
 
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.dao.WorkflowTypeDao;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceType;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowType;
+import io.github.lorenzobucci.tesi.metamodel.services_management.dao.WorkflowTypeDao;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceType;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowType;
 import jakarta.inject.Inject;
 import org.hibernate.exception.ConstraintViolationException;
 

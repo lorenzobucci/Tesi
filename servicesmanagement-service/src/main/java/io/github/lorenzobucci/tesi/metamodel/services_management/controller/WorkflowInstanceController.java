@@ -1,9 +1,9 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.controller;
+package io.github.lorenzobucci.tesi.metamodel.services_management.controller;
 
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.dao.WorkflowInstanceDao;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowInstance;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowRequirements;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.WorkflowType;
+import io.github.lorenzobucci.tesi.metamodel.services_management.dao.WorkflowInstanceDao;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowInstance;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowRequirements;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowType;
 import jakarta.inject.Inject;
 
 import java.net.URI;

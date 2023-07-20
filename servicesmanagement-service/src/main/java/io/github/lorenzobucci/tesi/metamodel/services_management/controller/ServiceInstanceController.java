@@ -1,7 +1,7 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.controller;
+package io.github.lorenzobucci.tesi.metamodel.services_management.controller;
 
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.dao.ServiceInstanceDao;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceInstance;
+import io.github.lorenzobucci.tesi.metamodel.services_management.dao.ServiceInstanceDao;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceInstance;
 import jakarta.inject.Inject;
 
 import java.util.List;

@@ -1,8 +1,8 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.controller;
+package io.github.lorenzobucci.tesi.metamodel.services_management.controller;
 
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.dao.EndpointServiceTypeDao;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.EndpointServiceType;
-import io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model.ServiceRequirements;
+import io.github.lorenzobucci.tesi.metamodel.services_management.dao.EndpointServiceTypeDao;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.EndpointServiceType;
+import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceRequirements;
 import jakarta.inject.Inject;
 import org.hibernate.exception.ConstraintViolationException;
 

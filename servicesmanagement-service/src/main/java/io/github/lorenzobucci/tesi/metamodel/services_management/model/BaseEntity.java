@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.servicesmanagement.model;
+package io.github.lorenzobucci.tesi.metamodel.services_management.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
