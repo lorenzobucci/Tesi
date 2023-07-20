@@ -5,22 +5,21 @@ import "google/protobuf/timestamp.proto";
 
 option java_package = "io.github.lorenzobucci.tesi.metamodel.mobiledevice.service.gRPC";
 
-package mobiledevice;
+package mobile_device;
 
-service MobileDeviceDTService {
-  rpc AddMobileDeviceDT(MobileDeviceDTConstructorParameters) returns (MobileDeviceDTDTO) {}
-  rpc GetMobileDeviceDT(MobileDeviceDTDTO) returns (MobileDeviceDTDTO) {}
-  rpc RetrieveMobileDeviceDTs(google.protobuf.Empty) returns (MobileDeviceDTList) {}
-  rpc RemoveMobileDeviceDT(MobileDeviceDTDTO) returns (google.protobuf.Empty) {}
-  rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty) {}
-  rpc SignalMobileDeviceTaskCompletion(TaskCompletionParameters) returns (google.protobuf.Empty) {}
-  rpc SyncMobileDeviceDTProperties(MobileDeviceDTSyncParameters) returns (google.protobuf.Empty) {}
-
+service crud {
+  rpc AddMobileDeviceDT(MobileDeviceDTConstructorParameters) returns (MobileDeviceDTDTO);
+  rpc GetMobileDeviceDT(MobileDeviceDTDTO) returns (MobileDeviceDTDTO);
+  rpc RetrieveMobileDeviceDTs(google.protobuf.Empty) returns (MobileDeviceDTList);
+  rpc RemoveMobileDeviceDT(MobileDeviceDTDTO) returns (google.protobuf.Empty);
+  rpc GetTask(TaskDTO) returns (TaskDTO);
+  rpc RetrieveTasks(google.protobuf.Empty) returns (TaskList);
 }
 
-service TaskService {
-  rpc GetTask(TaskDTO) returns (TaskDTO) {};
-  rpc RetrieveTasks(google.protobuf.Empty) returns (TaskList);
+service operational {
+  rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty);
+  rpc SignalMobileDeviceTaskCompletion(TaskCompletionParameters) returns (google.protobuf.Empty);
+  rpc SyncMobileDeviceDTProperties(MobileDeviceDTSyncParameters) returns (google.protobuf.Empty);
 }
 
 message MobileDeviceDTDTO {

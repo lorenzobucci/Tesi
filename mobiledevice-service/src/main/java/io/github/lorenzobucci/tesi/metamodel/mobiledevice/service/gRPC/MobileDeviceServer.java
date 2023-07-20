@@ -14,8 +14,8 @@ public class MobileDeviceServer {
 
     public MobileDeviceServer(int port) {
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
-                .addService(new MobileDeviceDTService())
-                .addService(new TaskService())
+                .addService(new CrudService())
+                .addService(new OperationalService())
                 .build();
     }
 

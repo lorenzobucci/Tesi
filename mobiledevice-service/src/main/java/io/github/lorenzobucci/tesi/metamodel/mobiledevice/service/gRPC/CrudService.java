@@ -3,20 +3,22 @@ package io.github.lorenzobucci.tesi.metamodel.mobiledevice.service.gRPC;
 import com.google.protobuf.Empty;
 import com.google.protobuf.util.Timestamps;
 import io.github.lorenzobucci.tesi.metamodel.mobiledevice.controller.MobileDeviceDTController;
+import io.github.lorenzobucci.tesi.metamodel.mobiledevice.controller.TaskController;
 import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.MobileDeviceDT;
 import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.Position;
 import io.github.lorenzobucci.tesi.metamodel.mobiledevice.model.Task;
 import io.grpc.stub.StreamObserver;
 import jakarta.inject.Inject;
 
-import java.net.URI;
-import java.sql.Timestamp;
 import java.util.List;
 
-public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDeviceDTServiceImplBase {
+public class CrudService extends crudGrpc.crudImplBase {
 
     @Inject
     private MobileDeviceDTController mobileDeviceDTController;
+
+    @Inject
+    private TaskController taskController;
 
     @Override
     public void addMobileDeviceDT(MobileDevice.MobileDeviceDTConstructorParameters request, StreamObserver<MobileDevice.MobileDeviceDTDTO> responseObserver) {
@@ -59,11 +61,16 @@ public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDevic
     }
 
     @Override
-    public void signalMobileDeviceEndpointInvocation(MobileDevice.EndpointInvocationParameters request, StreamObserver<Empty> responseObserver) {
+    public void getTask(MobileDevice.TaskDTO request, StreamObserver<MobileDevice.TaskDTO> responseObserver) {
         try {
-            mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDT().getId(),
-                    URI.create(request.getInvokedEndpoint()),
-                    request.getParameters());
+            Task task = taskController.getTask(request.getId());
+
+            MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
+                    .setEndpointURI(task.getEndpoint().toString())
+                    .setParameters(task.getParameters())
+                    .build();
+
+            responseObserver.onNext(taskDTO);
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -71,26 +78,21 @@ public class MobileDeviceDTService extends MobileDeviceDTServiceGrpc.MobileDevic
     }
 
     @Override
-    public void signalMobileDeviceTaskCompletion(MobileDevice.TaskCompletionParameters request, StreamObserver<Empty> responseObserver) {
-        try {
-            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDT().getId(), request.getCompletedTask().getId());
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            responseObserver.onError(e);
-        }
-    }
+    public void retrieveTasks(Empty request, StreamObserver<MobileDevice.TaskList> responseObserver) {
+        List<Task> tasks = taskController.retrieveTasks();
+        MobileDevice.TaskList.Builder taskList = MobileDevice.TaskList.newBuilder();
 
-    @Override
-    public void syncMobileDeviceDTProperties(MobileDevice.MobileDeviceDTSyncParameters request, StreamObserver<Empty> responseObserver) {
-        try {
-            MobileDevice.PositionDTO positionDTO = request.getCurrentPosition();
-            Position position = new Position(positionDTO.getLatitude(), positionDTO.getLongitude(), new Timestamp(Timestamps.toMillis(positionDTO.getTimestamp())));
+        for (Task task : tasks) {
+            MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
+                    .setEndpointURI(task.getEndpoint().toString())
+                    .setParameters(task.getParameters())
+                    .build();
 
-            mobileDeviceDTController.syncMobileDeviceDTProperties(request.getMobileDeviceDT().getId(), position);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            responseObserver.onError(e);
+            taskList.addTasks(taskDTO);
         }
+
+        responseObserver.onNext(taskList.build());
+        responseObserver.onCompleted();
     }
 
     private MobileDevice.MobileDeviceDTDTO buildMobileDeviceDTDTO(MobileDeviceDT mobileDeviceDT) {
