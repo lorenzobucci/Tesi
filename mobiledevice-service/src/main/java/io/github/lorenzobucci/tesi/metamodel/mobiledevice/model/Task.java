@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import java.net.URI;
-import java.util.UUID;
 
 @Entity
 @Table(name = "task")
@@ -19,14 +18,14 @@ public class Task extends BaseEntity {
     @Embedded
     private DependabilityRequirements requirements;
 
-    @Column(name = "associated_task_id")
-    private UUID associatedTaskId;
+    @Column(name = "associated_workflow_id")
+    private long associatedWorkflowId;
 
     Task(URI endpoint, String parameters, DependabilityRequirements requirements) {
         this.endpoint = endpoint;
         this.parameters = parameters;
         this.requirements = requirements;
-        //associatedTaskId = ServiceProxy.getInstance().requestService(this.toString()); // TODO: ADJUST AND USE API
+        //associatedWorkflowId = ServiceProxy.getInstance().requestService(this.toString()); // TODO: ADJUST AND USE API
     }
 
     protected Task() {
@@ -54,8 +53,8 @@ public class Task extends BaseEntity {
         return requirements;
     }
 
-    public UUID getAssociatedTaskId() {
-        return associatedTaskId;
+    public long getAssociatedWorkflowId() {
+        return associatedWorkflowId;
     }
 
     @Override
