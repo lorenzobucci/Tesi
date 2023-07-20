@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.resources_management;
 
 import java.beans.PropertyChangeListener;
 import java.util.NoSuchElementException;

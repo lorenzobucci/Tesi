@@ -1,8 +1,8 @@
-package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement;
+package io.github.lorenzobucci.tesi.metamodel.resources_management;
 
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model.ContainerInstance;
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model.ContainerType;
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model.Node;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerType;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
 
 import java.util.Set;
 

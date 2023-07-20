@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model;
+package io.github.lorenzobucci.tesi.metamodel.resources_management.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

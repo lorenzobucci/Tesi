@@ -1,6 +1,6 @@
-package io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.dao;
+package io.github.lorenzobucci.tesi.metamodel.resources_management.dao;
 
-import io.github.lorenzobucci.tesi.metamodel.resourcesmanagement.model.Node;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
