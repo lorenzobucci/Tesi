@@ -7,6 +7,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ServiceTypeDao {
 
@@ -30,5 +31,12 @@ public class ServiceTypeDao {
 
     public ServiceType findById(long serviceTypeId) {
         return em.find(ServiceType.class, serviceTypeId);
+    }
+
+    public ServiceType findByUuid(UUID serviceTypeUuid) {
+        TypedQuery<ServiceType> query =
+                em.createQuery("from ServiceType where uuid = :serviceTypeUuid", ServiceType.class)
+                        .setParameter("serviceTypeUuid", serviceTypeUuid);
+        return query.getSingleResult();
     }
 }

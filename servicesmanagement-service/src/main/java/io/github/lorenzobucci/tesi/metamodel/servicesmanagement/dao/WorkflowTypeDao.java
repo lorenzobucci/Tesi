@@ -8,6 +8,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 public class WorkflowTypeDao {
 
@@ -36,6 +37,13 @@ public class WorkflowTypeDao {
 
     public WorkflowType findById(long workflowTypeId) {
         return em.find(WorkflowType.class, workflowTypeId);
+    }
+
+    public WorkflowType findByUuid(UUID workflowTypeUuid) {
+        TypedQuery<WorkflowType> query =
+                em.createQuery("from WorkflowType where uuid = :workflowUuid", WorkflowType.class)
+                        .setParameter("workflowUuid", workflowTypeUuid);
+        return query.getSingleResult();
     }
 
     public WorkflowType findByEndpoint(EndpointServiceType endpointServiceType) {
