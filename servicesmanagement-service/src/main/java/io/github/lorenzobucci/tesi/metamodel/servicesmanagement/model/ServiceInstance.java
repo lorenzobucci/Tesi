@@ -35,6 +35,10 @@ public class ServiceInstance extends BaseEntity {
         container.optimize(dependabilityRequirements);
     }
 
+    void onCompleted() {
+        container.destroy();
+    }
+
     public ServiceType getServiceType() {
         return serviceType;
     }

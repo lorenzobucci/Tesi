@@ -24,8 +24,12 @@ public class Container {
 
     }
 
-    public void optimize(String dependabilityRequirements) {
+    void optimize(String dependabilityRequirements) {
         //ipAddress = AllocationManager.getInstance().reviseContainerAllocation(associatedContainerId, dependabilityRequirements); // TODO: ADJUST AND USE API
+    }
+
+    void destroy() {
+        //AllocationManager.destroy; // TODO: ADJUST AND USE API
     }
 
     public UUID getAssociatedContainerId() {

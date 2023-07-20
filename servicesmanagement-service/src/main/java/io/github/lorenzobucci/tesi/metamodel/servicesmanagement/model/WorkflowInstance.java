@@ -68,6 +68,11 @@ public class WorkflowInstance extends BaseEntity {
             serviceInstance.optimize();
     }
 
+    public void onCompleted() {
+        for (ServiceInstance serviceInstance : serviceInstanceDAG)
+            serviceInstance.onCompleted();
+    }
+
     public Iterator<ServiceInstance> getServicesIterator() {
         return serviceInstanceDAG.iterator();
     }
