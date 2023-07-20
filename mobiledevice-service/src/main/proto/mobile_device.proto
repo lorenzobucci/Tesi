@@ -12,6 +12,7 @@ service crud {
   rpc GetMobileDeviceDT(MobileDeviceDTDTO) returns (MobileDeviceDTDTO);
   rpc RetrieveMobileDeviceDTs(google.protobuf.Empty) returns (MobileDeviceDTList);
   rpc RemoveMobileDeviceDT(MobileDeviceDTDTO) returns (google.protobuf.Empty);
+
   rpc GetTask(TaskDTO) returns (TaskDTO);
   rpc RetrieveTasks(google.protobuf.Empty) returns (TaskList);
 }
@@ -22,19 +23,42 @@ service operational {
   rpc SyncMobileDeviceDTProperties(MobileDeviceDTSyncParameters) returns (google.protobuf.Empty);
 }
 
+// DTO
+
 message MobileDeviceDTDTO {
   int64 id = 1;
   repeated TaskDTO runningTasks = 2;
   repeated PositionDTO trajectory = 3;
 }
 
-message MobileDeviceDTConstructorParameters {
-
+message TaskDTO {
+  int64 id = 1;
+  string endpointURI = 2;
+  string parameters = 3;
 }
+
+message PositionDTO {
+  google.protobuf.Timestamp timestamp = 1;
+  float latitude = 2;
+  float longitude = 3;
+}
+
+// DTO LIST
 
 message MobileDeviceDTList {
   repeated MobileDeviceDTDTO mobileDeviceDTs = 1;
 }
+
+message TaskList {
+  repeated TaskDTO tasks = 1;
+}
+
+// METHODS PARAMETERS
+
+message MobileDeviceDTConstructorParameters {
+
+}
+
 
 message EndpointInvocationParameters {
   MobileDeviceDTDTO mobileDeviceDT = 1;
@@ -50,20 +74,4 @@ message TaskCompletionParameters {
 message MobileDeviceDTSyncParameters {
   MobileDeviceDTDTO mobileDeviceDT = 1;
   PositionDTO currentPosition = 2;
-}
-
-message TaskDTO {
-  int64 id = 1;
-  string endpointURI = 2;
-  string parameters = 3;
-}
-
-message TaskList {
-  repeated TaskDTO tasks = 1;
-}
-
-message PositionDTO {
-  google.protobuf.Timestamp timestamp = 1;
-  float latitude = 2;
-  float longitude = 3;
 }
