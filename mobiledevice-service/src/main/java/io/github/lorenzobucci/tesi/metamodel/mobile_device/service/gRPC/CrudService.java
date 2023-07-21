@@ -64,13 +64,7 @@ public class CrudService extends crudGrpc.crudImplBase {
     public void getTask(MobileDevice.TaskDTO request, StreamObserver<MobileDevice.TaskDTO> responseObserver) {
         try {
             Task task = taskController.getTask(request.getId());
-
-            MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
-                    .setEndpointURI(task.getEndpoint().toString())
-                    .setParameters(task.getParameters())
-                    .build();
-
-            responseObserver.onNext(taskDTO);
+            responseObserver.onNext(buildTaskDTO(task));
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -82,14 +76,8 @@ public class CrudService extends crudGrpc.crudImplBase {
         List<Task> tasks = taskController.retrieveTasks();
         MobileDevice.TaskList.Builder taskList = MobileDevice.TaskList.newBuilder();
 
-        for (Task task : tasks) {
-            MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
-                    .setEndpointURI(task.getEndpoint().toString())
-                    .setParameters(task.getParameters())
-                    .build();
-
-            taskList.addTasks(taskDTO);
-        }
+        for (Task task : tasks)
+            taskList.addTasks(buildTaskDTO(task));
 
         responseObserver.onNext(taskList.build());
         responseObserver.onCompleted();
@@ -98,23 +86,27 @@ public class CrudService extends crudGrpc.crudImplBase {
     private MobileDevice.MobileDeviceDTDTO buildMobileDeviceDTDTO(MobileDeviceDT mobileDeviceDT) {
         MobileDevice.MobileDeviceDTDTO.Builder mobileDeviceDTDTO = MobileDevice.MobileDeviceDTDTO.newBuilder().setId(mobileDeviceDT.getId());
 
-        for (Task task : mobileDeviceDT.getRunningTasks()) {
-            MobileDevice.TaskDTO taskDTO = MobileDevice.TaskDTO.newBuilder().setId(task.getId())
-                    .setEndpointURI(task.getEndpoint().toString())
-                    .setParameters(task.getParameters())
-                    .build();
-            mobileDeviceDTDTO.addRunningTasks(taskDTO);
-        }
+        for (Task task : mobileDeviceDT.getRunningTasks())
+            mobileDeviceDTDTO.addRunningTasks(buildTaskDTO(task));
 
-        for (Position position : mobileDeviceDT.getPastTrajectory().getPositionsSet()) {
-            MobileDevice.PositionDTO positionDTO = MobileDevice.PositionDTO.newBuilder()
-                    .setTimestamp(Timestamps.fromMillis(position.getTimestamp().getTime()))
-                    .setLatitude(position.getLatitude())
-                    .setLongitude(position.getLongitude())
-                    .build();
-            mobileDeviceDTDTO.addTrajectory(positionDTO);
-        }
+        for (Position position : mobileDeviceDT.getPastTrajectory().getPositionsSet())
+            mobileDeviceDTDTO.addTrajectory(buildPositionDTO(position));
 
         return mobileDeviceDTDTO.build();
+    }
+
+    private MobileDevice.PositionDTO buildPositionDTO(Position position) {
+        return MobileDevice.PositionDTO.newBuilder()
+                .setTimestamp(Timestamps.fromMillis(position.getTimestamp().getTime()))
+                .setLatitude(position.getLatitude())
+                .setLongitude(position.getLongitude())
+                .build();
+    }
+
+    private MobileDevice.TaskDTO buildTaskDTO(Task task) {
+        return MobileDevice.TaskDTO.newBuilder().setId(task.getId())
+                .setEndpointURI(task.getEndpoint().toString())
+                .setParameters(task.getParameters())
+                .build();
     }
 }
