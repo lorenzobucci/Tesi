@@ -81,4 +81,8 @@ public class Builders {
     public static ServicesManagement.WorkflowRequirementsDTO buildWorkflowRequirementsDTO(WorkflowRequirements workflowRequirements) {
         return ServicesManagement.WorkflowRequirementsDTO.newBuilder().build(); // DO CONVERSION TO DTO
     }
+
+    public static WorkflowRequirements buildWorkflowRequirements(ServicesManagement.WorkflowRequirementsDTO workflowRequirementsDTO) {
+        return new WorkflowRequirements(); // DO CONVERSION FROM DTO
+    }
 }
