@@ -4,14 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.net.InetAddress;
-import java.util.UUID;
 
 @Embeddable
 public class Container {
 
     @Column(name = "associated_container_id", unique = true)
-    private UUID associatedContainerId;
-
+    private long associatedContainerId;
 
     @Column(name = "container_ip_address")
     private InetAddress ipAddress;
@@ -32,7 +30,7 @@ public class Container {
         //AllocationManager.destroy; // TODO: ADJUST AND USE API
     }
 
-    public UUID getAssociatedContainerId() {
+    public long getAssociatedContainerId() {
         return associatedContainerId;
     }
 
