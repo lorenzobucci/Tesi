@@ -10,6 +10,8 @@ import jakarta.inject.Inject;
 import java.net.URI;
 import java.util.List;
 
+import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
+
 public class CrudService extends crudGrpc.crudImplBase {
 
     @Inject
@@ -258,81 +260,4 @@ public class CrudService extends crudGrpc.crudImplBase {
         }
     }
 
-    private ServicesManagement.EndpointServiceTypeDTO buildEndpointServiceTypeDTO(EndpointServiceType endpointServiceType) {
-        return ServicesManagement.EndpointServiceTypeDTO.newBuilder()
-                .setId(endpointServiceType.getId())
-                .setName(endpointServiceType.getName())
-                .setServiceRequirements(buildServiceRequirementsDTO(endpointServiceType.getRequirements()))
-                .setPhysicalEndpointURI(endpointServiceType.getPhysicalEndpointURI().toString())
-                .build();
-    }
-
-    private ServicesManagement.EndpointServiceInstanceDTO buildEndpointServiceInstanceDTO(EndpointServiceInstance endpointServiceInstance) {
-        return ServicesManagement.EndpointServiceInstanceDTO.newBuilder()
-                .setId(endpointServiceInstance.getId())
-                .setBelongingWorkflow(buildWorkflowInstanceDTO(endpointServiceInstance.getBelongingWorkflow()))
-                .setEndpointServiceType(buildEndpointServiceTypeDTO(endpointServiceInstance.getEndpointServiceType()))
-                .setParameters(endpointServiceInstance.getParameters())
-                .build();
-    }
-
-    private ServicesManagement.ServiceTypeDTO buildServiceTypeDTO(ServiceType serviceType) {
-        return ServicesManagement.ServiceTypeDTO.newBuilder()
-                .setId(serviceType.getId())
-                .setName(serviceType.getName())
-                .setServiceRequirements(buildServiceRequirementsDTO(serviceType.getRequirements()))
-                .build();
-    }
-
-    private ServicesManagement.ServiceInstanceDTO buildServiceInstanceDTO(ServiceInstance serviceInstance) {
-        return ServicesManagement.ServiceInstanceDTO.newBuilder()
-                .setId(serviceInstance.getId())
-                .setServiceType(buildServiceTypeDTO(serviceInstance.getServiceType()))
-                .setBelongingWorkflow(buildWorkflowInstanceDTO(serviceInstance.getBelongingWorkflow()))
-                .setContainer(buildContainerDTO(serviceInstance.getContainer()))
-                .build();
-    }
-
-    private ServicesManagement.WorkflowTypeDTO buildWorkflowTypeDTO(WorkflowType workflowType) {
-        ServicesManagement.WorkflowTypeDTO.Builder workflowTypeDTO = ServicesManagement.WorkflowTypeDTO.newBuilder().setId(workflowType.getId());
-
-        for (ServiceType serviceType : workflowType.getServiceTypes())
-            workflowTypeDTO.addServiceTypeSet(buildServiceTypeDTO(serviceType));
-
-        workflowTypeDTO.setEndpointServiceType(buildEndpointServiceTypeDTO(workflowType.getEndpointServiceType()));
-
-        return workflowTypeDTO.build();
-    }
-
-    private ServicesManagement.WorkflowInstanceDTO buildWorkflowInstanceDTO(WorkflowInstance workflowInstance) {
-        ServicesManagement.WorkflowInstanceDTO.Builder workflowInstanceDTO = ServicesManagement.WorkflowInstanceDTO.newBuilder().setId(workflowInstance.getId());
-
-        for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
-            workflowInstanceDTO.addServiceInstanceSet(buildServiceInstanceDTO(serviceInstance));
-
-        workflowInstanceDTO.setEndpointServiceInstance(buildEndpointServiceInstanceDTO(workflowInstance.getEndpointServiceInstance()))
-                .setRefWorkflowType(buildWorkflowTypeDTO(workflowInstance.getWorkflowType()))
-                .setWorkflowRequirements(buildWorkflowRequirementsDTO(workflowInstance.getWorkflowRequirements()));
-
-        return workflowInstanceDTO.build();
-    }
-
-    private ServicesManagement.ContainerDTO buildContainerDTO(Container container) {
-        return ServicesManagement.ContainerDTO.newBuilder()
-                .setIpAddress(container.getIpAddress().toString())
-                .setAssociatedContainerId(container.getAssociatedContainerId())
-                .build();
-    }
-
-    private ServicesManagement.ServiceRequirementsDTO buildServiceRequirementsDTO(ServiceRequirements serviceRequirements) {
-        return ServicesManagement.ServiceRequirementsDTO.newBuilder().build(); // DO CONVERSION TO DTO
-    }
-
-    private ServiceRequirements buildServiceRequirements(ServicesManagement.ServiceRequirementsDTO serviceRequirementsDTO) {
-        return new ServiceRequirements(); // DO CONVERSION FROM DTO
-    }
-
-    private ServicesManagement.WorkflowRequirementsDTO buildWorkflowRequirementsDTO(WorkflowRequirements workflowRequirements) {
-        return ServicesManagement.WorkflowRequirementsDTO.newBuilder().build(); // DO CONVERSION TO DTO
-    }
 }
