@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
 
-public class OperationalService extends operationalGrpc.operationalImplBase {
+public class OperationalService extends OperationalGrpc.OperationalImplBase {
 
     @Inject
     private WorkflowInstanceController workflowInstanceController;

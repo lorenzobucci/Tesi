@@ -12,7 +12,7 @@ import java.util.List;
 
 import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
 
-public class CrudService extends crudGrpc.crudImplBase {
+public class CrudService extends CrudGrpc.CrudImplBase {
 
     @Inject
     private EndpointServiceTypeController endpointServiceTypeController;

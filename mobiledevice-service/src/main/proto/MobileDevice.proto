@@ -5,9 +5,9 @@ import "google/protobuf/timestamp.proto";
 
 option java_package = "io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC";
 
-package mobile_device;
+package MobileDevice;
 
-service crud {
+service Crud {
   rpc AddMobileDeviceDT(MobileDeviceDTConstructorParameters) returns (MobileDeviceDTDTO);
   rpc GetMobileDeviceDT(MobileDeviceDTDTO) returns (MobileDeviceDTDTO);
   rpc RetrieveMobileDeviceDTs(google.protobuf.Empty) returns (MobileDeviceDTList);
@@ -17,7 +17,7 @@ service crud {
   rpc RetrieveTasks(google.protobuf.Empty) returns (TaskList);
 }
 
-service operational {
+service Operational {
   rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty);
   rpc SignalMobileDeviceTaskCompletion(TaskCompletionParameters) returns (google.protobuf.Empty);
   rpc SyncMobileDeviceDTProperties(MobileDeviceDTSyncParameters) returns (google.protobuf.Empty);

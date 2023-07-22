@@ -5,9 +5,9 @@ import "google/protobuf/wrappers.proto";
 
 option java_package = "io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC";
 
-package services_management;
+package ServicesManagement;
 
-service crud {
+service Crud {
   rpc AddEndpointServiceType(EndpointServiceTypeConstructorParameters) returns (EndpointServiceTypeDTO);
   rpc GetEndpointServiceType(EndpointServiceTypeDTO) returns (EndpointServiceTypeDTO);
   rpc GetEndpointServiceTypeByURI(google.protobuf.StringValue) returns (EndpointServiceTypeDTO);
@@ -35,7 +35,7 @@ service crud {
   rpc RemoveWorkflowType(RemoveWorkflowTypeParameters) returns (google.protobuf.Empty);
 }
 
-service operational {
+service Operational {
   rpc InstantiateWorkflowInstance(InstantiateWorkflowParameters) returns (WorkflowInstanceDTO);
   rpc TerminateWorkflowInstance(WorkflowInstanceDTO) returns (google.protobuf.Empty);
   rpc UpdateWorkflowRequirements(UpdateRequirementsParameters) returns (google.protobuf.Empty);

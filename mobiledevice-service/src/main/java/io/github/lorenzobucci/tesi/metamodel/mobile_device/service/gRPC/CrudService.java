@@ -12,7 +12,7 @@ import jakarta.inject.Inject;
 
 import java.util.List;
 
-public class CrudService extends crudGrpc.crudImplBase {
+public class CrudService extends CrudGrpc.CrudImplBase {
 
     @Inject
     private MobileDeviceDTController mobileDeviceDTController;

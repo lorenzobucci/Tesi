@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import java.net.URI;
 import java.sql.Timestamp;
 
-public class OperationalService extends operationalGrpc.operationalImplBase {
+public class OperationalService extends OperationalGrpc.OperationalImplBase {
 
     @Inject
     private MobileDeviceDTController mobileDeviceDTController;
