@@ -1,16 +1,17 @@
 package io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC;
 
 import com.google.protobuf.Empty;
-import com.google.protobuf.util.Timestamps;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.MobileDeviceDTController;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.TaskController;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
-import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Task;
 import io.grpc.stub.StreamObserver;
 import jakarta.inject.Inject;
 
 import java.util.List;
+
+import static io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.util.Builders.buildMobileDeviceDTDTO;
+import static io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.util.Builders.buildTaskDTO;
 
 public class CrudService extends CrudGrpc.CrudImplBase {
 
@@ -83,31 +84,4 @@ public class CrudService extends CrudGrpc.CrudImplBase {
         responseObserver.onCompleted();
     }
 
-    private MobileDevice.MobileDeviceDTDTO buildMobileDeviceDTDTO(MobileDeviceDT mobileDeviceDT) {
-        MobileDevice.MobileDeviceDTDTO.Builder mobileDeviceDTDTO = MobileDevice.MobileDeviceDTDTO.newBuilder().setId(mobileDeviceDT.getId());
-
-        for (Task task : mobileDeviceDT.getRunningTasks())
-            mobileDeviceDTDTO.addRunningTasks(buildTaskDTO(task));
-
-        for (Position position : mobileDeviceDT.getPastTrajectory().getPositionsSet())
-            mobileDeviceDTDTO.addTrajectory(buildPositionDTO(position));
-
-        return mobileDeviceDTDTO.build();
-    }
-
-    private MobileDevice.PositionDTO buildPositionDTO(Position position) {
-        return MobileDevice.PositionDTO.newBuilder()
-                .setTimestamp(Timestamps.fromMillis(position.getTimestamp().getTime()))
-                .setLatitude(position.getLatitude())
-                .setLongitude(position.getLongitude())
-                .build();
-    }
-
-    private MobileDevice.TaskDTO buildTaskDTO(Task task) {
-        return MobileDevice.TaskDTO.newBuilder().setId(task.getId())
-                .setEndpointURI(task.getEndpoint().toString())
-                .setParameters(task.getParameters())
-                .setAssociatedWorkflowId(task.getAssociatedWorkflowId())
-                .build();
-    }
 }
