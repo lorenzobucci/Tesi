@@ -14,7 +14,6 @@ public class Trajectory extends BaseEntity {
     @JoinColumn(name = "trajectory_id", referencedColumnName = "id")
     private TreeSet<Position> positionsSet = new TreeSet<>();
 
-    @SuppressWarnings("CopyConstructorMissesField")
     Trajectory(Trajectory trajectory) {
         positionsSet = new TreeSet<>(trajectory.positionsSet);
     }
