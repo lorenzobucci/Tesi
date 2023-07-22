@@ -35,6 +35,7 @@ message TaskDTO {
   int64 id = 1;
   string endpointURI = 2;
   string parameters = 3;
+  int64 associatedWorkflowId = 4;
 }
 
 message PositionDTO {

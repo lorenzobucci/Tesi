@@ -107,6 +107,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
         return MobileDevice.TaskDTO.newBuilder().setId(task.getId())
                 .setEndpointURI(task.getEndpoint().toString())
                 .setParameters(task.getParameters())
+                .setAssociatedWorkflowId(task.getAssociatedWorkflowId())
                 .build();
     }
 }
