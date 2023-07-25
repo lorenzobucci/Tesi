@@ -1,7 +1,6 @@
-package wildfly.to_be_deleted;
+package wildfly.to_be_deleted_soon;
 
-
-import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.CrudGrpc;
+import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.OperationalGrpc;
 
 /* !! THIS FAKE CLASS IS REQUIRED UNTIL WILDFLY SUPPORTS GRPC CLIENTS !!
 DETAILS: from the definition of protobufs, useful code is automatically generated for both clients and server.
@@ -9,6 +8,6 @@ On the client side there are no implementations of the services defined in the s
 implements them), but Wildfly behavior is to instance any leaf BindableService class. Not finding them, an exception
 is thrown because Wildfly try to instant the abstract self-generated superclasses *ImplBase. */
 
-public class TBD1 extends CrudGrpc.CrudImplBase {
+public class TBD2 extends OperationalGrpc.OperationalImplBase {
 
 }
