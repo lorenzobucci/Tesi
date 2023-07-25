@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-public class ContainerInstancesDao {
+public class ContainerInstanceDao {
 
     @PersistenceContext
     private EntityManager em;
