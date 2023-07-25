@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-mobile-device
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=MobileDevice
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 20
+    networks:
+      - mobile-device-net
+
+  wildfly:
+    build: .
+    container_name: wildfly-mobile-device
+    ports:
+      - "9000:9555"
+    networks:
+      - mobile-device-net
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+networks:
+  mobile-device-net:
+    driver: bridge
