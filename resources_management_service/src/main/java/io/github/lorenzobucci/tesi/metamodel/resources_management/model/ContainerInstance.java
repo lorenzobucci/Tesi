@@ -13,14 +13,12 @@ public class ContainerInstance extends BaseEntity {
 
     @Transient
     private final Semaphore migrationSemaphore = new Semaphore(1);
-
+    private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "container_type_id", nullable = false)
     private ContainerType containerType;
-
     @Column(name = "container_state", nullable = false)
     private String containerState = "IDLE";
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinTable(name = "node_container_instances",
             joinColumns = {@JoinColumn(name = "container_instance_id", insertable = false,
@@ -29,8 +27,6 @@ public class ContainerInstance extends BaseEntity {
                     updatable = false, referencedColumnName = "id")}
     )
     private Node belongingNode;
-
-    private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
     public ContainerInstance(ContainerType containerType, Node belongingNode) {
         this.containerType = containerType;
@@ -69,6 +65,11 @@ public class ContainerInstance extends BaseEntity {
         return containerState;
     }
 
+    public void setContainerState(String containerState) {
+        eventSupport.firePropertyChange("containerState", this.containerState, containerState);
+        this.containerState = containerState;
+    }
+
     public ContainerType getContainerType() {
         return containerType;
     }
@@ -83,11 +84,6 @@ public class ContainerInstance extends BaseEntity {
 
     public InetAddress getNodeIpAddress() {
         return belongingNode.getIpAddress();
-    }
-
-    public void setContainerState(String containerState) {
-        eventSupport.firePropertyChange("containerState", this.containerState, containerState);
-        this.containerState = containerState;
     }
 
 }

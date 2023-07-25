@@ -12,11 +12,7 @@ import java.util.Set;
 @Table(name = "node")
 public class Node extends BaseEntity {
 
-    public enum NodeType {
-        CLOUD,
-        EDGE
-    }
-
+    private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
     @Enumerated(EnumType.STRING)
     @Column(name = "node_type", nullable = false)
     private NodeType nodeType;
@@ -41,8 +37,6 @@ public class Node extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "container_instance_id", referencedColumnName = "id")}
     )
     private Set<ContainerInstance> ownedContainers = new HashSet<>();
-
-    private final PropertyChangeSupport eventSupport = new PropertyChangeSupport(this);
 
     public Node(NodeType nodeType, InetAddress ipAddress, NodeTechnicalProperties properties, float latitude, float longitude) {
         this.nodeType = nodeType;
@@ -110,6 +104,11 @@ public class Node extends BaseEntity {
 
     public int getOwnedContainersSize() {
         return ownedContainers.size();
+    }
+
+    public enum NodeType {
+        CLOUD,
+        EDGE
     }
 
 }

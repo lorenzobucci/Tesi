@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.lorenzobucci</groupId>
-    <artifactId>resourcesmanagement-service</artifactId>
+    <artifactId>resources_management_service</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>resourcesmanagement-service</name>
+    <name>resources_management-service</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
