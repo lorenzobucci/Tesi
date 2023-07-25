@@ -7,6 +7,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 public class NodeDao {
 
@@ -35,5 +36,12 @@ public class NodeDao {
 
     public Node findById(long nodeId) {
         return em.find(Node.class, nodeId);
+    }
+
+    public Node findByUuid(UUID nodeUuid) {
+        TypedQuery<Node> query =
+                em.createQuery("from Node where uuid = :nodeUuid", Node.class)
+                        .setParameter("nodeUuid", nodeUuid);
+        return query.getSingleResult();
     }
 }
