@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-services-management
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=ServicesManagement
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 20
+    networks:
+      - services-management-net
+
+  wildfly:
+    build: .
+    container_name: wildfly-services-management
+    ports:
+      - "9001:9555"
+    networks:
+      - services-management-net
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+networks:
+  services-management-net:
+    driver: bridge
