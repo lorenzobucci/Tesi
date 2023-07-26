@@ -1,4 +1,4 @@
-package io.github.lorenzobucci.tesi.metamodel.resources_management;
+package io.github.lorenzobucci.tesi.metamodel.resources_management.allocator;
 
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerType;
@@ -11,7 +11,7 @@ public interface AllocatorAlgorithm {
                                         Set<Node> availableNodes,
                                         Set<ContainerType> providedContainerTypes);
 
-    Node reviseOptimalNode(DependabilityRequirements dependabilityRequirements,
-                           ContainerType runningContainerType,
+    Node reviseOptimalNode(ContainerInstance containerInstance,
+                           DependabilityRequirements newDependabilityRequirements,
                            Set<Node> availableNodes);
 }
