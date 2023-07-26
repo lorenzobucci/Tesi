@@ -4,6 +4,10 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.model.*;
 import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.ServicesManagement;
 
 public class Builders {
+
+    private Builders() {
+    }
+
     public static ServicesManagement.EndpointServiceTypeDTO buildEndpointServiceTypeDTO(EndpointServiceType endpointServiceType) {
         return ServicesManagement.EndpointServiceTypeDTO.newBuilder()
                 .setId(endpointServiceType.getId())

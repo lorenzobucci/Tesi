@@ -7,6 +7,10 @@ import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Task;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.MobileDevice;
 
 public class Builders {
+
+    private Builders() {
+    }
+
     public static MobileDevice.MobileDeviceDTDTO buildMobileDeviceDTDTO(MobileDeviceDT mobileDeviceDT) {
         MobileDevice.MobileDeviceDTDTO.Builder mobileDeviceDTDTO = MobileDevice.MobileDeviceDTDTO.newBuilder().setId(mobileDeviceDT.getId());
 
