@@ -14,7 +14,7 @@ public class Container {
     @Column(name = "container_ip_address")
     private InetAddress ipAddress;
 
-    public Container(String dependabilityRequirements) {
+    public Container(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
         //(associatedContainerId, ipAddress) =AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 
@@ -22,7 +22,7 @@ public class Container {
 
     }
 
-    void optimize(String dependabilityRequirements) {
+    void optimize(ServiceRequirements serviceRequirements, WorkflowRequirements newWorkflowRequirements) {
         //ipAddress = AllocationManager.getInstance().reviseContainerAllocation(associatedContainerId, dependabilityRequirements); // TODO: ADJUST AND USE API
     }
 

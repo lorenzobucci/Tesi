@@ -21,9 +21,7 @@ public class ServiceInstance extends BaseEntity {
     ServiceInstance(ServiceType serviceType, WorkflowInstance belongingWorkflow) {
         this.serviceType = serviceType;
         this.belongingWorkflow = belongingWorkflow;
-
-        String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
-        this.container = new Container(dependabilityRequirements);
+        this.container = new Container(getServiceRequirements(), belongingWorkflow.getWorkflowRequirements());
     }
 
     protected ServiceInstance() {
@@ -31,8 +29,7 @@ public class ServiceInstance extends BaseEntity {
     }
 
     void optimize() {
-        String dependabilityRequirements = getServiceRequirements().toString() + belongingWorkflow.getWorkflowRequirements().toString(); // MERGE SERVICE REQUIREMENTS + WORKFLOW REQUIREMENTS
-        container.optimize(dependabilityRequirements);
+        container.optimize(getServiceRequirements(), belongingWorkflow.getWorkflowRequirements());
     }
 
     void onCompleted() {
