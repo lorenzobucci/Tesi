@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_package = "io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC";
+
+package ResourcesManagement;
+
+service Crud {
+  rpc AddNode(NodeConstructorParameters) returns (NodeDTO);
+  rpc GetNode(google.protobuf.Int64Value) returns (NodeDTO);
+  rpc RetrieveNodes(google.protobuf.Empty) returns (NodeList);
+  rpc RemoveNode(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+
+  rpc AddContainerType(ContainerTypeConstructorParameters) returns (ContainerTypeDTO);
+  rpc GetContainerType(google.protobuf.Int64Value) returns (ContainerTypeDTO);
+  rpc RetrieveContainerTypes(google.protobuf.Empty) returns (ContainerTypeList);
+  rpc RemoveContainerType(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+
+  rpc GetContainerInstance(google.protobuf.Int64Value) returns (ContainerInstanceDTO);
+  rpc RetrieveContainerInstances(google.protobuf.Empty) returns (ContainerInstanceList);
+
+  rpc GetCurrentAllocator(google.protobuf.Empty) returns (google.protobuf.StringValue);
+  rpc SetAllocatorAlgorithm(google.protobuf.StringValue) returns (google.protobuf.Empty);
+}
+
+service Operational {
+  rpc SyncNodeDTProperties(NodeDTSyncParameters) returns (google.protobuf.Empty);
+
+  rpc DestroyContainer(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+
+  rpc AllocateContainer(DependabilityRequirementsDTO) returns (ContainerInstanceDTO);
+  rpc ReviseContainerAllocation(ReviseContainerAllocationParameters) returns (ContainerInstanceDTO);
+}
+
+// DTO
+
+enum NodeTypeDTO {
+  CLOUD = 0;
+  EDGE = 1;
+}
+
+message NodeDTO {
+  int64 id = 1;
+  NodeTypeDTO nodeType = 2;
+  repeated int64 ownedContainers = 3;
+  NodeTechnicalPropertiesDTO properties = 4;
+  string ipAddress = 5;
+  float latitude = 6;
+  float longitude = 7;
+}
+
+message NodeTechnicalPropertiesDTO {
+  int32 memoryMB = 1;
+  int32 cpuCoresNumber = 2;
+  float cpuFrequencyGHz = 3;
+  string installedOS = 4;
+}
+
+message ContainerTypeDTO {
+  int64 id = 1;
+  string imageName = 2;
+  string imageVersion = 3;
+}
+
+message ContainerInstanceDTO {
+  int64 id = 1;
+  int64 containerType = 2;
+  string containerState = 3;
+  int64 belongingNode = 4;
+}
+
+// DTO LISTS
+
+message NodeList {
+  repeated NodeDTO nodes = 1;
+}
+
+message ContainerTypeList {
+  repeated ContainerTypeDTO containerTypes = 1;
+}
+
+message ContainerInstanceList {
+  repeated ContainerInstanceDTO containerInstances = 1;
+}
+
+// REQUIREMENTS
+
+message DependabilityRequirementsDTO {
+
+}
+
+// METHODS PARAMETERS
+
+message NodeConstructorParameters {
+  NodeTypeDTO nodeType = 1;
+  string ipAddress = 2;
+  NodeTechnicalPropertiesDTO properties = 3;
+  float latitude = 4;
+  float longitude = 5;
+}
+
+message ContainerTypeConstructorParameters {
+  string imageName = 1;
+  string imageVersion = 2;
+}
+
+message NodeDTSyncParameters {
+  float memoryUsagePercentage = 1;
+  float cpuUsagePercentage = 2;
+}
+
+message ReviseContainerAllocationParameters {
+  ContainerInstanceDTO container = 1;
+  DependabilityRequirementsDTO newRequirements = 2;
+}
