@@ -7,10 +7,7 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.Se
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.net.URI;
 
@@ -28,11 +25,14 @@ public class Task extends BaseEntity {
     @Column(name = "associated_workflow_id")
     private long associatedWorkflowId;
 
+    @Transient
+    private final ServicesManagementsClient servicesManagementsClient = new ServicesManagementsClient();
+
     Task(URI endpoint, String parameters, DependabilityRequirements requirements) {
         this.endpoint = endpoint;
         this.parameters = parameters;
         this.requirements = requirements;
-        associatedWorkflowId = ServicesManagementsClient.requestService(requirements, endpoint, parameters);
+        servicesManagementsClient.requestService(requirements, endpoint, parameters);
     }
 
     protected Task() {
@@ -41,11 +41,11 @@ public class Task extends BaseEntity {
 
     void updateRequirements(DependabilityRequirements requirements) {
         this.requirements = requirements;
-        ServicesManagementsClient.updateServiceRequirements(associatedWorkflowId, requirements);
+        servicesManagementsClient.updateServiceRequirements(associatedWorkflowId, requirements);
     }
 
     void onCompleted() {
-        ServicesManagementsClient.workflowCompleted(associatedWorkflowId);
+        servicesManagementsClient.workflowCompleted(associatedWorkflowId);
     }
 
     public URI getEndpoint() {
@@ -79,19 +79,20 @@ public class Task extends BaseEntity {
         return endpoint.hashCode();
     }
 
-    static class ServicesManagementsClient {
 
-        static ManagedChannel channel;
-        static OperationalGrpc.OperationalBlockingStub blockingStub;
-        static OperationalGrpc.OperationalStub asyncStub;
+    private class ServicesManagementsClient {
 
-        private static void init() {
+        private ManagedChannel channel;
+        private OperationalGrpc.OperationalBlockingStub blockingStub;
+        private OperationalGrpc.OperationalStub asyncStub;
+
+        private void init() {
             channel = ManagedChannelBuilder.forAddress("localhost", 9001).usePlaintext().build();
             blockingStub = OperationalGrpc.newBlockingStub(channel);
             asyncStub = OperationalGrpc.newStub(channel);
         }
 
-        private static long requestService(DependabilityRequirements requirements, URI endpoint, String parameters) {
+        private void requestService(DependabilityRequirements requirements, URI endpoint, String parameters) {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
@@ -105,10 +106,10 @@ public class Task extends BaseEntity {
 
             channel.shutdown();
 
-            return workflowInstanceDTO.getId();
+            associatedWorkflowId = workflowInstanceDTO.getId();
         }
 
-        private static void updateServiceRequirements(long associatedWorkflowId, DependabilityRequirements newRequirements) {
+        private void updateServiceRequirements(long associatedWorkflowId, DependabilityRequirements newRequirements) {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
@@ -139,7 +140,7 @@ public class Task extends BaseEntity {
             channel.shutdown();
         }
 
-        private static void workflowCompleted(long associatedWorkflowId) {
+        private void workflowCompleted(long associatedWorkflowId) {
             init();
 
             StreamObserver<Empty> streamObserver = new StreamObserver<>() {

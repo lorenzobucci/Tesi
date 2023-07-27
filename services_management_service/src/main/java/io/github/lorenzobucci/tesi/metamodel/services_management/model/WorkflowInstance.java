@@ -117,8 +117,7 @@ public class WorkflowInstance extends BaseEntity {
 
     @Entity
     @Table(name = "service_instance_graph_edge")
-    static
-    class ServiceInstanceGraphEdge extends BaseEntity {
+    private static class ServiceInstanceGraphEdge extends BaseEntity {
 
         @ManyToOne(cascade = CascadeType.ALL)
         @JoinColumn(name = "caller_service")
