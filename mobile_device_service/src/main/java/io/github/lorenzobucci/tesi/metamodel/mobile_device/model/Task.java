@@ -2,7 +2,7 @@ package io.github.lorenzobucci.tesi.metamodel.mobile_device.model;
 
 import com.google.protobuf.Empty;
 import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.OperationalGrpc;
-import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.ServicesManagement;
+import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.ServicesManagementContract;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -94,9 +94,9 @@ public class Task extends BaseEntity {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
-            ServicesManagement.WorkflowRequirementsDTO workflowRequirementsDTO = ServicesManagement.WorkflowRequirementsDTO.newBuilder().build();
+            ServicesManagementContract.WorkflowRequirementsDTO workflowRequirementsDTO = ServicesManagementContract.WorkflowRequirementsDTO.newBuilder().build();
 
-            ServicesManagement.WorkflowInstanceDTO workflowInstanceDTO = blockingStub.instantiateWorkflowInstance(ServicesManagement.InstantiateWorkflowParameters.newBuilder()
+            ServicesManagementContract.WorkflowInstanceDTO workflowInstanceDTO = blockingStub.instantiateWorkflowInstance(ServicesManagementContract.InstantiateWorkflowParameters.newBuilder()
                     .setEndpointParameters(parameters)
                     .setEndpointURI(endpoint.toString())
                     .setWorkflowRequirements(workflowRequirementsDTO)
@@ -111,7 +111,7 @@ public class Task extends BaseEntity {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
-            ServicesManagement.WorkflowRequirementsDTO workflowRequirementsDTO = ServicesManagement.WorkflowRequirementsDTO.newBuilder().build();
+            ServicesManagementContract.WorkflowRequirementsDTO workflowRequirementsDTO = ServicesManagementContract.WorkflowRequirementsDTO.newBuilder().build();
 
             StreamObserver<Empty> streamObserver = new StreamObserver<>() {
                 @Override
@@ -130,8 +130,8 @@ public class Task extends BaseEntity {
                 }
             };
 
-            asyncStub.updateWorkflowRequirements(ServicesManagement.UpdateRequirementsParameters.newBuilder()
-                    .setWorkflowInstance(ServicesManagement.WorkflowInstanceDTO.newBuilder().setId(associatedWorkflowId).build())
+            asyncStub.updateWorkflowRequirements(ServicesManagementContract.UpdateRequirementsParameters.newBuilder()
+                    .setWorkflowInstance(ServicesManagementContract.WorkflowInstanceDTO.newBuilder().setId(associatedWorkflowId).build())
                     .setNewWorkflowRequirements(workflowRequirementsDTO)
                     .build(), streamObserver);
 
@@ -158,7 +158,7 @@ public class Task extends BaseEntity {
                 }
             };
 
-            asyncStub.terminateWorkflowInstance(ServicesManagement.WorkflowInstanceDTO.newBuilder().setId(associatedWorkflowId).build(),
+            asyncStub.terminateWorkflowInstance(ServicesManagementContract.WorkflowInstanceDTO.newBuilder().setId(associatedWorkflowId).build(),
                     streamObserver);
 
             channel.shutdown();
