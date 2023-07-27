@@ -5,9 +5,11 @@ import com.google.protobuf.Int64Value;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.controller.AllocationController;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.controller.ContainerInstanceController;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.controller.NodeController;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
 import io.grpc.stub.StreamObserver;
 import jakarta.inject.Inject;
 
+import static io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.util.Builders.buildContainerInstanceDTO;
 import static io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.util.Builders.buildDependabilityRequirements;
 
 public class OperationalService extends OperationalGrpc.OperationalImplBase {
@@ -44,7 +46,8 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void allocateContainer(ResourcesManagement.DependabilityRequirementsDTO request, StreamObserver<ResourcesManagement.ContainerInstanceDTO> responseObserver) {
         try {
-            allocationController.allocateContainer(buildDependabilityRequirements(request));
+            ContainerInstance containerInstance = allocationController.allocateContainer(buildDependabilityRequirements(request));
+            responseObserver.onNext(buildContainerInstanceDTO(containerInstance));
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -54,7 +57,8 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void reviseContainerAllocation(ResourcesManagement.ReviseContainerAllocationParameters request, StreamObserver<ResourcesManagement.ContainerInstanceDTO> responseObserver) {
         try {
-            allocationController.reviseContainerAllocation(request.getContainerId(), buildDependabilityRequirements(request.getNewRequirements()));
+            ContainerInstance containerInstance = allocationController.reviseContainerAllocation(request.getContainerInstanceId(), buildDependabilityRequirements(request.getNewRequirements()));
+            responseObserver.onNext(buildContainerInstanceDTO(containerInstance));
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
