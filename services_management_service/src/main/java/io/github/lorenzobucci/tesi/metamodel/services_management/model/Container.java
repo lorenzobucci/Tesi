@@ -1,9 +1,18 @@
 package io.github.lorenzobucci.tesi.metamodel.services_management.model;
 
+import com.google.protobuf.Empty;
+import com.google.protobuf.Int64Value;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.OperationalGrpc;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.ResourcesManagementContract;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Embeddable
 public class Container {
@@ -14,8 +23,11 @@ public class Container {
     @Column(name = "container_ip_address")
     private InetAddress ipAddress;
 
+    @Transient
+    private final ResourcesManagementClient resourcesManagementClient = new ResourcesManagementClient();
+
     public Container(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
-        //(associatedContainerId, ipAddress) =AllocationManager.getInstance().allocateContainer(dependabilityRequirements); // TODO: ADJUST AND USE API
+        resourcesManagementClient.allocateContainer(serviceRequirements, workflowRequirements);
     }
 
     protected Container() {
@@ -23,11 +35,11 @@ public class Container {
     }
 
     void optimize(ServiceRequirements serviceRequirements, WorkflowRequirements newWorkflowRequirements) {
-        //ipAddress = AllocationManager.getInstance().reviseContainerAllocation(associatedContainerId, dependabilityRequirements); // TODO: ADJUST AND USE API
+        resourcesManagementClient.reviseContainerAllocation(serviceRequirements, newWorkflowRequirements);
     }
 
     void destroy() {
-        //AllocationManager.destroy; // TODO: ADJUST AND USE API
+        resourcesManagementClient.destroyContainer();
     }
 
     public long getAssociatedContainerId() {
@@ -36,5 +48,108 @@ public class Container {
 
     public InetAddress getIpAddress() {
         return ipAddress;
+    }
+
+    private static class DependabilityRequirements {
+        // PRIVATE STATIC ATTRIBUTES
+
+        private static DependabilityRequirements mergeAndCreate(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
+            // MERGE ServiceRequirements AND WorkflowRequirements
+            return new DependabilityRequirements();
+        }
+    }
+
+    private class ResourcesManagementClient {
+        private ManagedChannel channel;
+        private OperationalGrpc.OperationalBlockingStub blockingStub;
+        private OperationalGrpc.OperationalStub asyncStub;
+
+        private void init() {
+            channel = ManagedChannelBuilder.forAddress("localhost", 9002).usePlaintext().build();
+            blockingStub = OperationalGrpc.newBlockingStub(channel);
+            asyncStub = OperationalGrpc.newStub(channel);
+        }
+
+        private void allocateContainer(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
+            init();
+
+            DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndCreate(serviceRequirements, workflowRequirements);
+
+            // DO CONVERSION FROM DependabilityRequirements TO DependabilityRequirementsDTO
+            ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
+
+            ResourcesManagementContract.ContainerInstanceDTO containerInstanceDTO = blockingStub.allocateContainer(dependabilityRequirementsDTO);
+            channel.shutdown();
+
+            try {
+                ipAddress = InetAddress.getByName(containerInstanceDTO.getNodeIpAddress());
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
+
+            associatedContainerId = containerInstanceDTO.getId();
+        }
+
+        private void reviseContainerAllocation(ServiceRequirements serviceRequirements, WorkflowRequirements newWorkflowRequirements) {
+            init();
+
+            DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndCreate(serviceRequirements, newWorkflowRequirements);
+
+            // DO CONVERSION FROM DependabilityRequirements TO DependabilityRequirementsDTO
+            ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
+
+            StreamObserver<ResourcesManagementContract.ContainerInstanceDTO> streamObserver = new StreamObserver<>() {
+                @Override
+                public void onNext(ResourcesManagementContract.ContainerInstanceDTO containerInstanceDTO) {
+                    try {
+                        ipAddress = InetAddress.getByName(containerInstanceDTO.getNodeIpAddress());
+                    } catch (UnknownHostException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    // LOG FAILED REVISE
+                }
+
+                @Override
+                public void onCompleted() {
+
+                }
+            };
+
+            asyncStub.reviseContainerAllocation(ResourcesManagementContract.ReviseContainerAllocationParameters.newBuilder()
+                    .setContainerInstanceId(associatedContainerId)
+                    .setNewRequirements(dependabilityRequirementsDTO)
+                    .build(), streamObserver);
+
+            channel.shutdown();
+        }
+
+        public void destroyContainer() {
+            init();
+
+            StreamObserver<Empty> streamObserver = new StreamObserver<>() {
+                @Override
+                public void onNext(Empty empty) {
+
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    // LOG FAILED DESTROY
+                }
+
+                @Override
+                public void onCompleted() {
+
+                }
+            };
+
+            asyncStub.destroyContainer(Int64Value.of(associatedContainerId), streamObserver);
+
+            channel.shutdown();
+        }
     }
 }
