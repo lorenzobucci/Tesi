@@ -50,6 +50,7 @@ public class Builders {
                 .setContainerTypeId(containerInstance.getContainerType().getId())
                 .setContainerState(containerInstance.getContainerState())
                 .setBelongingNodeId(containerInstance.getBelongingNode().getId())
+                .setNodeIpAddress(containerInstance.getBelongingNode().getIpAddress().toString())
                 .build();
     }
 

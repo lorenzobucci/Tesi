@@ -69,6 +69,7 @@ message ContainerInstanceDTO {
   int64 containerTypeId = 2;
   string containerState = 3;
   int64 belongingNodeId = 4;
+  string nodeIpAddress = 5;
 }
 
 // DTO LISTS
