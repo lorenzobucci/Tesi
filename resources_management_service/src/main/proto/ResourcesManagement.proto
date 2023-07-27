@@ -44,7 +44,7 @@ enum NodeTypeDTO {
 message NodeDTO {
   int64 id = 1;
   NodeTypeDTO nodeType = 2;
-  repeated int64 ownedContainers = 3;
+  repeated int64 ownedContainersId = 3;
   NodeTechnicalPropertiesDTO properties = 4;
   string ipAddress = 5;
   float latitude = 6;
@@ -66,9 +66,9 @@ message ContainerTypeDTO {
 
 message ContainerInstanceDTO {
   int64 id = 1;
-  int64 containerType = 2;
+  int64 containerTypeId = 2;
   string containerState = 3;
-  int64 belongingNode = 4;
+  int64 belongingNodeId = 4;
 }
 
 // DTO LISTS
@@ -107,11 +107,12 @@ message ContainerTypeConstructorParameters {
 }
 
 message NodeDTSyncParameters {
-  float memoryUsagePercentage = 1;
-  float cpuUsagePercentage = 2;
+  int64 nodeId = 1;
+  float memoryUsagePercentage = 2;
+  float cpuUsagePercentage = 3;
 }
 
 message ReviseContainerAllocationParameters {
-  ContainerInstanceDTO container = 1;
+  int64 containerId = 1;
   DependabilityRequirementsDTO newRequirements = 2;
 }

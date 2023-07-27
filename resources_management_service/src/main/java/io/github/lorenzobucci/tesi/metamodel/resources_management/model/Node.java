@@ -95,4 +95,8 @@ public class Node extends BaseEntity {
         return ownedContainers.size();
     }
 
+    public Set<ContainerInstance> getOwnedContainers() {
+        return ownedContainers;
+    }
+
 }

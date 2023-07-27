@@ -5,9 +5,12 @@ import io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.Depe
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 
+@Singleton
 public class AllocationController {
 
     @Inject
@@ -37,7 +40,7 @@ public class AllocationController {
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
-    public ContainerInstance reviseContainerAllocation(long containerInstanceId, DependabilityRequirements newDependabilityRequirements) throws IllegalStateException {
+    public ContainerInstance reviseContainerAllocation(long containerInstanceId, DependabilityRequirements newDependabilityRequirements) throws IllegalStateException, NoSuchElementException {
         if (allocator != null) {
             ContainerInstance containerInstance = containerInstanceController.getContainerInstance(containerInstanceId);
             Node oldNode = containerInstance.getBelongingNode();
@@ -62,8 +65,11 @@ public class AllocationController {
             throw new IllegalStateException("The allocation algorithm has not yet been set.");
     }
 
-    public AllocatorAlgorithm getCurrentAllocator() {
-        return allocator;
+    public AllocatorAlgorithm getCurrentAllocator() throws NoSuchElementException {
+        if (allocator != null)
+            return allocator;
+        else
+            throw new NoSuchElementException("The allocation algorithm has not yet been set.");
     }
 
     public void setAllocatorAlgorithm(AllocatorAlgorithm allocatorAlgorithm) {
