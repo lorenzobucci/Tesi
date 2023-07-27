@@ -44,7 +44,7 @@ enum NodeTypeDTO {
 message NodeDTO {
   int64 id = 1;
   NodeTypeDTO nodeType = 2;
-  repeated int64 ownedContainersId = 3;
+  repeated int64 ownedContainerInstancesId = 3;
   NodeTechnicalPropertiesDTO properties = 4;
   string ipAddress = 5;
   float latitude = 6;
@@ -113,6 +113,6 @@ message NodeDTSyncParameters {
 }
 
 message ReviseContainerAllocationParameters {
-  int64 containerId = 1;
+  int64 containerInstanceId = 1;
   DependabilityRequirementsDTO newRequirements = 2;
 }

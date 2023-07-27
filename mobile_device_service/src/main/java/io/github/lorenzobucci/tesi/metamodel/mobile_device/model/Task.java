@@ -1,6 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.mobile_device.model;
 
 import com.google.protobuf.Empty;
+import com.google.protobuf.Int64Value;
 import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.OperationalGrpc;
 import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.ServicesManagementContract;
 import io.grpc.ManagedChannel;
@@ -131,7 +132,7 @@ public class Task extends BaseEntity {
             };
 
             asyncStub.updateWorkflowRequirements(ServicesManagementContract.UpdateRequirementsParameters.newBuilder()
-                    .setWorkflowInstance(ServicesManagementContract.WorkflowInstanceDTO.newBuilder().setId(associatedWorkflowId).build())
+                    .setWorkflowInstanceId(associatedWorkflowId)
                     .setNewWorkflowRequirements(workflowRequirementsDTO)
                     .build(), streamObserver);
 
@@ -158,8 +159,7 @@ public class Task extends BaseEntity {
                 }
             };
 
-            asyncStub.terminateWorkflowInstance(ServicesManagementContract.WorkflowInstanceDTO.newBuilder().setId(associatedWorkflowId).build(),
-                    streamObserver);
+            asyncStub.terminateWorkflowInstance(Int64Value.of(associatedWorkflowId), streamObserver);
 
             channel.shutdown();
         }

@@ -2,6 +2,7 @@ package io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC;
 
 import com.google.protobuf.BoolValue;
 import com.google.protobuf.Empty;
+import com.google.protobuf.Int64Value;
 import io.github.lorenzobucci.tesi.metamodel.services_management.controller.WorkflowInstanceController;
 import io.github.lorenzobucci.tesi.metamodel.services_management.controller.WorkflowTypeController;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceType;
@@ -36,9 +37,9 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     }
 
     @Override
-    public void terminateWorkflowInstance(ServicesManagement.WorkflowInstanceDTO request, StreamObserver<Empty> responseObserver) {
+    public void terminateWorkflowInstance(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowInstanceController.terminateWorkflowInstance(request.getId());
+            workflowInstanceController.terminateWorkflowInstance(request.getValue());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -48,7 +49,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void updateWorkflowRequirements(ServicesManagement.UpdateRequirementsParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowInstanceController.updateWorkflowRequirements(request.getWorkflowInstance().getId(),
+            workflowInstanceController.updateWorkflowRequirements(request.getWorkflowInstanceId(),
                     buildWorkflowRequirements(request.getNewWorkflowRequirements()));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -59,9 +60,9 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void addServiceTypeToWorkflowType(ServicesManagement.AddServiceTypeToWorkflowTypeParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowTypeController.addServiceTypeToWorkflow(request.getWorkflowType().getId(),
-                    request.getServiceTypeToAdd().getId(),
-                    request.getCallerServiceType().getId());
+            workflowTypeController.addServiceTypeToWorkflow(request.getWorkflowTypeId(),
+                    request.getServiceTypeToAddId(),
+                    request.getCallerServiceTypeId());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -71,9 +72,9 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void addRPCToWorkflowType(ServicesManagement.AddRPCToWorkflowTypeParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowTypeController.addRPCToWorkflow(request.getWorkflowType().getId(),
-                    request.getCallerServiceType().getId(),
-                    request.getCalleeServiceType().getId());
+            workflowTypeController.addRPCToWorkflow(request.getWorkflowTypeId(),
+                    request.getCallerServiceTypeId(),
+                    request.getCalleeServiceTypeId());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -83,8 +84,8 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void workflowTypeContainsServiceType(ServicesManagement.WorkflowTypeContainsServiceTypeParameters request, StreamObserver<BoolValue> responseObserver) {
         try {
-            boolean response = workflowTypeController.workflowTypeContainsServiceType(request.getWorkflowType().getId(),
-                    request.getServiceTypeToVerify().getId());
+            boolean response = workflowTypeController.workflowTypeContainsServiceType(request.getWorkflowTypeId(),
+                    request.getServiceTypeToVerifyId());
             responseObserver.onNext(BoolValue.of(response));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -95,8 +96,8 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void removeServiceTypeFromWorkflow(ServicesManagement.RemoveServiceTypeFromWorkflowParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowTypeController.removeServiceTypeFromWorkflow(request.getWorkflowType().getId(),
-                    request.getServiceTypeToRemove().getId());
+            workflowTypeController.removeServiceTypeFromWorkflow(request.getWorkflowTypeId(),
+                    request.getServiceTypeToRemoveId());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -106,8 +107,8 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void updateWorkflowEndpointServiceType(ServicesManagement.UpdateWorkflowEndpointServiceTypeParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowTypeController.updateWorkflowEndpointServiceType(request.getWorkflowType().getId(),
-                    request.getNewEndpointServiceType().getId());
+            workflowTypeController.updateWorkflowEndpointServiceType(request.getWorkflowTypeId(),
+                    request.getNewEndpointServiceTypeId());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -115,9 +116,9 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     }
 
     @Override
-    public void retrieveServiceTypesFromWorkflow(ServicesManagement.WorkflowTypeDTO request, StreamObserver<ServicesManagement.ServiceTypeList> responseObserver) {
+    public void retrieveServiceTypesFromWorkflow(Int64Value request, StreamObserver<ServicesManagement.ServiceTypeList> responseObserver) {
         try {
-            Set<ServiceType> serviceTypes = workflowTypeController.retrieveServiceTypesFromWorkflow(request.getId());
+            Set<ServiceType> serviceTypes = workflowTypeController.retrieveServiceTypesFromWorkflow(request.getValue());
             ServicesManagement.ServiceTypeList.Builder serviceTypeList = ServicesManagement.ServiceTypeList.newBuilder();
 
             for (ServiceType serviceType : serviceTypes)

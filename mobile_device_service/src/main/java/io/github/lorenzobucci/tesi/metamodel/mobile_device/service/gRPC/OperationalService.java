@@ -18,7 +18,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void signalMobileDeviceEndpointInvocation(MobileDevice.EndpointInvocationParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDT().getId(),
+            mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDTId(),
                     URI.create(request.getInvokedEndpoint()),
                     request.getParameters());
             responseObserver.onCompleted();
@@ -30,7 +30,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void signalMobileDeviceTaskCompletion(MobileDevice.TaskCompletionParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDT().getId(), request.getCompletedTask().getId());
+            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), request.getCompletedTaskId());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -43,7 +43,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
             MobileDevice.PositionDTO positionDTO = request.getCurrentPosition();
             Position position = new Position(positionDTO.getLatitude(), positionDTO.getLongitude(), new Timestamp(Timestamps.toMillis(positionDTO.getTimestamp())));
 
-            mobileDeviceDTController.syncMobileDeviceDTProperties(request.getMobileDeviceDT().getId(), position);
+            mobileDeviceDTController.syncMobileDeviceDTProperties(request.getMobileDeviceDTId(), position);
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

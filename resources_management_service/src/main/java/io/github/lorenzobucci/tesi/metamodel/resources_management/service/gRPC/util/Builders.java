@@ -17,7 +17,7 @@ public class Builders {
                 .setNodeType(ResourcesManagement.NodeTypeDTO.valueOf(node.getNodeType().toString()));
 
         for (ContainerInstance containerInstance : node.getOwnedContainers())
-            nodeDTO.addOwnedContainersId(containerInstance.getId());
+            nodeDTO.addOwnedContainerInstancesId(containerInstance.getId());
 
         nodeDTO.setProperties(buildNodeTechnicalPropertiesDTO(node.getProperties()))
                 .setIpAddress(node.getIpAddress().toString())

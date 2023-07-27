@@ -20,8 +20,8 @@ public class Builders {
     public static ServicesManagement.EndpointServiceInstanceDTO buildEndpointServiceInstanceDTO(EndpointServiceInstance endpointServiceInstance) {
         return ServicesManagement.EndpointServiceInstanceDTO.newBuilder()
                 .setId(endpointServiceInstance.getId())
-                .setBelongingWorkflow(buildWorkflowInstanceDTO(endpointServiceInstance.getBelongingWorkflow()))
-                .setEndpointServiceType(buildEndpointServiceTypeDTO(endpointServiceInstance.getEndpointServiceType()))
+                .setBelongingWorkflowInstanceId(endpointServiceInstance.getBelongingWorkflow().getId())
+                .setEndpointServiceTypeId(endpointServiceInstance.getEndpointServiceType().getId())
                 .setParameters(endpointServiceInstance.getParameters())
                 .build();
     }
@@ -37,8 +37,8 @@ public class Builders {
     public static ServicesManagement.ServiceInstanceDTO buildServiceInstanceDTO(ServiceInstance serviceInstance) {
         return ServicesManagement.ServiceInstanceDTO.newBuilder()
                 .setId(serviceInstance.getId())
-                .setServiceType(buildServiceTypeDTO(serviceInstance.getServiceType()))
-                .setBelongingWorkflow(buildWorkflowInstanceDTO(serviceInstance.getBelongingWorkflow()))
+                .setServiceTypeId(serviceInstance.getServiceType().getId())
+                .setBelongingWorkflowInstanceId(serviceInstance.getBelongingWorkflow().getId())
                 .setContainer(buildContainerDTO(serviceInstance.getContainer()))
                 .build();
     }
@@ -47,9 +47,9 @@ public class Builders {
         ServicesManagement.WorkflowTypeDTO.Builder workflowTypeDTO = ServicesManagement.WorkflowTypeDTO.newBuilder().setId(workflowType.getId());
 
         for (ServiceType serviceType : workflowType.getServiceTypes())
-            workflowTypeDTO.addServiceTypeSet(buildServiceTypeDTO(serviceType));
+            workflowTypeDTO.addServiceTypesIdSet(serviceType.getId());
 
-        workflowTypeDTO.setEndpointServiceType(buildEndpointServiceTypeDTO(workflowType.getEndpointServiceType()));
+        workflowTypeDTO.setEndpointServiceTypeId(workflowType.getEndpointServiceType().getId());
 
         return workflowTypeDTO.build();
     }
@@ -58,10 +58,10 @@ public class Builders {
         ServicesManagement.WorkflowInstanceDTO.Builder workflowInstanceDTO = ServicesManagement.WorkflowInstanceDTO.newBuilder().setId(workflowInstance.getId());
 
         for (ServiceInstance serviceInstance : workflowInstance.getServiceInstances())
-            workflowInstanceDTO.addServiceInstanceSet(buildServiceInstanceDTO(serviceInstance));
+            workflowInstanceDTO.addServiceInstancesIdSet(serviceInstance.getId());
 
-        workflowInstanceDTO.setEndpointServiceInstance(buildEndpointServiceInstanceDTO(workflowInstance.getEndpointServiceInstance()))
-                .setRefWorkflowType(buildWorkflowTypeDTO(workflowInstance.getWorkflowType()))
+        workflowInstanceDTO.setEndpointServiceInstanceId(workflowInstance.getEndpointServiceInstance().getId())
+                .setRefWorkflowTypeId(workflowInstance.getWorkflowType().getId())
                 .setWorkflowRequirements(buildWorkflowRequirementsDTO(workflowInstance.getWorkflowRequirements()));
 
         return workflowInstanceDTO.build();

@@ -1,6 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC;
 
 import com.google.protobuf.Empty;
+import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
 import io.github.lorenzobucci.tesi.metamodel.services_management.controller.*;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.*;
@@ -47,9 +48,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getEndpointServiceType(ServicesManagement.EndpointServiceTypeDTO request, StreamObserver<ServicesManagement.EndpointServiceTypeDTO> responseObserver) {
+    public void getEndpointServiceType(Int64Value request, StreamObserver<ServicesManagement.EndpointServiceTypeDTO> responseObserver) {
         try {
-            EndpointServiceType endpointServiceType = endpointServiceTypeController.getEndpointServiceType(request.getId());
+            EndpointServiceType endpointServiceType = endpointServiceTypeController.getEndpointServiceType(request.getValue());
             responseObserver.onNext(buildEndpointServiceTypeDTO(endpointServiceType));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -81,9 +82,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void removeEndpointServiceType(ServicesManagement.EndpointServiceTypeDTO request, StreamObserver<Empty> responseObserver) {
+    public void removeEndpointServiceType(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
-            endpointServiceTypeController.removeEndpointServiceType(request.getId());
+            endpointServiceTypeController.removeEndpointServiceType(request.getValue());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -91,9 +92,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getEndpointServiceInstance(ServicesManagement.EndpointServiceInstanceDTO request, StreamObserver<ServicesManagement.EndpointServiceInstanceDTO> responseObserver) {
+    public void getEndpointServiceInstance(Int64Value request, StreamObserver<ServicesManagement.EndpointServiceInstanceDTO> responseObserver) {
         try {
-            EndpointServiceInstance endpointServiceInstance = endpointServiceInstanceController.getEndpointServiceInstance(request.getId());
+            EndpointServiceInstance endpointServiceInstance = endpointServiceInstanceController.getEndpointServiceInstance(request.getValue());
             responseObserver.onNext(buildEndpointServiceInstanceDTO(endpointServiceInstance));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -114,9 +115,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getServiceInstance(ServicesManagement.ServiceInstanceDTO request, StreamObserver<ServicesManagement.ServiceInstanceDTO> responseObserver) {
+    public void getServiceInstance(Int64Value request, StreamObserver<ServicesManagement.ServiceInstanceDTO> responseObserver) {
         try {
-            ServiceInstance serviceInstance = serviceInstanceController.getServiceInstance(request.getId());
+            ServiceInstance serviceInstance = serviceInstanceController.getServiceInstance(request.getValue());
             responseObserver.onNext(buildServiceInstanceDTO(serviceInstance));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -149,9 +150,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getServiceType(ServicesManagement.ServiceTypeDTO request, StreamObserver<ServicesManagement.ServiceTypeDTO> responseObserver) {
+    public void getServiceType(Int64Value request, StreamObserver<ServicesManagement.ServiceTypeDTO> responseObserver) {
         try {
-            ServiceType serviceType = serviceTypeController.getServiceType(request.getId());
+            ServiceType serviceType = serviceTypeController.getServiceType(request.getValue());
             responseObserver.onNext(buildServiceTypeDTO(serviceType));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -172,9 +173,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void removeServiceType(ServicesManagement.ServiceTypeDTO request, StreamObserver<Empty> responseObserver) {
+    public void removeServiceType(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
-            serviceTypeController.removeServiceType(request.getId());
+            serviceTypeController.removeServiceType(request.getValue());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -182,9 +183,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getWorkflowInstance(ServicesManagement.WorkflowInstanceDTO request, StreamObserver<ServicesManagement.WorkflowInstanceDTO> responseObserver) {
+    public void getWorkflowInstance(Int64Value request, StreamObserver<ServicesManagement.WorkflowInstanceDTO> responseObserver) {
         try {
-            WorkflowInstance workflowInstance = workflowInstanceController.getWorkflowInstance(request.getId());
+            WorkflowInstance workflowInstance = workflowInstanceController.getWorkflowInstance(request.getValue());
             responseObserver.onNext(buildWorkflowInstanceDTO(workflowInstance));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -207,7 +208,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     @Override
     public void addWorkflowType(ServicesManagement.WorkflowTypeConstructorParameters request, StreamObserver<ServicesManagement.WorkflowTypeDTO> responseObserver) {
         try {
-            WorkflowType workflowType = workflowTypeController.addWorkflowType(request.getEndpointServiceType().getId());
+            WorkflowType workflowType = workflowTypeController.addWorkflowType(request.getEndpointServiceTypeId());
 
             responseObserver.onNext(buildWorkflowTypeDTO(workflowType));
             responseObserver.onCompleted();
@@ -217,9 +218,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getWorkflowType(ServicesManagement.WorkflowTypeDTO request, StreamObserver<ServicesManagement.WorkflowTypeDTO> responseObserver) {
+    public void getWorkflowType(Int64Value request, StreamObserver<ServicesManagement.WorkflowTypeDTO> responseObserver) {
         try {
-            WorkflowType workflowType = workflowTypeController.getWorkflowType(request.getId());
+            WorkflowType workflowType = workflowTypeController.getWorkflowType(request.getValue());
             responseObserver.onNext(buildWorkflowTypeDTO(workflowType));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -253,7 +254,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     @Override
     public void removeWorkflowType(ServicesManagement.RemoveWorkflowTypeParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            workflowTypeController.removeWorkflowType(request.getWorkflowType().getId(), request.getRemoveEndpointServiceType());
+            workflowTypeController.removeWorkflowType(request.getWorkflowTypeId(), request.getRemoveEndpointServiceType());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

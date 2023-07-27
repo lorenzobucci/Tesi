@@ -15,7 +15,7 @@ public class Builders {
         MobileDevice.MobileDeviceDTDTO.Builder mobileDeviceDTDTO = MobileDevice.MobileDeviceDTDTO.newBuilder().setId(mobileDeviceDT.getId());
 
         for (Task task : mobileDeviceDT.getRunningTasks())
-            mobileDeviceDTDTO.addRunningTasks(buildTaskDTO(task));
+            mobileDeviceDTDTO.addRunningTasksId(task.getId());
 
         for (Position position : mobileDeviceDT.getPastTrajectory().getPositionsSet())
             mobileDeviceDTDTO.addTrajectory(buildPositionDTO(position));

@@ -1,6 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC;
 
 import com.google.protobuf.Empty;
+import com.google.protobuf.Int64Value;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.MobileDeviceDTController;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.TaskController;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
@@ -29,9 +30,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getMobileDeviceDT(MobileDevice.MobileDeviceDTDTO request, StreamObserver<MobileDevice.MobileDeviceDTDTO> responseObserver) {
+    public void getMobileDeviceDT(Int64Value request, StreamObserver<MobileDevice.MobileDeviceDTDTO> responseObserver) {
         try {
-            MobileDeviceDT mobileDeviceDT = mobileDeviceDTController.getMobileDeviceDT(request.getId());
+            MobileDeviceDT mobileDeviceDT = mobileDeviceDTController.getMobileDeviceDT(request.getValue());
             responseObserver.onNext(buildMobileDeviceDTDTO(mobileDeviceDT));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -52,9 +53,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void removeMobileDeviceDT(MobileDevice.MobileDeviceDTDTO request, StreamObserver<Empty> responseObserver) {
+    public void removeMobileDeviceDT(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
-            mobileDeviceDTController.removeMobileDeviceDT(request.getId());
+            mobileDeviceDTController.removeMobileDeviceDT(request.getValue());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -62,9 +63,9 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     }
 
     @Override
-    public void getTask(MobileDevice.TaskDTO request, StreamObserver<MobileDevice.TaskDTO> responseObserver) {
+    public void getTask(Int64Value request, StreamObserver<MobileDevice.TaskDTO> responseObserver) {
         try {
-            Task task = taskController.getTask(request.getId());
+            Task task = taskController.getTask(request.getValue());
             responseObserver.onNext(buildTaskDTO(task));
             responseObserver.onCompleted();
         } catch (Exception e) {
