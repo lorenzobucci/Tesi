@@ -76,8 +76,4 @@ public class AllocationController {
         allocator = allocatorAlgorithm;
     }
 
-    void deallocateContainer(ContainerInstance containerInstance) {
-        containerInstance.getBelongingNode().removeOwnedContainer(containerInstance);
-        nodeController.updateNode(containerInstance.getBelongingNode());
-    }
 }

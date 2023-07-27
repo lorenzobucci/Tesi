@@ -13,7 +13,7 @@ public class ContainerInstanceController {
     private ContainerInstanceDao containerInstanceDao;
 
     @Inject
-    private AllocationController allocationController;
+    private NodeController nodeController;
 
     public ContainerInstance getContainerInstance(long containerInstanceId) throws NoSuchElementException {
         ContainerInstance containerInstance = containerInstanceDao.findById(containerInstanceId);
@@ -29,7 +29,8 @@ public class ContainerInstanceController {
 
     public void destroyContainerInstance(long containerInstanceId) throws NoSuchElementException {
         ContainerInstance containerInstance = getContainerInstance(containerInstanceId);
-        allocationController.deallocateContainer(containerInstance);
+        containerInstance.getBelongingNode().removeOwnedContainer(containerInstance);
+        nodeController.updateNode(containerInstance.getBelongingNode());
         containerInstanceDao.delete(containerInstance);
     }
 
