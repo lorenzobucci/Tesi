@@ -37,12 +37,17 @@ message TaskDTO {
   string endpointURI = 2;
   string parameters = 3;
   int64 associatedWorkflowId = 4;
+  DependabilityRequirementsDTO dependabilityRequirements = 5;
 }
 
 message PositionDTO {
   google.protobuf.Timestamp timestamp = 1;
   float latitude = 2;
   float longitude = 3;
+}
+
+message DependabilityRequirementsDTO {
+
 }
 
 // DTO LIST

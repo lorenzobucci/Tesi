@@ -1,6 +1,7 @@
 package io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.util;
 
 import com.google.protobuf.util.Timestamps;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.DependabilityRequirements;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Task;
@@ -36,6 +37,11 @@ public class Builders {
                 .setEndpointURI(task.getEndpoint().toString())
                 .setParameters(task.getParameters())
                 .setAssociatedWorkflowId(task.getAssociatedWorkflowId())
+                .setDependabilityRequirements(buildDependabilityRequirementsDTO(task.getRequirements()))
                 .build();
+    }
+
+    public static MobileDevice.DependabilityRequirementsDTO buildDependabilityRequirementsDTO(DependabilityRequirements dependabilityRequirements) {
+        return MobileDevice.DependabilityRequirementsDTO.newBuilder().build(); // DO CONVERSION TO DTO
     }
 }
