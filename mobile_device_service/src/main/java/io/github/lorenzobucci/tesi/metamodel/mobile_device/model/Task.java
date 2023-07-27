@@ -41,11 +41,11 @@ public class Task extends BaseEntity {
 
     void updateRequirements(DependabilityRequirements requirements) {
         this.requirements = requirements;
-        servicesManagementsClient.updateServiceRequirements(associatedWorkflowId, requirements);
+        servicesManagementsClient.updateServiceRequirements(requirements);
     }
 
     void onCompleted() {
-        servicesManagementsClient.workflowCompleted(associatedWorkflowId);
+        servicesManagementsClient.workflowCompleted();
     }
 
     public URI getEndpoint() {
@@ -109,7 +109,7 @@ public class Task extends BaseEntity {
             associatedWorkflowId = workflowInstanceDTO.getId();
         }
 
-        private void updateServiceRequirements(long associatedWorkflowId, DependabilityRequirements newRequirements) {
+        private void updateServiceRequirements(DependabilityRequirements newRequirements) {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
@@ -140,7 +140,7 @@ public class Task extends BaseEntity {
             channel.shutdown();
         }
 
-        private void workflowCompleted(long associatedWorkflowId) {
+        private void workflowCompleted() {
             init();
 
             StreamObserver<Empty> streamObserver = new StreamObserver<>() {
