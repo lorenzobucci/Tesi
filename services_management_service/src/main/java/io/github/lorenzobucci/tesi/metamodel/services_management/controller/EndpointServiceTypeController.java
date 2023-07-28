@@ -4,7 +4,6 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.dao.EndpointSer
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.EndpointServiceType;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceRequirements;
 import jakarta.inject.Inject;
-import org.hibernate.exception.ConstraintViolationException;
 
 import java.net.URI;
 import java.util.List;
@@ -41,7 +40,7 @@ public class EndpointServiceTypeController {
         return endpointServiceTypeDao.findAll();
     }
 
-    public void removeEndpointServiceType(long endpointServiceTypeId) throws NoSuchElementException, ConstraintViolationException {
+    public void removeEndpointServiceType(long endpointServiceTypeId) throws NoSuchElementException {
         endpointServiceTypeDao.delete(getEndpointServiceType(endpointServiceTypeId));
     }
 }

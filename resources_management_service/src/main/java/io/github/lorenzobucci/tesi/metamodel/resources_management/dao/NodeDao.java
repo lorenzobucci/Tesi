@@ -9,28 +9,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class NodeDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(Node node) {
         em.persist(node);
     }
 
-    @Transactional
     public void delete(Node node) {
         em.remove(node);
     }
 
-    @Transactional
     public void update(Node node) {
         em.merge(node);
     }
 
     public List<Node> findAll() {
-        TypedQuery<Node> query = em.createQuery("from Node ", Node.class);
+        TypedQuery<Node> query = em.createQuery("select p from Node p", Node.class);
         return query.getResultList();
     }
 
@@ -40,7 +38,7 @@ public class NodeDao {
 
     public Node findByUuid(UUID nodeUuid) {
         TypedQuery<Node> query =
-                em.createQuery("from Node where uuid = :nodeUuid", Node.class)
+                em.createQuery("select p from Node p where p.uuid = :nodeUuid", Node.class)
                         .setParameter("nodeUuid", nodeUuid);
         return query.getSingleResult();
     }

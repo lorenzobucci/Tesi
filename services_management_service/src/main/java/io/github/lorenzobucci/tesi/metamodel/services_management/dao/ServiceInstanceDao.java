@@ -4,16 +4,18 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceIn
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
+@Transactional
 public class ServiceInstanceDao {
 
     @PersistenceContext
     private EntityManager em;
 
     public List<ServiceInstance> findAll() {
-        TypedQuery<ServiceInstance> query = em.createQuery("from ServiceInstance ", ServiceInstance.class);
+        TypedQuery<ServiceInstance> query = em.createQuery("select p from ServiceInstance p", ServiceInstance.class);
         return query.getResultList();
     }
 

@@ -7,11 +7,13 @@ import io.github.lorenzobucci.tesi.metamodel.resources_management.controller.Con
 import io.github.lorenzobucci.tesi.metamodel.resources_management.controller.NodeController;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
 import io.grpc.stub.StreamObserver;
+import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
 import static io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.util.Builders.buildContainerInstanceDTO;
 import static io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.util.Builders.buildDependabilityRequirements;
 
+@GrpcService
 public class OperationalService extends OperationalGrpc.OperationalImplBase {
 
     @Inject

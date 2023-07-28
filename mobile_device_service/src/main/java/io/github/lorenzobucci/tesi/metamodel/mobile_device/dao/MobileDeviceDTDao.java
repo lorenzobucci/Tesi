@@ -9,28 +9,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class MobileDeviceDTDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(MobileDeviceDT newMobileDevice) {
         em.persist(newMobileDevice);
     }
 
-    @Transactional
     public void delete(MobileDeviceDT mobileDevice) {
         em.remove(mobileDevice);
     }
 
-    @Transactional
     public void update(MobileDeviceDT mobileDevice) {
         em.merge(mobileDevice);
     }
 
     public List<MobileDeviceDT> findAll() {
-        TypedQuery<MobileDeviceDT> query = em.createQuery("from MobileDeviceDT ", MobileDeviceDT.class);
+        TypedQuery<MobileDeviceDT> query = em.createQuery("select p from MobileDeviceDT p", MobileDeviceDT.class);
         return query.getResultList();
     }
 
@@ -40,7 +38,7 @@ public class MobileDeviceDTDao {
 
     public MobileDeviceDT findByUuid(UUID mobileDeviceUuid) {
         TypedQuery<MobileDeviceDT> query =
-                em.createQuery("from MobileDeviceDT where uuid = :mobileDeviceUuid", MobileDeviceDT.class)
+                em.createQuery("select p from MobileDeviceDT p where p.uuid = :mobileDeviceUuid", MobileDeviceDT.class)
                         .setParameter("mobileDeviceUuid", mobileDeviceUuid);
         return query.getSingleResult();
     }

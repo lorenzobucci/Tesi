@@ -10,28 +10,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class WorkflowTypeDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(WorkflowType workflowType) {
         em.persist(workflowType);
     }
 
-    @Transactional
     public void update(WorkflowType workflowType) {
         em.merge(workflowType);
     }
 
-    @Transactional
     public void delete(WorkflowType workflowType) {
         em.remove(workflowType);
     }
 
     public List<WorkflowType> findAll() {
-        TypedQuery<WorkflowType> query = em.createQuery("from WorkflowType ", WorkflowType.class);
+        TypedQuery<WorkflowType> query = em.createQuery("select p from WorkflowType p", WorkflowType.class);
         return query.getResultList();
     }
 
@@ -41,14 +39,14 @@ public class WorkflowTypeDao {
 
     public WorkflowType findByUuid(UUID workflowTypeUuid) {
         TypedQuery<WorkflowType> query =
-                em.createQuery("from WorkflowType where uuid = :workflowUuid", WorkflowType.class)
+                em.createQuery("select p from WorkflowType p where p.uuid = :workflowUuid", WorkflowType.class)
                         .setParameter("workflowUuid", workflowTypeUuid);
         return query.getSingleResult();
     }
 
     public WorkflowType findByEndpoint(EndpointServiceType endpointServiceType) {
         TypedQuery<WorkflowType> query =
-                em.createQuery("from WorkflowType where endpointServiceType = :endpointId", WorkflowType.class)
+                em.createQuery("select p from WorkflowType p where p.endpointServiceType = :endpointId", WorkflowType.class)
                         .setParameter("endpointId", endpointServiceType.getId());
         return query.getSingleResult();
     }

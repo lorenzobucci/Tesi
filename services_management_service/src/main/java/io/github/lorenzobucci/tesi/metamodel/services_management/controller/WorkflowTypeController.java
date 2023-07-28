@@ -4,7 +4,6 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.dao.WorkflowTyp
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceType;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowType;
 import jakarta.inject.Inject;
-import org.hibernate.exception.ConstraintViolationException;
 
 import java.net.URI;
 import java.util.List;
@@ -48,7 +47,7 @@ public class WorkflowTypeController {
         return workflowTypeDao.findAll();
     }
 
-    public void removeWorkflowType(long workflowTypeId, boolean removeEndpointServiceType) throws NoSuchElementException, ConstraintViolationException {
+    public void removeWorkflowType(long workflowTypeId, boolean removeEndpointServiceType) throws NoSuchElementException {
         WorkflowType workflowType = getWorkflowType(workflowTypeId);
         long endpointServiceTypeId = workflowType.getEndpointServiceType().getId();
 

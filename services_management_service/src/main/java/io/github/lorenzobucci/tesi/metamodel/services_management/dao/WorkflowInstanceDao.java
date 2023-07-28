@@ -9,28 +9,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class WorkflowInstanceDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(WorkflowInstance workflowInstance) {
         em.persist(workflowInstance);
     }
 
-    @Transactional
     public void update(WorkflowInstance workflowInstance) {
         em.merge(workflowInstance);
     }
 
-    @Transactional
     public void delete(WorkflowInstance workflowInstance) {
         em.remove(workflowInstance);
     }
 
     public List<WorkflowInstance> findAll() {
-        TypedQuery<WorkflowInstance> query = em.createQuery("from WorkflowInstance ", WorkflowInstance.class);
+        TypedQuery<WorkflowInstance> query = em.createQuery("select p from WorkflowInstance p", WorkflowInstance.class);
         return query.getResultList();
     }
 
@@ -40,7 +38,7 @@ public class WorkflowInstanceDao {
 
     public WorkflowInstance findByUuid(UUID workflowInstanceUuid) {
         TypedQuery<WorkflowInstance> query =
-                em.createQuery("from WorkflowInstance where uuid = :workflowUuid", WorkflowInstance.class)
+                em.createQuery("select p from WorkflowInstance p where p.uuid = :workflowUuid", WorkflowInstance.class)
                         .setParameter("workflowUuid", workflowInstanceUuid);
         return query.getSingleResult();
     }

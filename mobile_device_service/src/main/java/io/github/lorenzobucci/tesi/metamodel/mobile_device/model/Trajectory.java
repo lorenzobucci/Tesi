@@ -1,8 +1,8 @@
 package io.github.lorenzobucci.tesi.metamodel.mobile_device.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.SortNatural;
 
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 @Entity
@@ -10,9 +10,8 @@ import java.util.TreeSet;
 public class Trajectory extends BaseEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @SortNatural
     @JoinColumn(name = "trajectory_id", referencedColumnName = "id")
-    private TreeSet<Position> positionsSet = new TreeSet<>();
+    private SortedSet<Position> positionsSet = new TreeSet<>();
 
     Trajectory(Trajectory trajectory) {
         positionsSet = new TreeSet<>(trajectory.positionsSet);
@@ -25,7 +24,7 @@ public class Trajectory extends BaseEntity {
         positionsSet.add(position);
     }
 
-    public TreeSet<Position> getPositionsSet() {
+    public SortedSet<Position> getPositionsSet() {
         return positionsSet;
     }
 

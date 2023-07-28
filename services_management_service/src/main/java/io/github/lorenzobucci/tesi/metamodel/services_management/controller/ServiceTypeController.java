@@ -4,7 +4,6 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.dao.ServiceType
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceRequirements;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceType;
 import jakarta.inject.Inject;
-import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,7 +31,7 @@ public class ServiceTypeController {
         return serviceTypeDao.findAll();
     }
 
-    public void removeServiceType(long serviceTypeId) throws NoSuchElementException, ConstraintViolationException {
+    public void removeServiceType(long serviceTypeId) throws NoSuchElementException {
         serviceTypeDao.delete(getServiceType(serviceTypeId));
     }
 }

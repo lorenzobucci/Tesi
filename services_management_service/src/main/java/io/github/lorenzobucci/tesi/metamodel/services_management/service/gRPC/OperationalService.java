@@ -8,6 +8,7 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.controller.Work
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceType;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowInstance;
 import io.grpc.stub.StreamObserver;
+import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
 
+@GrpcService
 public class OperationalService extends OperationalGrpc.OperationalImplBase {
 
     @Inject

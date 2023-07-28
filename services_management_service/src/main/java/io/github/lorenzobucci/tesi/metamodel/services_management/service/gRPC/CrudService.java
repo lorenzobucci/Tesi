@@ -6,6 +6,7 @@ import com.google.protobuf.StringValue;
 import io.github.lorenzobucci.tesi.metamodel.services_management.controller.*;
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.*;
 import io.grpc.stub.StreamObserver;
+import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
 import java.net.URI;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
 
+@GrpcService
 public class CrudService extends CrudGrpc.CrudImplBase {
 
     @Inject

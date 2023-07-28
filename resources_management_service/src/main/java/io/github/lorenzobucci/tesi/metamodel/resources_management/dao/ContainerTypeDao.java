@@ -9,23 +9,22 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class ContainerTypeDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(ContainerType containerType) {
         em.persist(containerType);
     }
 
-    @Transactional
     public void delete(ContainerType containerType) {
         em.remove(containerType);
     }
 
     public List<ContainerType> findAll() {
-        TypedQuery<ContainerType> query = em.createQuery("from ContainerType ", ContainerType.class);
+        TypedQuery<ContainerType> query = em.createQuery("select p from ContainerType p", ContainerType.class);
         return query.getResultList();
     }
 
@@ -35,7 +34,7 @@ public class ContainerTypeDao {
 
     public ContainerType findByUuid(UUID containerTypeUuid) {
         TypedQuery<ContainerType> query =
-                em.createQuery("from ContainerType where uuid = :containerUuid", ContainerType.class)
+                em.createQuery("select p from ContainerType p where p.uuid = :containerUuid", ContainerType.class)
                         .setParameter("containerUuid", containerTypeUuid);
         return query.getSingleResult();
     }

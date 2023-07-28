@@ -4,7 +4,6 @@ import io.github.lorenzobucci.tesi.metamodel.resources_management.dao.NodeDao;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.NodeTechnicalProperties;
 import jakarta.inject.Inject;
-import org.hibernate.exception.ConstraintViolationException;
 
 import java.net.InetAddress;
 import java.util.List;
@@ -33,7 +32,7 @@ public class NodeController {
         return nodeDao.findAll();
     }
 
-    public void removeNode(long nodeId) throws NoSuchElementException, ConstraintViolationException {
+    public void removeNode(long nodeId) throws NoSuchElementException {
         nodeDao.delete(getNode(nodeId));
     }
 

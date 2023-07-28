@@ -3,7 +3,6 @@ package io.github.lorenzobucci.tesi.metamodel.resources_management.controller;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.dao.ContainerTypeDao;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerType;
 import jakarta.inject.Inject;
-import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,7 +30,7 @@ public class ContainerTypeController {
         return containerTypeDao.findAll();
     }
 
-    public void removeContainerType(long containerTypeId) throws NoSuchElementException, ConstraintViolationException {
+    public void removeContainerType(long containerTypeId) throws NoSuchElementException {
         containerTypeDao.delete(getContainerType(containerTypeId));
     }
 

@@ -10,23 +10,22 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class EndpointServiceTypeDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(EndpointServiceType endpointServiceType) {
         em.persist(endpointServiceType);
     }
 
-    @Transactional
     public void delete(EndpointServiceType endpointServiceType) {
         em.remove(endpointServiceType);
     }
 
     public List<EndpointServiceType> findAll() {
-        TypedQuery<EndpointServiceType> query = em.createQuery("from EndpointServiceType ", EndpointServiceType.class);
+        TypedQuery<EndpointServiceType> query = em.createQuery("select p from EndpointServiceType p", EndpointServiceType.class);
         return query.getResultList();
     }
 
@@ -36,14 +35,14 @@ public class EndpointServiceTypeDao {
 
     public EndpointServiceType findByUuid(UUID endpointServiceTypeUuid) {
         TypedQuery<EndpointServiceType> query =
-                em.createQuery("from EndpointServiceType where uuid = :endpointServiceTypeUuid", EndpointServiceType.class)
+                em.createQuery("select p from EndpointServiceType p where p.uuid = :endpointServiceTypeUuid", EndpointServiceType.class)
                         .setParameter("endpointServiceTypeUuid", endpointServiceTypeUuid);
         return query.getSingleResult();
     }
 
     public EndpointServiceType findByURI(URI endpointURI) {
         TypedQuery<EndpointServiceType> query =
-                em.createQuery("from EndpointServiceType where physicalEndpointURI = :endpointURI", EndpointServiceType.class)
+                em.createQuery("select p from EndpointServiceType p where p.physicalEndpointURI = :endpointURI", EndpointServiceType.class)
                         .setParameter("endpointURI", endpointURI);
         return query.getSingleResult();
     }

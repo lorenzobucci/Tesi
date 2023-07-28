@@ -5,11 +5,13 @@ import com.google.protobuf.util.Timestamps;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.MobileDeviceDTController;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
 import io.grpc.stub.StreamObserver;
+import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
 import java.net.URI;
 import java.sql.Timestamp;
 
+@GrpcService
 public class OperationalService extends OperationalGrpc.OperationalImplBase {
 
     @Inject

@@ -9,23 +9,22 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 public class ServiceTypeDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void create(ServiceType serviceType) {
         em.persist(serviceType);
     }
 
-    @Transactional
     public void delete(ServiceType serviceType) {
         em.remove(serviceType);
     }
 
     public List<ServiceType> findAll() {
-        TypedQuery<ServiceType> query = em.createQuery("from ServiceType ", ServiceType.class);
+        TypedQuery<ServiceType> query = em.createQuery("select p from ServiceType p", ServiceType.class);
         return query.getResultList();
     }
 
@@ -35,7 +34,7 @@ public class ServiceTypeDao {
 
     public ServiceType findByUuid(UUID serviceTypeUuid) {
         TypedQuery<ServiceType> query =
-                em.createQuery("from ServiceType where uuid = :serviceTypeUuid", ServiceType.class)
+                em.createQuery("select p from ServiceType p where p.uuid = :serviceTypeUuid", ServiceType.class)
                         .setParameter("serviceTypeUuid", serviceTypeUuid);
         return query.getSingleResult();
     }

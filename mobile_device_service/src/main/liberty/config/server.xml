@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="system service">
+
+    <featureManager>
+        <feature>grpc-1.0</feature>
+        <feature>cdi-4.0</feature>
+        <feature>persistenceContainer-3.1</feature>
+        <feature>bells-1.0</feature>
+        <feature>managedBeans-2.0</feature>
+        <feature>beanValidation-3.0</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint" httpPort="9080"/>
+
+    <applicationManager autoExpand="true"/>
+
+    <logging consoleLogLevel="INFO"/>
+
+    <library id="jdbcLib">
+        <fileset dir="jdbc" includes="*.jar"/>
+    </library>
+
+    <library id="HibernateLib">
+        <fileset dir="hibernate" includes="*.jar"/>
+    </library>
+
+    <bell libraryRef="HibernateLib"/>
+
+    <application location="mobile_device_service-1.0-SNAPSHOT.war">
+        <classloader commonLibraryRef="HibernateLib"/>
+    </application>
+
+    <dataSource jndiName="jdbc/datasources/MobileDeviceDS">
+        <jdbcDriver libraryRef="jdbcLib"/>
+        <properties serverName="localhost" portNumber="3310"
+                    databaseName="MobileDevice"
+                    user="root"
+                    password="admin"/>
+    </dataSource>
+</server>

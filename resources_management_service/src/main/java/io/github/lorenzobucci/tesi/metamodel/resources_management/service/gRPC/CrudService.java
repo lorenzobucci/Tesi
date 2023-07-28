@@ -13,6 +13,7 @@ import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Containe
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.NodeTechnicalProperties;
 import io.grpc.stub.StreamObserver;
+import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
 import java.net.InetAddress;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.util.Builders.*;
 
+@GrpcService
 public class CrudService extends CrudGrpc.CrudImplBase {
 
     @Inject

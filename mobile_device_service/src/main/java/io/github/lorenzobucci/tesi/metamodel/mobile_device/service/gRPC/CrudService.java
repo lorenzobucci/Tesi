@@ -7,6 +7,7 @@ import io.github.lorenzobucci.tesi.metamodel.mobile_device.controller.TaskContro
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Task;
 import io.grpc.stub.StreamObserver;
+import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 import static io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.util.Builders.buildMobileDeviceDTDTO;
 import static io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.util.Builders.buildTaskDTO;
 
+@GrpcService
 public class CrudService extends CrudGrpc.CrudImplBase {
 
     @Inject
