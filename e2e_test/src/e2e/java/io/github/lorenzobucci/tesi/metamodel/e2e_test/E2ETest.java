@@ -90,31 +90,37 @@ public class E2ETest {
 
         servicesManagementClient.getOperationalBlockingStub().addServiceTypeToWorkflowType(
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
+                        .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(0))
                         .setCallerServiceTypeId(endPointServiceTypes.get(0))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addServiceTypeToWorkflowType(
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
+                        .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(1))
                         .setCallerServiceTypeId(endPointServiceTypes.get(0))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addServiceTypeToWorkflowType(
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
+                        .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(2))
                         .setCallerServiceTypeId(endPointServiceTypes.get(0))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addServiceTypeToWorkflowType(
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
+                        .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(3))
                         .setCallerServiceTypeId(serviceTypes.get(3))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addServiceTypeToWorkflowType(
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
+                        .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(4))
                         .setCallerServiceTypeId(serviceTypes.get(1))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addRPCToWorkflowType(
                 ServicesManagementContract.AddRPCToWorkflowTypeParameters.newBuilder()
+                        .setWorkflowTypeId(workflowTypes.get(0))
                         .setCallerServiceTypeId(serviceTypes.get(2))
                         .setCalleeServiceTypeId(serviceTypes.get(1))
                         .build());
