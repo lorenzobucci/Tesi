@@ -20,9 +20,10 @@ service Crud {
 
 service Operational {
   rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty);
-  rpc SignalMobileDeviceTaskCompletion(TaskCompletionParameters) returns (google.protobuf.Empty);
+  rpc SignalMobileDeviceTaskCompletion(MobileDeviceDTTaskEndpoint) returns (google.protobuf.Empty);
   rpc SyncMobileDeviceDTProperties(SyncMobileDeviceDTParameters) returns (google.protobuf.Empty);
   rpc SetMobileDeviceDTTrajectoryForecaster(SetTrajectoryForecasterParameters) returns (google.protobuf.Empty);
+  rpc RequestMobileDeviceDTTaskOptimization(MobileDeviceDTTaskEndpoint) returns (google.protobuf.Empty);
 }
 
 // DTO
@@ -75,7 +76,7 @@ message EndpointInvocationParameters {
   string parameters = 3;
 }
 
-message TaskCompletionParameters {
+message MobileDeviceDTTaskEndpoint {
   int64 mobileDeviceDTId = 1;
   string taskEndpoint = 2;
 }

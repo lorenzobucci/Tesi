@@ -61,5 +61,10 @@ public class MobileDeviceDTController {
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 
+    public void requestMobileDeviceDTTaskOptimization(long mobileDeviceDTId, URI taskEndpoint) throws NoSuchElementException {
+        MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
+        mobileDeviceDT.requestTaskOptimization(taskEndpoint);
+        mobileDeviceDTDao.update(mobileDeviceDT);
+    }
 
 }

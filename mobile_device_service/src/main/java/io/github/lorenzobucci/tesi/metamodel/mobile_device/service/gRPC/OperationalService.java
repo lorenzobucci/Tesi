@@ -31,7 +31,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     }
 
     @Override
-    public void signalMobileDeviceTaskCompletion(MobileDevice.TaskCompletionParameters request, StreamObserver<Empty> responseObserver) {
+    public void signalMobileDeviceTaskCompletion(MobileDevice.MobileDeviceDTTaskEndpoint request, StreamObserver<Empty> responseObserver) {
         try {
             mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
             responseObserver.onCompleted();
@@ -58,6 +58,16 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
         try {
             mobileDeviceDTController.setMobileDeviceDTTrajectoryForecaster(request.getMobileDeviceDTId(),
                     (TrajectoryForecaster) Class.forName(request.getTrajectoryForecasterClassName()).getConstructor().newInstance());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+    }
+
+    @Override
+    public void requestMobileDeviceDTTaskOptimization(MobileDevice.MobileDeviceDTTaskEndpoint request, StreamObserver<Empty> responseObserver) {
+        try {
+            mobileDeviceDTController.requestMobileDeviceDTTaskOptimization(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
