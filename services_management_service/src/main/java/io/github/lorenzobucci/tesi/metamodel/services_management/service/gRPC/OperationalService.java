@@ -42,6 +42,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     public void terminateWorkflowInstance(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             workflowInstanceController.terminateWorkflowInstance(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -53,6 +54,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
         try {
             workflowInstanceController.updateWorkflowRequirements(request.getWorkflowInstanceId(),
                     buildWorkflowRequirements(request.getNewWorkflowRequirements()));
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -65,6 +67,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
             workflowTypeController.addServiceTypeToWorkflow(request.getWorkflowTypeId(),
                     request.getServiceTypeToAddId(),
                     request.getCallerServiceTypeId());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -77,6 +80,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
             workflowTypeController.addRPCToWorkflow(request.getWorkflowTypeId(),
                     request.getCallerServiceTypeId(),
                     request.getCalleeServiceTypeId());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -100,6 +104,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
         try {
             workflowTypeController.removeServiceTypeFromWorkflow(request.getWorkflowTypeId(),
                     request.getServiceTypeToRemoveId());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -111,6 +116,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
         try {
             workflowTypeController.updateWorkflowEndpointServiceType(request.getWorkflowTypeId(),
                     request.getNewEndpointServiceTypeId());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

@@ -29,6 +29,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     public void syncNodeDTProperties(ResourcesManagement.NodeDTSyncParameters request, StreamObserver<Empty> responseObserver) {
         try {
             nodeController.syncNodeDTProperties(request.getNodeId(), request.getMemoryUsagePercentage(), request.getCpuUsagePercentage());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -39,6 +40,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     public void destroyContainer(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             containerInstanceController.destroyContainerInstance(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

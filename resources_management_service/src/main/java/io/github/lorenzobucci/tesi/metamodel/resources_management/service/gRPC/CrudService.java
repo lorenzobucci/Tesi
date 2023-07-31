@@ -83,6 +83,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void removeNode(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             nodeController.removeNode(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -124,6 +125,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void removeContainerType(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             containerTypeController.removeContainerType(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

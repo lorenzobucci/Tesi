@@ -87,6 +87,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void removeEndpointServiceType(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             endpointServiceTypeController.removeEndpointServiceType(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -178,6 +179,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void removeServiceType(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             serviceTypeController.removeServiceType(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -257,6 +259,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void removeWorkflowType(ServicesManagement.RemoveWorkflowTypeParameters request, StreamObserver<Empty> responseObserver) {
         try {
             workflowTypeController.removeWorkflowType(request.getWorkflowTypeId(), request.getRemoveEndpointServiceType());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

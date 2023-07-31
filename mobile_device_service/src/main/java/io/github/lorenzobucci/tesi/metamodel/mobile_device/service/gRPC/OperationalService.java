@@ -24,6 +24,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
             mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDTId(),
                     URI.create(request.getInvokedEndpoint()),
                     request.getParameters());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -34,6 +35,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     public void signalMobileDeviceTaskCompletion(MobileDevice.MobileDeviceDTTaskEndpoint request, StreamObserver<Empty> responseObserver) {
         try {
             mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -47,6 +49,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
             Position position = new Position(positionDTO.getLatitude(), positionDTO.getLongitude(), new Timestamp(Timestamps.toMillis(positionDTO.getTimestamp())));
 
             mobileDeviceDTController.syncMobileDeviceDTProperties(request.getMobileDeviceDTId(), position);
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -58,6 +61,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
         try {
             mobileDeviceDTController.setMobileDeviceDTTrajectoryForecaster(request.getMobileDeviceDTId(),
                     (TrajectoryForecaster) Class.forName(request.getTrajectoryForecasterClassName()).getConstructor().newInstance());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
@@ -68,6 +72,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     public void requestMobileDeviceDTTaskOptimization(MobileDevice.MobileDeviceDTTaskEndpoint request, StreamObserver<Empty> responseObserver) {
         try {
             mobileDeviceDTController.requestMobileDeviceDTTaskOptimization(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);

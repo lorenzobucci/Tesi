@@ -58,6 +58,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void removeMobileDeviceDT(Int64Value request, StreamObserver<Empty> responseObserver) {
         try {
             mobileDeviceDTController.removeMobileDeviceDT(request.getValue());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
