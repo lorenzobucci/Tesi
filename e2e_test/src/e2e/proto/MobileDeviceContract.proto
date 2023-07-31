@@ -72,13 +72,13 @@ message MobileDeviceDTConstructorParameters {
 
 message EndpointInvocationParameters {
   int64 mobileDeviceDTId = 1;
-  string invokedEndpoint = 2;
+  string invokedEndpointURI = 2;
   string parameters = 3;
 }
 
 message MobileDeviceDTTaskEndpoint {
   int64 mobileDeviceDTId = 1;
-  string taskEndpoint = 2;
+  string taskEndpointURI = 2;
 }
 
 message SyncMobileDeviceDTParameters {
