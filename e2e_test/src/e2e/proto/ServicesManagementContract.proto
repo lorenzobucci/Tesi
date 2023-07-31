@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_package = "io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC";
+
+package ServicesManagement;
+
+service Crud {
+  rpc AddEndpointServiceType(EndpointServiceTypeConstructorParameters) returns (EndpointServiceTypeDTO);
+  rpc GetEndpointServiceType(google.protobuf.Int64Value) returns (EndpointServiceTypeDTO);
+  rpc GetEndpointServiceTypeByURI(google.protobuf.StringValue) returns (EndpointServiceTypeDTO);
+  rpc RetrieveEndpointServiceTypes(google.protobuf.Empty) returns (EndpointServiceTypeList);
+  rpc RemoveEndpointServiceType(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+
+  rpc GetEndpointServiceInstance(google.protobuf.Int64Value) returns (EndpointServiceInstanceDTO);
+  rpc RetrieveEndpointServiceInstances(google.protobuf.Empty) returns (EndpointServiceInstanceList);
+
+  rpc GetServiceInstance(google.protobuf.Int64Value) returns (ServiceInstanceDTO);
+  rpc RetrieveServiceInstances(google.protobuf.Empty) returns (ServiceInstanceList);
+
+  rpc AddServiceType(ServiceTypeConstructorParameters) returns (ServiceTypeDTO);
+  rpc GetServiceType(google.protobuf.Int64Value) returns (ServiceTypeDTO);
+  rpc RetrieveServiceTypes(google.protobuf.Empty) returns (ServiceTypeList);
+  rpc RemoveServiceType(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+
+  rpc GetWorkflowInstance(google.protobuf.Int64Value) returns (WorkflowInstanceDTO);
+  rpc RetrieveWorkflowInstances(google.protobuf.Empty) returns (WorkflowInstanceList);
+
+  rpc AddWorkflowType(WorkflowTypeConstructorParameters) returns (WorkflowTypeDTO);
+  rpc GetWorkflowType(google.protobuf.Int64Value) returns (WorkflowTypeDTO);
+  rpc GetWorkflowTypeByURI(google.protobuf.StringValue) returns (WorkflowTypeDTO);
+  rpc RetrieveWorkflowTypes(google.protobuf.Empty) returns (WorkflowTypeList);
+  rpc RemoveWorkflowType(RemoveWorkflowTypeParameters) returns (google.protobuf.Empty);
+}
+
+service Operational {
+  rpc InstantiateWorkflowInstance(InstantiateWorkflowParameters) returns (WorkflowInstanceDTO);
+  rpc TerminateWorkflowInstance(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+  rpc UpdateWorkflowRequirements(UpdateRequirementsParameters) returns (google.protobuf.Empty);
+
+  rpc AddServiceTypeToWorkflowType(AddServiceTypeToWorkflowTypeParameters) returns (google.protobuf.Empty);
+  rpc AddRPCToWorkflowType(AddRPCToWorkflowTypeParameters) returns (google.protobuf.Empty);
+  rpc WorkflowTypeContainsServiceType(WorkflowTypeContainsServiceTypeParameters) returns (google.protobuf.BoolValue);
+  rpc RemoveServiceTypeFromWorkflow(RemoveServiceTypeFromWorkflowParameters) returns (google.protobuf.Empty);
+  rpc UpdateWorkflowEndpointServiceType(UpdateWorkflowEndpointServiceTypeParameters) returns (google.protobuf.Empty);
+  rpc RetrieveServiceTypesFromWorkflow(google.protobuf.Int64Value) returns (ServiceTypeList);
+}
+
+// DTO
+
+message EndpointServiceTypeDTO {
+  int64 id = 1;
+  string name = 2;
+  ServiceRequirementsDTO serviceRequirements = 3;
+  string physicalEndpointURI = 4;
+}
+
+message EndpointServiceInstanceDTO {
+  int64 id = 1;
+  int64 belongingWorkflowInstanceId = 2;
+  int64 endpointServiceTypeId = 3;
+  string parameters = 4;
+}
+
+message ServiceTypeDTO {
+  int64 id = 1;
+  string name = 2;
+  ServiceRequirementsDTO serviceRequirements = 3;
+}
+
+message ServiceInstanceDTO {
+  int64 id = 1;
+  int64 serviceTypeId = 2;
+  int64 belongingWorkflowInstanceId = 3;
+  ContainerDTO container = 4;
+}
+
+message WorkflowTypeDTO {
+  int64 id = 1;
+  repeated int64 serviceTypesIdSet = 2;
+  int64 endpointServiceTypeId = 3;
+}
+
+message WorkflowInstanceDTO {
+  int64 id = 1;
+  repeated int64 serviceInstancesIdSet = 2;
+  int64 endpointServiceInstanceId = 3;
+  int64 refWorkflowTypeId = 4;
+  WorkflowRequirementsDTO workflowRequirements = 5;
+}
+
+message ContainerDTO {
+  string ipAddress = 1;
+  int64 associatedContainerId = 2;
+}
+
+// DTO LISTS
+
+message EndpointServiceTypeList {
+  repeated EndpointServiceTypeDTO endpointServiceTypes = 1;
+}
+
+message EndpointServiceInstanceList {
+  repeated EndpointServiceInstanceDTO endpointServiceInstances = 1;
+}
+
+message ServiceTypeList {
+  repeated ServiceTypeDTO serviceTypes = 1;
+}
+
+message ServiceInstanceList {
+  repeated ServiceInstanceDTO serviceInstances = 1;
+}
+
+message WorkflowTypeList {
+  repeated WorkflowTypeDTO workflowTypes = 1;
+}
+
+message WorkflowInstanceList {
+  repeated WorkflowInstanceDTO workflowInstances = 1;
+}
+
+// REQUIREMENTS
+
+message WorkflowRequirementsDTO {
+
+}
+
+message ServiceRequirementsDTO {
+
+}
+
+// METHODS PARAMETERS
+
+message EndpointServiceTypeConstructorParameters {
+  string serviceName = 1;
+  ServiceRequirementsDTO serviceRequirements = 2;
+  string physicalEndpointURI = 3;
+}
+
+message ServiceTypeConstructorParameters {
+  string serviceName = 1;
+  ServiceRequirementsDTO serviceRequirements = 2;
+}
+
+message WorkflowTypeConstructorParameters {
+  int64 endpointServiceTypeId = 1;
+}
+
+message RemoveWorkflowTypeParameters {
+  int64 workflowTypeId = 1;
+  bool removeEndpointServiceType = 2;
+}
+
+message InstantiateWorkflowParameters {
+  string endpointURI = 1;
+  string endpointParameters = 2;
+  WorkflowRequirementsDTO workflowRequirements = 3;
+}
+
+message UpdateRequirementsParameters {
+  int64 workflowInstanceId = 1;
+  WorkflowRequirementsDTO newWorkflowRequirements = 2;
+}
+
+message AddServiceTypeToWorkflowTypeParameters {
+  int64 workflowTypeId = 1;
+  int64 serviceTypeToAddId = 2;
+  int64 callerServiceTypeId = 3;
+}
+
+message AddRPCToWorkflowTypeParameters {
+  int64 workflowTypeId = 1;
+  int64 callerServiceTypeId = 2;
+  int64 calleeServiceTypeId = 3;
+}
+
+message WorkflowTypeContainsServiceTypeParameters {
+  int64 workflowTypeId = 1;
+  int64 serviceTypeToVerifyId = 2;
+}
+
+message RemoveServiceTypeFromWorkflowParameters {
+  int64 workflowTypeId = 1;
+  int64 serviceTypeToRemoveId = 2;
+}
+
+message UpdateWorkflowEndpointServiceTypeParameters {
+  int64 workflowTypeId = 1;
+  int64 newEndpointServiceTypeId = 2;
+}

@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_package = "io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC";
+
+package MobileDevice;
+
+service Crud {
+  rpc AddMobileDeviceDT(MobileDeviceDTConstructorParameters) returns (MobileDeviceDTDTO);
+  rpc GetMobileDeviceDT(google.protobuf.Int64Value) returns (MobileDeviceDTDTO);
+  rpc RetrieveMobileDeviceDTs(google.protobuf.Empty) returns (MobileDeviceDTList);
+  rpc RemoveMobileDeviceDT(google.protobuf.Int64Value) returns (google.protobuf.Empty);
+
+  rpc GetTask(google.protobuf.Int64Value) returns (TaskDTO);
+  rpc RetrieveTasks(google.protobuf.Empty) returns (TaskList);
+}
+
+service Operational {
+  rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty);
+  rpc SignalMobileDeviceTaskCompletion(MobileDeviceDTTaskEndpoint) returns (google.protobuf.Empty);
+  rpc SyncMobileDeviceDTProperties(SyncMobileDeviceDTParameters) returns (google.protobuf.Empty);
+  rpc SetMobileDeviceDTTrajectoryForecaster(SetTrajectoryForecasterParameters) returns (google.protobuf.Empty);
+  rpc RequestMobileDeviceDTTaskOptimization(MobileDeviceDTTaskEndpoint) returns (google.protobuf.Empty);
+}
+
+// DTO
+
+message MobileDeviceDTDTO {
+  int64 id = 1;
+  repeated int64 runningTasksId = 2;
+  repeated PositionDTO trajectory = 3;
+  string trajectoryForecaster = 4;
+}
+
+message TaskDTO {
+  int64 id = 1;
+  string endpointURI = 2;
+  string parameters = 3;
+  int64 associatedWorkflowId = 4;
+  DependabilityRequirementsDTO dependabilityRequirements = 5;
+}
+
+message PositionDTO {
+  google.protobuf.Timestamp timestamp = 1;
+  float latitude = 2;
+  float longitude = 3;
+}
+
+message DependabilityRequirementsDTO {
+
+}
+
+// DTO LIST
+
+message MobileDeviceDTList {
+  repeated MobileDeviceDTDTO mobileDeviceDTs = 1;
+}
+
+message TaskList {
+  repeated TaskDTO tasks = 1;
+}
+
+// METHODS PARAMETERS
+
+message MobileDeviceDTConstructorParameters {
+
+}
+
+
+message EndpointInvocationParameters {
+  int64 mobileDeviceDTId = 1;
+  string invokedEndpoint = 2;
+  string parameters = 3;
+}
+
+message MobileDeviceDTTaskEndpoint {
+  int64 mobileDeviceDTId = 1;
+  string taskEndpoint = 2;
+}
+
+message SyncMobileDeviceDTParameters {
+  int64 mobileDeviceDTId = 1;
+  PositionDTO currentPosition = 2;
+}
+
+message SetTrajectoryForecasterParameters {
+  int64 mobileDeviceDTId = 1;
+  string trajectoryForecasterClassName = 2;
+}
