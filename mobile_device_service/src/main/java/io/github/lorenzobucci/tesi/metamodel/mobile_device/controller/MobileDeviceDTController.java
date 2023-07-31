@@ -15,9 +15,6 @@ public class MobileDeviceDTController {
     @Inject
     private MobileDeviceDTDao mobileDeviceDTDao;
 
-    @Inject
-    private TaskController taskController;
-
     public MobileDeviceDT addMobileDeviceDT() {
         MobileDeviceDT mobileDeviceDT = new MobileDeviceDT();
         mobileDeviceDTDao.create(mobileDeviceDT);
@@ -46,9 +43,9 @@ public class MobileDeviceDTController {
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 
-    public void signalMobileDeviceTaskCompletion(long mobileDeviceDTId, long taskId) throws NoSuchElementException {
+    public void signalMobileDeviceTaskCompletion(long mobileDeviceDTId, URI taskEndpoint) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
-        mobileDeviceDT.taskCompleted(taskController.getTask(taskId));
+        mobileDeviceDT.taskCompleted(taskEndpoint);
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 

@@ -77,7 +77,7 @@ message EndpointInvocationParameters {
 
 message TaskCompletionParameters {
   int64 mobileDeviceDTId = 1;
-  int64 completedTaskId = 2;
+  string taskEndpoint = 2;
 }
 
 message SyncMobileDeviceDTParameters {

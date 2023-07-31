@@ -15,7 +15,7 @@ import java.net.URI;
 @Table(name = "task")
 public class Task extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private URI endpoint;
     private String parameters;
 

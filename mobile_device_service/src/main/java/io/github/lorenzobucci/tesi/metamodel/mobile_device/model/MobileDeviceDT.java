@@ -36,7 +36,8 @@ public class MobileDeviceDT extends BaseEntity {
         runningTasks.add(invokedTask);
     }
 
-    public void taskCompleted(Task task) throws NoSuchElementException {
+    public void taskCompleted(URI endpoint) throws NoSuchElementException {
+        Task task = runningTasks.stream().filter(task1 -> task1.getEndpoint().equals(endpoint)).findAny().orElseThrow();
         if (runningTasks.contains(task)) {
             task.onCompleted();
             runningTasks.remove(task);

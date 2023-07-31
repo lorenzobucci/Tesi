@@ -33,7 +33,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void signalMobileDeviceTaskCompletion(MobileDevice.TaskCompletionParameters request, StreamObserver<Empty> responseObserver) {
         try {
-            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), request.getCompletedTaskId());
+            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
