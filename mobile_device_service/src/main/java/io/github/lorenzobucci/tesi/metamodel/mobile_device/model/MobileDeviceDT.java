@@ -21,7 +21,7 @@ public class MobileDeviceDT extends BaseEntity {
     private Set<Task> runningTasks = new HashSet<>();
 
     @Transient // CLASS INSTANCE PERSISTED USING PROPERTY MODE
-    private TrajectoryForecaster trajectoryForecaster;
+    private TrajectoryForecaster trajectoryForecaster = new SampleTrajectoryForecaster(); // DEFAULT ALGORITHM
 
     public MobileDeviceDT() {
 
@@ -65,20 +65,17 @@ public class MobileDeviceDT extends BaseEntity {
         return runningTasks;
     }
 
-    public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) { // BUSINESS LOGIC OR EXTERNAL CALL?
+    public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) {
         this.trajectoryForecaster = trajectoryForecaster;
     }
 
     @Access(AccessType.PROPERTY)
     @Column(name = "trajectory_forecaster_class")
     protected String getTrajectoryForecasterClass() {
-        if (trajectoryForecaster != null)
-            return trajectoryForecaster.getClass().getName();
-        return null;
+        return trajectoryForecaster.getClass().getName();
     }
 
     protected void setTrajectoryForecasterClass(String trajectoryForecasterClass) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        if (trajectoryForecasterClass != null)
-            trajectoryForecaster = (TrajectoryForecaster) Class.forName(trajectoryForecasterClass).getConstructor().newInstance();
+        trajectoryForecaster = (TrajectoryForecaster) Class.forName(trajectoryForecasterClass).getConstructor().newInstance();
     }
 }
