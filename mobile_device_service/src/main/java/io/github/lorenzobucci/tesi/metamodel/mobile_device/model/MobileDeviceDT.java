@@ -23,6 +23,9 @@ public class MobileDeviceDT extends BaseEntity {
     @Transient // CLASS INSTANCE PERSISTED USING PROPERTY MODE
     private TrajectoryForecaster trajectoryForecaster = new SampleTrajectoryForecaster(); // DEFAULT ALGORITHM
 
+    @Column(name = "sync_left_to_optimize", nullable = false)
+    private int syncLeftToOptimize = 10; // EVERY X SYNC AN OPTIMIZATION OF ALL TASKS IS PERFORMED
+
     public MobileDeviceDT() {
 
     }
@@ -31,14 +34,6 @@ public class MobileDeviceDT extends BaseEntity {
         DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
         Task invokedTask = new Task(endpoint, parameters, requirements);
         runningTasks.add(invokedTask);
-    }
-
-    public void requestTaskOptimization(URI endpoint) { // BUSINESS LOGIC OR EXTERNAL CALL?
-        Task taskToOptimize = runningTasks.stream().filter(task -> task.getEndpoint().equals(endpoint)).findAny().orElseThrow();
-
-        Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
-        DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
-        taskToOptimize.updateRequirements(newDependabilityRequirements);
     }
 
     public void taskCompleted(Task task) throws NoSuchElementException {
@@ -51,6 +46,28 @@ public class MobileDeviceDT extends BaseEntity {
 
     public void syncWithRealObject(Position currentPosition) {
         pastTrajectory.addPosition(currentPosition);
+        verifyOptimizationNeeded();
+    }
+
+    public void requestTaskOptimization(URI endpoint) {
+        Task taskToOptimize = runningTasks.stream().filter(task -> task.getEndpoint().equals(endpoint)).findAny().orElseThrow();
+        requestTaskOptimization(taskToOptimize);
+    }
+
+    private void requestTaskOptimization(Task taskToOptimize) {
+        Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
+        DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
+        taskToOptimize.updateRequirements(newDependabilityRequirements);
+    }
+
+    private void verifyOptimizationNeeded() {
+        if (syncLeftToOptimize > 0)
+            syncLeftToOptimize--;
+        else {
+            syncLeftToOptimize = 10;
+            for (Task task : runningTasks)
+                requestTaskOptimization(task);
+        }
     }
 
     public Trajectory getPastTrajectory() {
