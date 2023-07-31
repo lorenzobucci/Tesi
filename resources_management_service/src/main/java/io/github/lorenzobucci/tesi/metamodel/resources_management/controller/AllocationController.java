@@ -5,7 +5,6 @@ import io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.Depe
 import io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.SampleAllocatorAlgorithm;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -13,7 +12,6 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 @Singleton
-@ApplicationScoped
 public class AllocationController {
 
     @Inject
