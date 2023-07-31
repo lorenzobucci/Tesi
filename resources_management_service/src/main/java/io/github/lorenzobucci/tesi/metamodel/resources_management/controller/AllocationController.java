@@ -2,8 +2,10 @@ package io.github.lorenzobucci.tesi.metamodel.resources_management.controller;
 
 import io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.AllocatorAlgorithm;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.DependabilityRequirements;
+import io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.SampleAllocatorAlgorithm;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.ContainerInstance;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -11,6 +13,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 @Singleton
+@ApplicationScoped
 public class AllocationController {
 
     @Inject
@@ -22,54 +25,46 @@ public class AllocationController {
     @Inject
     private NodeController nodeController;
 
-    private AllocatorAlgorithm allocator = null;
+    private AllocatorAlgorithm allocator = new SampleAllocatorAlgorithm(); // DEFAULT ALGORITHM
 
-    public ContainerInstance allocateContainer(DependabilityRequirements dependabilityRequirements) throws IllegalStateException {
-        if (allocator != null) {
-            ContainerInstance containerInstance = allocator.allocateContainer(dependabilityRequirements,
-                    new HashSet<>(nodeController.retrieveNodes()),
-                    new HashSet<>(containerTypeController.retrieveContainerTypes()));
+    public ContainerInstance allocateContainer(DependabilityRequirements dependabilityRequirements) {
+        ContainerInstance containerInstance = allocator.allocateContainer(dependabilityRequirements,
+                new HashSet<>(nodeController.retrieveNodes()),
+                new HashSet<>(containerTypeController.retrieveContainerTypes()));
 
-            containerInstance = containerInstanceController.addContainerInstance(containerInstance);
+        containerInstance = containerInstanceController.addContainerInstance(containerInstance);
 
-            containerInstance.getBelongingNode().addOwnedContainer(containerInstance);
-            nodeController.updateNode(containerInstance.getBelongingNode());
+        containerInstance.getBelongingNode().addOwnedContainer(containerInstance);
+        nodeController.updateNode(containerInstance.getBelongingNode());
 
-            return containerInstance;
-        } else
-            throw new IllegalStateException("The allocation algorithm has not yet been set.");
+        return containerInstance;
+
     }
 
-    public ContainerInstance reviseContainerAllocation(long containerInstanceId, DependabilityRequirements newDependabilityRequirements) throws IllegalStateException, NoSuchElementException {
-        if (allocator != null) {
-            ContainerInstance containerInstance = containerInstanceController.getContainerInstance(containerInstanceId);
-            Node oldNode = containerInstance.getBelongingNode();
+    public ContainerInstance reviseContainerAllocation(long containerInstanceId, DependabilityRequirements newDependabilityRequirements) throws NoSuchElementException {
+        ContainerInstance containerInstance = containerInstanceController.getContainerInstance(containerInstanceId);
+        Node oldNode = containerInstance.getBelongingNode();
 
-            Node newNode = allocator.reviseOptimalNode(
-                    containerInstance,
-                    newDependabilityRequirements,
-                    new HashSet<>(nodeController.retrieveNodes()));
+        Node newNode = allocator.reviseOptimalNode(
+                containerInstance,
+                newDependabilityRequirements,
+                new HashSet<>(nodeController.retrieveNodes()));
 
-            if (!oldNode.equals(newNode)) {
-                // CONTAINER MIGRATION
-                newNode.addOwnedContainer(containerInstance);
-                containerInstance.updateBelongingNode(newNode);
-                oldNode.removeOwnedContainer(containerInstance);
+        if (!oldNode.equals(newNode)) {
+            // CONTAINER MIGRATION
+            newNode.addOwnedContainer(containerInstance);
+            containerInstance.updateBelongingNode(newNode);
+            oldNode.removeOwnedContainer(containerInstance);
 
-                nodeController.updateNode(newNode);
-                nodeController.updateNode(oldNode);
-            }
+            nodeController.updateNode(newNode);
+            nodeController.updateNode(oldNode);
+        }
 
-            return containerInstance;
-        } else
-            throw new IllegalStateException("The allocation algorithm has not yet been set.");
+        return containerInstance;
     }
 
-    public AllocatorAlgorithm getCurrentAllocator() throws NoSuchElementException {
-        if (allocator != null)
-            return allocator;
-        else
-            throw new NoSuchElementException("The allocation algorithm has not yet been set.");
+    public AllocatorAlgorithm getCurrentAllocator() {
+        return allocator;
     }
 
     public void setAllocatorAlgorithm(AllocatorAlgorithm allocatorAlgorithm) {
