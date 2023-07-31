@@ -91,20 +91,13 @@ public class WorkflowType extends BaseEntity {
     }
 
     @Access(AccessType.PROPERTY)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "workflow_types_graphs",
-            joinColumns = @JoinColumn(name = "workflow_type_id", referencedColumnName = "id"))
-    @AssociationOverrides({
-            @AssociationOverride(name = "callerService", joinColumns = @JoinColumn(name = "caller_service_type_id")),
-            @AssociationOverride(name = "calleeService", joinColumns = @JoinColumn(name = "callee_service_type_id"))
-    })
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowType")
     protected Set<ServiceTypeGraphEdge> getGraphEdges() {
         Set<ServiceTypeGraphEdge> set = new HashSet<>();
         for (DefaultEdge edge : serviceTypeDAG.edgeSet())
-            set.add(new ServiceTypeGraphEdge(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge)));
+            set.add(new ServiceTypeGraphEdge(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge), this));
         if (set.isEmpty() && endpointServiceType != null) // WORKFLOW WITH ONLY THE ENDPOINT
-            set.add(new ServiceTypeGraphEdge(null, endpointServiceType));
+            set.add(new ServiceTypeGraphEdge(null, endpointServiceType, this));
         return set;
     }
 
@@ -118,20 +111,26 @@ public class WorkflowType extends BaseEntity {
         }
     }
 
-    @Embeddable
-    protected static class ServiceTypeGraphEdge {
+    @Entity
+    @Table(name = "service_type_graph_edge")
+    protected static class ServiceTypeGraphEdge extends BaseEntity {
 
-        @ManyToOne(cascade = CascadeType.PERSIST)
+        @ManyToOne
         @JoinColumn(name = "caller_service")
         private ServiceType callerService;
 
-        @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
+        @ManyToOne(optional = false)
         @JoinColumn(name = "callee_service", nullable = false)
         private ServiceType calleeService;
 
-        ServiceTypeGraphEdge(ServiceType callerService, ServiceType calleeService) {
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "workflow_type_id", nullable = false)
+        private WorkflowType workflowType;
+
+        ServiceTypeGraphEdge(ServiceType callerService, ServiceType calleeService, WorkflowType workflowType) {
             this.callerService = callerService;
             this.calleeService = calleeService;
+            this.workflowType = workflowType;
         }
 
         protected ServiceTypeGraphEdge() {
