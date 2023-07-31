@@ -91,14 +91,13 @@ public class WorkflowType extends BaseEntity {
     }
 
     @Access(AccessType.PROPERTY)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "workflow_type_id", referencedColumnName = "id", nullable = false)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowType")
     protected Set<ServiceTypeGraphEdge> getGraphEdges() {
         Set<ServiceTypeGraphEdge> set = new HashSet<>();
         for (DefaultEdge edge : serviceTypeDAG.edgeSet())
-            set.add(new ServiceTypeGraphEdge(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge)));
+            set.add(new ServiceTypeGraphEdge(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge), this));
         if (set.isEmpty() && endpointServiceType != null) // WORKFLOW WITH ONLY THE ENDPOINT
-            set.add(new ServiceTypeGraphEdge(null, endpointServiceType));
+            set.add(new ServiceTypeGraphEdge(null, endpointServiceType, this));
         return set;
     }
 
@@ -114,7 +113,7 @@ public class WorkflowType extends BaseEntity {
 
     @Entity
     @Table(name = "service_type_graph_edge")
-    private static class ServiceTypeGraphEdge extends BaseEntity {
+    protected static class ServiceTypeGraphEdge extends BaseEntity {
 
         @ManyToOne
         @JoinColumn(name = "caller_service")
@@ -124,9 +123,14 @@ public class WorkflowType extends BaseEntity {
         @JoinColumn(name = "callee_service", nullable = false)
         private ServiceType calleeService;
 
-        ServiceTypeGraphEdge(ServiceType callerService, ServiceType calleeService) {
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "workflow_type_id", nullable = false)
+        private WorkflowType workflowType;
+
+        ServiceTypeGraphEdge(ServiceType callerService, ServiceType calleeService, WorkflowType workflowType) {
             this.callerService = callerService;
             this.calleeService = calleeService;
+            this.workflowType = workflowType;
         }
 
         protected ServiceTypeGraphEdge() {

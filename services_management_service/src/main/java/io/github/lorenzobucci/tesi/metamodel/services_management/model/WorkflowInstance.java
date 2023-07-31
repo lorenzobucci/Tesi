@@ -94,14 +94,13 @@ public class WorkflowInstance extends BaseEntity {
     }
 
     @Access(AccessType.PROPERTY)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id", nullable = false)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowInstance")
     protected Set<ServiceInstanceGraphEdge> getGraphEdges() {
         Set<ServiceInstanceGraphEdge> set = new HashSet<>();
         for (DefaultEdge edge : serviceInstanceDAG.edgeSet())
-            set.add(new ServiceInstanceGraphEdge(serviceInstanceDAG.getEdgeSource(edge), serviceInstanceDAG.getEdgeTarget(edge)));
+            set.add(new ServiceInstanceGraphEdge(serviceInstanceDAG.getEdgeSource(edge), serviceInstanceDAG.getEdgeTarget(edge), this));
         if (set.isEmpty() && endpointServiceInstance != null) // WORKFLOW WITH ONLY THE ENDPOINT
-            set.add(new ServiceInstanceGraphEdge(null, endpointServiceInstance));
+            set.add(new ServiceInstanceGraphEdge(null, endpointServiceInstance, this));
         return set;
     }
 
@@ -117,7 +116,7 @@ public class WorkflowInstance extends BaseEntity {
 
     @Entity
     @Table(name = "service_instance_graph_edge")
-    private static class ServiceInstanceGraphEdge extends BaseEntity {
+    protected static class ServiceInstanceGraphEdge extends BaseEntity {
 
         @ManyToOne(cascade = CascadeType.ALL)
         @JoinColumn(name = "caller_service")
@@ -127,9 +126,14 @@ public class WorkflowInstance extends BaseEntity {
         @JoinColumn(name = "callee_service", nullable = false)
         private ServiceInstance calleeService;
 
-        ServiceInstanceGraphEdge(ServiceInstance callerService, ServiceInstance calleeService) {
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "workflow_instance_id", nullable = false)
+        private WorkflowInstance workflowInstance;
+
+        ServiceInstanceGraphEdge(ServiceInstance callerService, ServiceInstance calleeService, WorkflowInstance workflowInstance) {
             this.callerService = callerService;
             this.calleeService = calleeService;
+            this.workflowInstance = workflowInstance;
         }
 
         protected ServiceInstanceGraphEdge() {
