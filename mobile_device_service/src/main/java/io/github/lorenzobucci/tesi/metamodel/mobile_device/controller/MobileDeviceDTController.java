@@ -3,6 +3,7 @@ package io.github.lorenzobucci.tesi.metamodel.mobile_device.controller;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.dao.MobileDeviceDTDao;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.MobileDeviceDT;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
+import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.TrajectoryForecaster;
 import jakarta.inject.Inject;
 
 import java.net.URI;
@@ -54,6 +55,12 @@ public class MobileDeviceDTController {
     public void syncMobileDeviceDTProperties(long mobileDeviceDTId, Position currentPosition) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
         mobileDeviceDT.syncWithRealObject(currentPosition);
+        mobileDeviceDTDao.update(mobileDeviceDT);
+    }
+
+    public void setMobileDeviceDTTrajectoryForecaster(long mobileDeviceDTId, TrajectoryForecaster trajectoryForecaster) throws NoSuchElementException {
+        MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
+        mobileDeviceDT.setTrajectoryForecaster(trajectoryForecaster);
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 

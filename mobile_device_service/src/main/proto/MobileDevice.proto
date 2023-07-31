@@ -21,7 +21,8 @@ service Crud {
 service Operational {
   rpc SignalMobileDeviceEndpointInvocation(EndpointInvocationParameters) returns (google.protobuf.Empty);
   rpc SignalMobileDeviceTaskCompletion(TaskCompletionParameters) returns (google.protobuf.Empty);
-  rpc SyncMobileDeviceDTProperties(MobileDeviceDTSyncParameters) returns (google.protobuf.Empty);
+  rpc SyncMobileDeviceDTProperties(SyncMobileDeviceDTParameters) returns (google.protobuf.Empty);
+  rpc SetMobileDeviceDTTrajectoryForecaster(SetTrajectoryForecasterParameters) returns (google.protobuf.Empty);
 }
 
 // DTO
@@ -30,6 +31,7 @@ message MobileDeviceDTDTO {
   int64 id = 1;
   repeated int64 runningTasksId = 2;
   repeated PositionDTO trajectory = 3;
+  string trajectoryForecaster = 4;
 }
 
 message TaskDTO {
@@ -78,7 +80,12 @@ message TaskCompletionParameters {
   int64 completedTaskId = 2;
 }
 
-message MobileDeviceDTSyncParameters {
+message SyncMobileDeviceDTParameters {
   int64 mobileDeviceDTId = 1;
   PositionDTO currentPosition = 2;
+}
+
+message SetTrajectoryForecasterParameters {
+  int64 mobileDeviceDTId = 1;
+  string trajectoryForecasterClassName = 2;
 }

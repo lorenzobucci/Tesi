@@ -65,6 +65,10 @@ public class MobileDeviceDT extends BaseEntity {
         return runningTasks;
     }
 
+    public TrajectoryForecaster getTrajectoryForecaster() {
+        return trajectoryForecaster;
+    }
+
     public void setTrajectoryForecaster(TrajectoryForecaster trajectoryForecaster) {
         this.trajectoryForecaster = trajectoryForecaster;
     }

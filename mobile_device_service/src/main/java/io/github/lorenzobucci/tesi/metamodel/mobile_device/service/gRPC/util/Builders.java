@@ -21,6 +21,8 @@ public class Builders {
         for (Position position : mobileDeviceDT.getPastTrajectory().getPositionsSet())
             mobileDeviceDTDTO.addTrajectory(buildPositionDTO(position));
 
+        mobileDeviceDTDTO.setTrajectoryForecaster(mobileDeviceDT.getTrajectoryForecaster().getClass().getName());
+
         return mobileDeviceDTDTO.build();
     }
 
