@@ -5,7 +5,6 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceTy
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowType;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -35,7 +34,7 @@ public class WorkflowTypeController {
             throw new NoSuchElementException("WorkflowType with id=" + workflowTypeId + " does not exist.");
     }
 
-    public WorkflowType getWorkflowType(URI endpointURI) throws NoSuchElementException {
+    public WorkflowType getWorkflowType(String endpointURI) throws NoSuchElementException {
         WorkflowType workflowType = workflowTypeDao.findByEndpoint(endpointServiceTypeController.getEndpointServiceType(endpointURI));
         if (workflowType != null)
             return workflowType;

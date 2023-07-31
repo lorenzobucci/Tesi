@@ -11,7 +11,6 @@ import io.grpc.stub.StreamObserver;
 import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.util.Set;
 
 import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
@@ -28,7 +27,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void instantiateWorkflowInstance(ServicesManagement.InstantiateWorkflowParameters request, StreamObserver<ServicesManagement.WorkflowInstanceDTO> responseObserver) {
         try {
-            WorkflowInstance workflowInstance = workflowInstanceController.instantiateWorkflowInstance(URI.create(request.getEndpointURI()),
+            WorkflowInstance workflowInstance = workflowInstanceController.instantiateWorkflowInstance(request.getEndpointURI(),
                     request.getEndpointParameters(),
                     buildWorkflowRequirements(request.getWorkflowRequirements()));
             responseObserver.onNext(buildWorkflowInstanceDTO(workflowInstance));

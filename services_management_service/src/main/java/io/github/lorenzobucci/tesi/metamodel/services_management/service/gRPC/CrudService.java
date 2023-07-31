@@ -9,7 +9,6 @@ import io.grpc.stub.StreamObserver;
 import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.util.List;
 
 import static io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.util.Builders.*;
@@ -40,7 +39,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
         try {
             EndpointServiceType endpointServiceType = endpointServiceTypeController.addEndpointServiceType(request.getServiceName(),
                     buildServiceRequirements(request.getServiceRequirements()),
-                    URI.create(request.getPhysicalEndpointURI()));
+                    request.getPhysicalEndpointURI());
 
             responseObserver.onNext(buildEndpointServiceTypeDTO(endpointServiceType));
             responseObserver.onCompleted();
@@ -63,7 +62,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     @Override
     public void getEndpointServiceTypeByURI(StringValue request, StreamObserver<ServicesManagement.EndpointServiceTypeDTO> responseObserver) {
         try {
-            EndpointServiceType endpointServiceType = endpointServiceTypeController.getEndpointServiceType(URI.create(request.getValue()));
+            EndpointServiceType endpointServiceType = endpointServiceTypeController.getEndpointServiceType(request.getValue());
             responseObserver.onNext(buildEndpointServiceTypeDTO(endpointServiceType));
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -235,7 +234,7 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     @Override
     public void getWorkflowTypeByURI(StringValue request, StreamObserver<ServicesManagement.WorkflowTypeDTO> responseObserver) {
         try {
-            WorkflowType workflowType = workflowTypeController.getWorkflowType(URI.create(request.getValue()));
+            WorkflowType workflowType = workflowTypeController.getWorkflowType(request.getValue());
             responseObserver.onNext(buildWorkflowTypeDTO(workflowType));
             responseObserver.onCompleted();
         } catch (Exception e) {

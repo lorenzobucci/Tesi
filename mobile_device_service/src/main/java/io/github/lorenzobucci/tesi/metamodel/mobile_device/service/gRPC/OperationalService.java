@@ -9,7 +9,6 @@ import io.grpc.stub.StreamObserver;
 import io.openliberty.grpc.annotation.GrpcService;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.sql.Timestamp;
 
 @GrpcService
@@ -22,7 +21,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     public void signalMobileDeviceEndpointInvocation(MobileDevice.EndpointInvocationParameters request, StreamObserver<Empty> responseObserver) {
         try {
             mobileDeviceDTController.signalMobileDeviceEndpointInvocation(request.getMobileDeviceDTId(),
-                    URI.create(request.getInvokedEndpoint()),
+                    request.getInvokedEndpointURI(),
                     request.getParameters());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
@@ -34,7 +33,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void signalMobileDeviceTaskCompletion(MobileDevice.MobileDeviceDTTaskEndpoint request, StreamObserver<Empty> responseObserver) {
         try {
-            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
+            mobileDeviceDTController.signalMobileDeviceTaskCompletion(request.getMobileDeviceDTId(), request.getTaskEndpointURI());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -71,7 +70,7 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
     @Override
     public void requestMobileDeviceDTTaskOptimization(MobileDevice.MobileDeviceDTTaskEndpoint request, StreamObserver<Empty> responseObserver) {
         try {
-            mobileDeviceDTController.requestMobileDeviceDTTaskOptimization(request.getMobileDeviceDTId(), URI.create(request.getTaskEndpoint()));
+            mobileDeviceDTController.requestMobileDeviceDTTaskOptimization(request.getMobileDeviceDTId(), request.getTaskEndpointURI());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {

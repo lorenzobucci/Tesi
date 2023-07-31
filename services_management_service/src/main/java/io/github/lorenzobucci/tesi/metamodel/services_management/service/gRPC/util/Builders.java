@@ -13,7 +13,7 @@ public class Builders {
                 .setId(endpointServiceType.getId())
                 .setName(endpointServiceType.getName())
                 .setServiceRequirements(buildServiceRequirementsDTO(endpointServiceType.getRequirements()))
-                .setPhysicalEndpointURI(endpointServiceType.getPhysicalEndpointURI().toString())
+                .setPhysicalEndpointURI(endpointServiceType.getPhysicalEndpointURI())
                 .build();
     }
 

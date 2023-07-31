@@ -3,7 +3,6 @@ package io.github.lorenzobucci.tesi.metamodel.mobile_device.model;
 import jakarta.persistence.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -30,14 +29,14 @@ public class MobileDeviceDT extends BaseEntity {
 
     }
 
-    public void taskInvoked(URI endpoint, String parameters) {
+    public void taskInvoked(String endpointURI, String parameters) {
         DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
-        Task invokedTask = new Task(endpoint, parameters, requirements);
+        Task invokedTask = new Task(endpointURI, parameters, requirements);
         runningTasks.add(invokedTask);
     }
 
-    public void taskCompleted(URI endpoint) throws NoSuchElementException {
-        Task task = runningTasks.stream().filter(task1 -> task1.getEndpoint().equals(endpoint)).findAny().orElseThrow();
+    public void taskCompleted(String endpointURI) throws NoSuchElementException {
+        Task task = runningTasks.stream().filter(task1 -> task1.getEndpointURI().equals(endpointURI)).findAny().orElseThrow();
         if (runningTasks.contains(task)) {
             task.onCompleted();
             runningTasks.remove(task);
@@ -50,8 +49,8 @@ public class MobileDeviceDT extends BaseEntity {
         verifyOptimizationNeeded();
     }
 
-    public void requestTaskOptimization(URI endpoint) {
-        Task taskToOptimize = runningTasks.stream().filter(task -> task.getEndpoint().equals(endpoint)).findAny().orElseThrow();
+    public void requestTaskOptimization(String endpointURI) {
+        Task taskToOptimize = runningTasks.stream().filter(task -> task.getEndpointURI().equals(endpointURI)).findAny().orElseThrow();
         requestTaskOptimization(taskToOptimize);
     }
 

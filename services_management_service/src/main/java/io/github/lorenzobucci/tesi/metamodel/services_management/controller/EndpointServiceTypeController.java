@@ -5,7 +5,6 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.model.EndpointS
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.ServiceRequirements;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -14,7 +13,7 @@ public class EndpointServiceTypeController {
     @Inject
     private EndpointServiceTypeDao endpointServiceTypeDao;
 
-    public EndpointServiceType addEndpointServiceType(String serviceName, ServiceRequirements serviceRequirements, URI physicalEndpointURI) {
+    public EndpointServiceType addEndpointServiceType(String serviceName, ServiceRequirements serviceRequirements, String physicalEndpointURI) {
         EndpointServiceType endpointServiceType = new EndpointServiceType(serviceName, serviceRequirements, physicalEndpointURI);
         endpointServiceTypeDao.create(endpointServiceType);
         return endpointServiceTypeDao.findByUuid(endpointServiceType.getUuid());
@@ -28,7 +27,7 @@ public class EndpointServiceTypeController {
             throw new NoSuchElementException("EndpointServiceType with id=" + endpointServiceTypeId + " does not exist.");
     }
 
-    public EndpointServiceType getEndpointServiceType(URI endpointURI) throws NoSuchElementException {
+    public EndpointServiceType getEndpointServiceType(String endpointURI) throws NoSuchElementException {
         EndpointServiceType endpointServiceType = endpointServiceTypeDao.findByURI(endpointURI);
         if (endpointServiceType != null)
             return endpointServiceType;

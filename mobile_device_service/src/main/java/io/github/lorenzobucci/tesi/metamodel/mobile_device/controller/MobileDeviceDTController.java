@@ -6,7 +6,6 @@ import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.Position;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.model.TrajectoryForecaster;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -37,15 +36,15 @@ public class MobileDeviceDTController {
         mobileDeviceDTDao.delete(getMobileDeviceDT(mobileDeviceDTId));
     }
 
-    public void signalMobileDeviceEndpointInvocation(long mobileDeviceDTId, URI invokedEndpoint, String sentParameters) throws NoSuchElementException {
+    public void signalMobileDeviceEndpointInvocation(long mobileDeviceDTId, String invokedEndpointURI, String sentParameters) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
-        mobileDeviceDT.taskInvoked(invokedEndpoint, sentParameters);
+        mobileDeviceDT.taskInvoked(invokedEndpointURI, sentParameters);
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 
-    public void signalMobileDeviceTaskCompletion(long mobileDeviceDTId, URI taskEndpoint) throws NoSuchElementException {
+    public void signalMobileDeviceTaskCompletion(long mobileDeviceDTId, String taskEndpointURI) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
-        mobileDeviceDT.taskCompleted(taskEndpoint);
+        mobileDeviceDT.taskCompleted(taskEndpointURI);
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 
@@ -61,9 +60,9 @@ public class MobileDeviceDTController {
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 
-    public void requestMobileDeviceDTTaskOptimization(long mobileDeviceDTId, URI taskEndpoint) throws NoSuchElementException {
+    public void requestMobileDeviceDTTaskOptimization(long mobileDeviceDTId, String taskEndpointURI) throws NoSuchElementException {
         MobileDeviceDT mobileDeviceDT = getMobileDeviceDT(mobileDeviceDTId);
-        mobileDeviceDT.requestTaskOptimization(taskEndpoint);
+        mobileDeviceDT.requestTaskOptimization(taskEndpointURI);
         mobileDeviceDTDao.update(mobileDeviceDT);
     }
 

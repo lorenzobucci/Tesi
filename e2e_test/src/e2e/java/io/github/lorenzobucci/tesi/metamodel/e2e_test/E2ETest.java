@@ -11,7 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -67,13 +66,13 @@ public class E2ETest {
         endPointServiceTypes.add(servicesManagementClient.getCrudBlockingStub().addEndpointServiceType(
                 ServicesManagementContract.EndpointServiceTypeConstructorParameters.newBuilder()
                         .setServiceName("endpoint1")
-                        .setPhysicalEndpointURI(String.valueOf(URI.create("example.com/doSomething").toString()))
+                        .setPhysicalEndpointURI("example.com/doSomething")
                         .setServiceRequirements(ServicesManagementContract.ServiceRequirementsDTO.newBuilder().build())
                         .build()).getId());
         endPointServiceTypes.add(servicesManagementClient.getCrudBlockingStub().addEndpointServiceType(
                 ServicesManagementContract.EndpointServiceTypeConstructorParameters.newBuilder()
                         .setServiceName("endpoint2")
-                        .setPhysicalEndpointURI(String.valueOf(URI.create("example.com/doSomethingElse").toString()))
+                        .setPhysicalEndpointURI("example.com/doSomethingElse")
                         .setServiceRequirements(ServicesManagementContract.ServiceRequirementsDTO.newBuilder().build())
                         .build()).getId());
 

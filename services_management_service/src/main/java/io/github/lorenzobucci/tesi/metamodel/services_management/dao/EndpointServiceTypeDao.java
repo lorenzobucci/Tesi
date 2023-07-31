@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +39,7 @@ public class EndpointServiceTypeDao {
         return query.getSingleResult();
     }
 
-    public EndpointServiceType findByURI(URI endpointURI) {
+    public EndpointServiceType findByURI(String endpointURI) {
         TypedQuery<EndpointServiceType> query =
                 em.createQuery("select p from EndpointServiceType p where p.physicalEndpointURI = :endpointURI", EndpointServiceType.class)
                         .setParameter("endpointURI", endpointURI);

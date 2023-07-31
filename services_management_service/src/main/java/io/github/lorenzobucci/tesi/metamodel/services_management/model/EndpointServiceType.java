@@ -4,16 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-import java.net.URI;
-
 @Entity
 @Table(name = "endpoint_service_type")
 public class EndpointServiceType extends ServiceType {
 
-    @Column(name = "physical_endpoint_uri", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
-    private URI physicalEndpointURI;
+    @Column(name = "physical_endpoint_uri", nullable = false, unique = true)
+    private String physicalEndpointURI;
 
-    public EndpointServiceType(String name, ServiceRequirements requirements, URI physicalEndpointURI) {
+    public EndpointServiceType(String name, ServiceRequirements requirements, String physicalEndpointURI) {
         super(name, requirements);
         this.physicalEndpointURI = physicalEndpointURI;
     }
@@ -22,7 +20,8 @@ public class EndpointServiceType extends ServiceType {
 
     }
 
-    public URI getPhysicalEndpointURI() {
+    public String getPhysicalEndpointURI() {
         return physicalEndpointURI;
     }
+
 }

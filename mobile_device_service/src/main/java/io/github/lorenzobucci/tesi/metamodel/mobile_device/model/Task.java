@@ -9,14 +9,12 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import jakarta.persistence.*;
 
-import java.net.URI;
-
 @Entity
 @Table(name = "task")
 public class Task extends BaseEntity {
 
     @Column(nullable = false, unique = true)
-    private URI endpoint;
+    private String endpointURI;
     private String parameters;
 
     @Embedded
@@ -28,11 +26,11 @@ public class Task extends BaseEntity {
     @Transient
     private final ServicesManagementsClient servicesManagementsClient = new ServicesManagementsClient();
 
-    Task(URI endpoint, String parameters, DependabilityRequirements requirements) {
-        this.endpoint = endpoint;
+    Task(String endpointURI, String parameters, DependabilityRequirements requirements) {
+        this.endpointURI = endpointURI;
         this.parameters = parameters;
         this.requirements = requirements;
-        servicesManagementsClient.requestService(requirements, endpoint, parameters);
+        servicesManagementsClient.requestService(requirements, endpointURI, parameters);
     }
 
     protected Task() {
@@ -48,8 +46,8 @@ public class Task extends BaseEntity {
         servicesManagementsClient.workflowCompleted();
     }
 
-    public URI getEndpoint() {
-        return endpoint;
+    public String getEndpointURI() {
+        return endpointURI;
     }
 
     public String getParameters() {
@@ -71,12 +69,12 @@ public class Task extends BaseEntity {
 
         Task task = (Task) o;
 
-        return endpoint.equals(task.endpoint);
+        return endpointURI.equals(task.endpointURI);
     }
 
     @Override
     public int hashCode() {
-        return endpoint.hashCode();
+        return endpointURI.hashCode();
     }
 
 
@@ -92,7 +90,7 @@ public class Task extends BaseEntity {
             asyncStub = OperationalGrpc.newStub(channel);
         }
 
-        private void requestService(DependabilityRequirements requirements, URI endpoint, String parameters) {
+        private void requestService(DependabilityRequirements requirements, String endpointURI, String parameters) {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
@@ -100,7 +98,7 @@ public class Task extends BaseEntity {
 
             ServicesManagementContract.WorkflowInstanceDTO workflowInstanceDTO = blockingStub.instantiateWorkflowInstance(ServicesManagementContract.InstantiateWorkflowParameters.newBuilder()
                     .setEndpointParameters(parameters)
-                    .setEndpointURI(endpoint.toString())
+                    .setEndpointURI(endpointURI)
                     .setWorkflowRequirements(workflowRequirementsDTO)
                     .build());
 

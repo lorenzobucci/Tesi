@@ -36,7 +36,7 @@ public class Builders {
 
     public static MobileDevice.TaskDTO buildTaskDTO(Task task) {
         return MobileDevice.TaskDTO.newBuilder().setId(task.getId())
-                .setEndpointURI(task.getEndpoint().toString())
+                .setEndpointURI(task.getEndpointURI())
                 .setParameters(task.getParameters())
                 .setAssociatedWorkflowId(task.getAssociatedWorkflowId())
                 .setDependabilityRequirements(buildDependabilityRequirementsDTO(task.getRequirements()))

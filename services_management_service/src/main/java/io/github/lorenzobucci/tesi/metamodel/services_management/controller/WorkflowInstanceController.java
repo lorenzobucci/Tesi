@@ -6,7 +6,6 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowR
 import io.github.lorenzobucci.tesi.metamodel.services_management.model.WorkflowType;
 import jakarta.inject.Inject;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,7 +17,7 @@ public class WorkflowInstanceController {
     @Inject
     private WorkflowTypeController workflowTypeController;
 
-    public WorkflowInstance instantiateWorkflowInstance(URI endpointURI, String endpointParameters, WorkflowRequirements workflowRequirements) throws NoSuchElementException {
+    public WorkflowInstance instantiateWorkflowInstance(String endpointURI, String endpointParameters, WorkflowRequirements workflowRequirements) throws NoSuchElementException {
         WorkflowType workflowType = workflowTypeController.getWorkflowType(endpointURI);
 
         WorkflowInstance workflowInstance = new WorkflowInstance(workflowType, endpointParameters, workflowRequirements);
