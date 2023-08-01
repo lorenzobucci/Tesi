@@ -69,7 +69,7 @@ public class Builders {
 
     public static ServicesManagement.ContainerDTO buildContainerDTO(Container container) {
         return ServicesManagement.ContainerDTO.newBuilder()
-                .setIpAddress(container.getIpAddress().toString())
+                .setIpAddress(container.getIpAddress().getHostAddress())
                 .setAssociatedContainerId(container.getAssociatedContainerId())
                 .build();
     }

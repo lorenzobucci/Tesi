@@ -20,7 +20,7 @@ public class Builders {
             nodeDTO.addOwnedContainerInstancesId(containerInstance.getId());
 
         nodeDTO.setProperties(buildNodeTechnicalPropertiesDTO(node.getProperties()))
-                .setIpAddress(node.getIpAddress().toString())
+                .setIpAddress(node.getIpAddress().getHostAddress())
                 .setLatitude(node.getLatitude())
                 .setLongitude(node.getLongitude());
 
@@ -50,7 +50,7 @@ public class Builders {
                 .setContainerTypeId(containerInstance.getContainerType().getId())
                 .setContainerState(containerInstance.getContainerState())
                 .setBelongingNodeId(containerInstance.getBelongingNode().getId())
-                .setNodeIpAddress(containerInstance.getBelongingNode().getIpAddress().toString())
+                .setNodeIpAddress(containerInstance.getBelongingNode().getIpAddress().getHostAddress())
                 .build();
     }
 
