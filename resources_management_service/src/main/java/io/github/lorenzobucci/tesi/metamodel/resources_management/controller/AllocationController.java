@@ -32,8 +32,9 @@ public class AllocationController {
 
         containerInstance = containerInstanceController.addContainerInstance(containerInstance);
 
-        containerInstance.getBelongingNode().addOwnedContainer(containerInstance);
-        nodeController.updateNode(containerInstance.getBelongingNode());
+        Node node = nodeController.getNode(containerInstance.getBelongingNode().getId());
+        node.addOwnedContainer(containerInstance);
+        nodeController.updateNode(node);
 
         return containerInstance;
 
@@ -41,12 +42,12 @@ public class AllocationController {
 
     public ContainerInstance reviseContainerAllocation(long containerInstanceId, DependabilityRequirements newDependabilityRequirements) throws NoSuchElementException {
         ContainerInstance containerInstance = containerInstanceController.getContainerInstance(containerInstanceId);
-        Node oldNode = containerInstance.getBelongingNode();
+        Node oldNode = nodeController.getNode(containerInstance.getBelongingNode().getId());
 
-        Node newNode = allocator.reviseOptimalNode(
+        Node newNode = nodeController.getNode(allocator.reviseOptimalNode(
                 containerInstance,
                 newDependabilityRequirements,
-                new HashSet<>(nodeController.retrieveNodes()));
+                new HashSet<>(nodeController.retrieveNodes())).getId());
 
         if (!oldNode.equals(newNode)) {
             // CONTAINER MIGRATION
