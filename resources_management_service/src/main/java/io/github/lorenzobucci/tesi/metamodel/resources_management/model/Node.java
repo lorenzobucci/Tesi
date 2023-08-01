@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "node")
 public class Node extends BaseEntity {
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "node_container_instances",
             joinColumns = {@JoinColumn(name = "node_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "container_instance_id", referencedColumnName = "id")})
