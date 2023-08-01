@@ -46,8 +46,8 @@ public class WorkflowTypeDao {
 
     public WorkflowType findByEndpoint(EndpointServiceType endpointServiceType) {
         TypedQuery<WorkflowType> query =
-                em.createQuery("select p from WorkflowType p where p.endpointServiceType = :endpointId", WorkflowType.class)
-                        .setParameter("endpointId", endpointServiceType.getId());
+                em.createQuery("select p from WorkflowType p where p.endpointServiceType = :endpoint", WorkflowType.class)
+                        .setParameter("endpoint", endpointServiceType);
         return query.getSingleResult();
     }
 }
