@@ -27,10 +27,6 @@ public class WorkflowInstance extends BaseEntity {
     @Embedded
     private WorkflowRequirements workflowRequirements;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id", nullable = false)
-    private Set<ServiceInstanceGraphEdge> graphEdges = new HashSet<>();
-
     protected WorkflowInstance() {
 
     }
@@ -66,8 +62,6 @@ public class WorkflowInstance extends BaseEntity {
         return workflowType;
     }
 
-    // GRAPH PERSISTENCE SECTION
-
     public WorkflowInstance(WorkflowType workflowType, String endpointParameters, WorkflowRequirements workflowRequirements) {
         this.workflowType = workflowType;
         this.workflowRequirements = workflowRequirements;
@@ -100,6 +94,12 @@ public class WorkflowInstance extends BaseEntity {
         }
         storeGraphEdges();
     }
+
+    // GRAPH PERSISTENCE SECTION
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id", nullable = false)
+    private Set<ServiceInstanceGraphEdge> graphEdges = new HashSet<>();
 
     private void storeGraphEdges() {
         for (DefaultEdge edge : serviceInstanceDAG.edgeSet())

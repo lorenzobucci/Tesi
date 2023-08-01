@@ -27,8 +27,6 @@ public class WorkflowType extends BaseEntity {
     protected WorkflowType() {
 
     }
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowType", orphanRemoval = true)
-    private Set<ServiceTypeGraphEdge> graphEdges = new HashSet<>();
 
     public void addServiceType(ServiceType newService, ServiceType callerService) throws IllegalArgumentException, NoSuchElementException {
         if (serviceTypeDAG.containsVertex(callerService)) {
@@ -79,8 +77,6 @@ public class WorkflowType extends BaseEntity {
         return serviceTypeDAG.vertexSet();
     }
 
-    // GRAPH PERSISTENCE SECTION
-
     public void updateEndpointServiceType(EndpointServiceType endpointServiceType) {
         if (!serviceTypeDAG.containsVertex(endpointServiceType)) {
             if (serviceTypeDAG.vertexSet().isEmpty()) {
@@ -97,6 +93,11 @@ public class WorkflowType extends BaseEntity {
             throw new NoSuchElementException("The service " + endpointServiceType.getId() + " already belongs to the workflow.");
         storeGraphEdges();
     }
+
+    // GRAPH PERSISTENCE SECTION
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowType", orphanRemoval = true)
+    private Set<ServiceTypeGraphEdge> graphEdges = new HashSet<>();
 
     private void storeGraphEdges() {
         graphEdges.clear();
