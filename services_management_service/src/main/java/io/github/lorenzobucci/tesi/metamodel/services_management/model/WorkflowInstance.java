@@ -16,11 +16,11 @@ public class WorkflowInstance extends BaseEntity {
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "endpoint_service_instance_id", nullable = false, unique = true)
     private EndpointServiceInstance endpointServiceInstance;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "workflow_type_id", nullable = false)
     private WorkflowType workflowType;
 

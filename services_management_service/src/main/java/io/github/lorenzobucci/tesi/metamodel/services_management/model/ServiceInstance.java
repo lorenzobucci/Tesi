@@ -11,7 +11,7 @@ public class ServiceInstance extends BaseEntity {
     @JoinColumn(name = "service_type_id", nullable = false)
     protected ServiceType serviceType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "belonging_workflow_id", nullable = false)
     protected WorkflowInstance belongingWorkflow;
 
