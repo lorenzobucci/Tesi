@@ -1,5 +1,6 @@
 package io.github.lorenzobucci.tesi.metamodel.services_management.model;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
@@ -15,7 +16,7 @@ public class WorkflowType extends BaseEntity {
     @Transient // PERSISTED USING PROPERTY MODE
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     private EndpointServiceType endpointServiceType;
 
     public WorkflowType(EndpointServiceType endpointServiceType) {
@@ -26,6 +27,8 @@ public class WorkflowType extends BaseEntity {
     protected WorkflowType() {
 
     }
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowType", orphanRemoval = true)
+    private Set<ServiceTypeGraphEdge> graphEdges = new HashSet<>();
 
     public void addServiceType(ServiceType newService, ServiceType callerService) throws IllegalArgumentException, NoSuchElementException {
         if (serviceTypeDAG.containsVertex(callerService)) {
@@ -36,7 +39,11 @@ public class WorkflowType extends BaseEntity {
         } else {
             throw new NoSuchElementException("Caller service " + callerService.getId() + " must belong to the workflow.");
         }
+        storeGraphEdges();
+    }
 
+    public boolean contains(ServiceType serviceType) {
+        return serviceTypeDAG.vertexSet().contains(serviceType);
     }
 
     public void addRPC(ServiceType callerService, ServiceType calleeService) throws NoSuchElementException {
@@ -47,10 +54,7 @@ public class WorkflowType extends BaseEntity {
                 throw new NoSuchElementException("Callee service " + calleeService.getId() + " must belong to the workflow.");
         } else
             throw new NoSuchElementException("Caller service " + callerService.getId() + " must belong to the workflow.");
-    }
-
-    public boolean contains(ServiceType serviceType) {
-        return serviceTypeDAG.vertexSet().contains(serviceType);
+        storeGraphEdges();
     }
 
     public void removeServiceType(ServiceType service) throws NoSuchElementException, IllegalArgumentException {
@@ -60,7 +64,22 @@ public class WorkflowType extends BaseEntity {
                 throw new NoSuchElementException("The service " + service.getId() + " does not belong to the workflow.");
         } else
             throw new IllegalArgumentException("Cannot remove the endpoint service.");
+        storeGraphEdges();
     }
+
+    public EndpointServiceType getEndpointServiceType() {
+        return endpointServiceType;
+    }
+
+    DirectedAcyclicGraph<ServiceType, DefaultEdge> getDAG() {
+        return serviceTypeDAG;
+    }
+
+    public Set<ServiceType> getServiceTypes() {
+        return serviceTypeDAG.vertexSet();
+    }
+
+    // GRAPH PERSISTENCE SECTION
 
     public void updateEndpointServiceType(EndpointServiceType endpointServiceType) {
         if (!serviceTypeDAG.containsVertex(endpointServiceType)) {
@@ -76,35 +95,24 @@ public class WorkflowType extends BaseEntity {
             }
         } else
             throw new NoSuchElementException("The service " + endpointServiceType.getId() + " already belongs to the workflow.");
+        storeGraphEdges();
     }
 
-    public EndpointServiceType getEndpointServiceType() {
-        return endpointServiceType;
-    }
-
-    DirectedAcyclicGraph<ServiceType, DefaultEdge> getDAG() {
-        return serviceTypeDAG;
-    }
-
-    public Set<ServiceType> getServiceTypes() {
-        return serviceTypeDAG.vertexSet();
-    }
-
-    @Access(AccessType.PROPERTY)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "workflowType")
-    protected Set<ServiceTypeGraphEdge> getGraphEdges() {
-        Set<ServiceTypeGraphEdge> set = new HashSet<>();
+    private void storeGraphEdges() {
+        graphEdges.clear();
         for (DefaultEdge edge : serviceTypeDAG.edgeSet())
-            set.add(new ServiceTypeGraphEdge(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge), this));
-        if (set.isEmpty() && endpointServiceType != null) // WORKFLOW WITH ONLY THE ENDPOINT
-            set.add(new ServiceTypeGraphEdge(null, endpointServiceType, this));
-        return set;
+            graphEdges.add(new ServiceTypeGraphEdge(serviceTypeDAG.getEdgeSource(edge), serviceTypeDAG.getEdgeTarget(edge), this));
     }
 
-    protected void setGraphEdges(Set<ServiceTypeGraphEdge> graphEdges) {
-        for (ServiceTypeGraphEdge edge : graphEdges) {
-            serviceTypeDAG.addVertex(edge.calleeService);
-            if (edge.callerService != null) { // WORKFLOW WITH 2 OR MORE SERVICES
+    @PostConstruct
+    @PostLoad
+    private void retrieveGraphEdges() {
+        if (graphEdges.isEmpty())
+            serviceTypeDAG.addVertex(endpointServiceType);
+        else {
+            for (ServiceTypeGraphEdge edge : graphEdges) {
+                edge.workflowType = null; // NECESSARY TO DELETE THE EDGE FROM DB
+                serviceTypeDAG.addVertex(edge.calleeService);
                 serviceTypeDAG.addVertex(edge.callerService);
                 serviceTypeDAG.addEdge(edge.callerService, edge.calleeService);
             }
@@ -115,8 +123,8 @@ public class WorkflowType extends BaseEntity {
     @Table(name = "service_type_graph_edge")
     protected static class ServiceTypeGraphEdge extends BaseEntity {
 
-        @ManyToOne
-        @JoinColumn(name = "caller_service")
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "caller_service", nullable = false)
         private ServiceType callerService;
 
         @ManyToOne(optional = false)
@@ -127,7 +135,7 @@ public class WorkflowType extends BaseEntity {
         @JoinColumn(name = "workflow_type_id", nullable = false)
         private WorkflowType workflowType;
 
-        ServiceTypeGraphEdge(ServiceType callerService, ServiceType calleeService, WorkflowType workflowType) {
+        private ServiceTypeGraphEdge(ServiceType callerService, ServiceType calleeService, WorkflowType workflowType) {
             this.callerService = callerService;
             this.calleeService = calleeService;
             this.workflowType = workflowType;
