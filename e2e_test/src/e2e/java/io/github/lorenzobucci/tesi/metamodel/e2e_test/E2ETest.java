@@ -110,13 +110,13 @@ public class E2ETest {
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
                         .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(3))
-                        .setCallerServiceTypeId(serviceTypes.get(3))
+                        .setCallerServiceTypeId(serviceTypes.get(2))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addServiceTypeToWorkflowType(
                 ServicesManagementContract.AddServiceTypeToWorkflowTypeParameters.newBuilder()
                         .setWorkflowTypeId(workflowTypes.get(0))
                         .setServiceTypeToAddId(serviceTypes.get(4))
-                        .setCallerServiceTypeId(serviceTypes.get(1))
+                        .setCallerServiceTypeId(serviceTypes.get(0))
                         .build());
         servicesManagementClient.getOperationalBlockingStub().addRPCToWorkflowType(
                 ServicesManagementContract.AddRPCToWorkflowTypeParameters.newBuilder()
@@ -207,7 +207,7 @@ public class E2ETest {
         mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
                 MobileDeviceContract.EndpointInvocationParameters.newBuilder()
                         .setMobileDeviceDTId(mobileDevices.get(0))
-                        .setInvokedEndpoint("example.com/doSomething")
+                        .setInvokedEndpointURI("example.com/doSomething")
                         .setParameters("someParameters")
                         .build());
 
@@ -244,7 +244,7 @@ public class E2ETest {
                 MobileDeviceContract.TaskDTO taskDTO = mobileDeviceClient.getCrudBlockingStub().getTask(Int64Value.of(taskId));
                 mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceTaskCompletion(MobileDeviceContract.MobileDeviceDTTaskEndpoint.newBuilder()
                         .setMobileDeviceDTId(mobileDeviceDTDTO.getId())
-                        .setTaskEndpoint(taskDTO.getEndpointURI())
+                        .setTaskEndpointURI(taskDTO.getEndpointURI())
                         .build());
             }
         }
