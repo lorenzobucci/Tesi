@@ -27,6 +27,39 @@ public class WorkflowInstance extends BaseEntity {
     @Embedded
     private WorkflowRequirements workflowRequirements;
 
+    public WorkflowInstance(WorkflowType workflowType, String endpointParameters, WorkflowRequirements workflowRequirements) {
+        this.workflowType = workflowType;
+        this.workflowRequirements = workflowRequirements;
+
+        for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
+            ServiceType calleeServiceType = workflowType.getDAG().getEdgeTarget(edge);
+
+            ServiceInstance calleeService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(calleeServiceType)).findAny().orElse(null);
+            if (calleeService == null) {
+                calleeService = new ServiceInstance(calleeServiceType, this);
+                serviceInstanceDAG.addVertex(calleeService);
+            }
+
+            ServiceType callerServiceType = workflowType.getDAG().getEdgeSource(edge);
+
+            if (!callerServiceType.equals(workflowType.getEndpointServiceType())) {
+                ServiceInstance callerService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(callerServiceType)).findAny().orElse(null);
+                if (callerService == null) {
+                    callerService = new ServiceInstance(callerServiceType, this);
+                    serviceInstanceDAG.addVertex(callerService);
+                }
+                serviceInstanceDAG.addEdge(callerService, calleeService);
+            } else {
+                if (endpointServiceInstance == null) {
+                    endpointServiceInstance = new EndpointServiceInstance(workflowType.getEndpointServiceType(), this, endpointParameters);
+                    serviceInstanceDAG.addVertex(endpointServiceInstance);
+                }
+                serviceInstanceDAG.addEdge(endpointServiceInstance, calleeService);
+            }
+        }
+        storeGraphEdges();
+    }
+
     protected WorkflowInstance() {
 
     }
@@ -60,39 +93,6 @@ public class WorkflowInstance extends BaseEntity {
 
     public WorkflowType getWorkflowType() {
         return workflowType;
-    }
-
-    public WorkflowInstance(WorkflowType workflowType, String endpointParameters, WorkflowRequirements workflowRequirements) {
-        this.workflowType = workflowType;
-        this.workflowRequirements = workflowRequirements;
-
-        for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
-            ServiceType calleeServiceType = workflowType.getDAG().getEdgeTarget(edge);
-
-            ServiceInstance calleeService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(calleeServiceType)).findAny().orElse(null);
-            if (calleeService == null) {
-                calleeService = new ServiceInstance(calleeServiceType, this);
-                serviceInstanceDAG.addVertex(calleeService);
-            }
-
-            ServiceType callerServiceType = workflowType.getDAG().getEdgeSource(edge);
-
-            if (!callerServiceType.equals(workflowType.getEndpointServiceType())) {
-                ServiceInstance callerService = serviceInstanceDAG.vertexSet().stream().filter(serviceInstance -> serviceInstance.getServiceType().equals(callerServiceType)).findAny().orElse(null);
-                if (callerService == null) {
-                    callerService = new ServiceInstance(callerServiceType, this);
-                    serviceInstanceDAG.addVertex(callerService);
-                }
-                serviceInstanceDAG.addEdge(callerService, calleeService);
-            } else {
-                if (endpointServiceInstance == null) {
-                    endpointServiceInstance = new EndpointServiceInstance(workflowType.getEndpointServiceType(), this, endpointParameters);
-                    serviceInstanceDAG.addVertex(endpointServiceInstance);
-                }
-                serviceInstanceDAG.addEdge(endpointServiceInstance, calleeService);
-            }
-        }
-        storeGraphEdges();
     }
 
     // GRAPH PERSISTENCE SECTION
