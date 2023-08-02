@@ -25,7 +25,7 @@ public class WorkflowTypeDao {
     }
 
     public void delete(WorkflowType workflowType) {
-        em.remove(workflowType);
+        em.remove(em.contains(workflowType) ? workflowType : em.merge(workflowType));
     }
 
     public List<WorkflowType> findAll() {

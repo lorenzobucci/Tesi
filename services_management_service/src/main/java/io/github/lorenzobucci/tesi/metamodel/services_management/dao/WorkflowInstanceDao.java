@@ -24,7 +24,7 @@ public class WorkflowInstanceDao {
     }
 
     public void delete(WorkflowInstance workflowInstance) {
-        em.remove(workflowInstance);
+        em.remove(em.contains(workflowInstance) ? workflowInstance : em.merge(workflowInstance));
     }
 
     public List<WorkflowInstance> findAll() {

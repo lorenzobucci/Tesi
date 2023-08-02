@@ -20,7 +20,7 @@ public class ServiceTypeDao {
     }
 
     public void delete(ServiceType serviceType) {
-        em.remove(serviceType);
+        em.remove(em.contains(serviceType) ? serviceType : em.merge(serviceType));
     }
 
     public List<ServiceType> findAll() {

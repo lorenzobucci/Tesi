@@ -20,7 +20,7 @@ public class EndpointServiceTypeDao {
     }
 
     public void delete(EndpointServiceType endpointServiceType) {
-        em.remove(endpointServiceType);
+        em.remove(em.contains(endpointServiceType) ? endpointServiceType : em.merge(endpointServiceType));
     }
 
     public List<EndpointServiceType> findAll() {

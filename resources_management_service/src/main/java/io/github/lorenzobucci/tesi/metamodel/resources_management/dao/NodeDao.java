@@ -20,7 +20,7 @@ public class NodeDao {
     }
 
     public void delete(Node node) {
-        em.remove(node);
+        em.remove(em.contains(node) ? node : em.merge(node));
     }
 
     public void update(Node node) {

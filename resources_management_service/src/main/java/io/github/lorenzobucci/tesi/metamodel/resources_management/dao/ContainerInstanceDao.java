@@ -20,7 +20,7 @@ public class ContainerInstanceDao {
     }
 
     public void delete(ContainerInstance containerInstance) {
-        em.remove(containerInstance);
+        em.remove(em.contains(containerInstance) ? containerInstance : em.merge(containerInstance));
     }
 
     public void update(ContainerInstance containerInstance) {

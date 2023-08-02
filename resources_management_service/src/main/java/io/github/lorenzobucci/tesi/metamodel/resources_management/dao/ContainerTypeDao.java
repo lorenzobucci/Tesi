@@ -20,7 +20,7 @@ public class ContainerTypeDao {
     }
 
     public void delete(ContainerType containerType) {
-        em.remove(containerType);
+        em.remove(em.contains(containerType) ? containerType : em.merge(containerType));
     }
 
     public List<ContainerType> findAll() {

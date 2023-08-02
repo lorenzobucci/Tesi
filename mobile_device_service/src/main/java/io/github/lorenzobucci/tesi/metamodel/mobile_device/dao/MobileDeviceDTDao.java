@@ -20,7 +20,7 @@ public class MobileDeviceDTDao {
     }
 
     public void delete(MobileDeviceDT mobileDevice) {
-        em.remove(mobileDevice);
+        em.remove(em.contains(mobileDevice) ? mobileDevice : em.merge(mobileDevice));
     }
 
     public void update(MobileDeviceDT mobileDevice) {
