@@ -7,15 +7,14 @@ import io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.MobileDe
 import io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.ResourcesManagementContract;
 import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.ServicesManagementContract;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 public class E2ETest {
 
@@ -176,7 +175,58 @@ public class E2ETest {
                         .setCpuUsagePercentage(0.74f)
                         .setMemoryUsagePercentage(0.35f)
                         .build());
+    }
 
+    @Test
+    public void testContainerAllocationOnSignalMobileDeviceEndpointInvocation() {
+        mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
+                MobileDeviceContract.EndpointInvocationParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setInvokedEndpointURI("example.com/doSomething")
+                        .setParameters("someParameters")
+                        .build());
+
+        MobileDeviceContract.MobileDeviceDTDTO mobileDeviceDTDTO = mobileDeviceClient.getCrudBlockingStub().getMobileDeviceDT(Int64Value.of(mobileDevices.get(0)));
+        MobileDeviceContract.TaskDTO taskDTO = mobileDeviceClient.getCrudBlockingStub().getTask(Int64Value.of(mobileDeviceDTDTO.getRunningTasksId(0)));
+        assertThat(taskDTO.getAssociatedWorkflowId()).isNotZero();
+
+        List<ServicesManagementContract.WorkflowInstanceDTO> workflowInstances =
+                servicesManagementClient.getCrudBlockingStub().retrieveWorkflowInstances(Empty.newBuilder().build()).getWorkflowInstancesList();
+        assertThat(workflowInstances.size()).isEqualTo(1);
+
+        ServicesManagementContract.EndpointServiceInstanceDTO endpointServiceInstance =
+                servicesManagementClient.getCrudBlockingStub().getEndpointServiceInstance(Int64Value.of(workflowInstances.get(0).getEndpointServiceInstanceId()));
+        assertThat(endpointServiceInstance.getParameters()).isEqualTo("someParameters");
+
+        ServicesManagementContract.EndpointServiceTypeDTO endpointServiceType =
+                servicesManagementClient.getCrudBlockingStub().getEndpointServiceType(Int64Value.of(endpointServiceInstance.getEndpointServiceTypeId()));
+        assertThat(endpointServiceType.getPhysicalEndpointURI()).isEqualTo("example.com/doSomething");
+
+        List<ResourcesManagementContract.ContainerInstanceDTO> containerInstances =
+                resourcesManagementClient.getCrudBlockingStub().retrieveContainerInstances(Empty.newBuilder().build()).getContainerInstancesList();
+        assertThat(containerInstances.size()).isEqualTo(6);
+    }
+
+    @AfterEach
+    public void cleanInstances() {
+        for (ResourcesManagementContract.ContainerInstanceDTO containerInstanceDTO :
+                resourcesManagementClient.getCrudBlockingStub().retrieveContainerInstances(Empty.newBuilder().build()).getContainerInstancesList())
+            resourcesManagementClient.getOperationalBlockingStub().destroyContainer(Int64Value.of(containerInstanceDTO.getId()));
+
+        for (ServicesManagementContract.WorkflowInstanceDTO workflowInstanceDTO :
+                servicesManagementClient.getCrudBlockingStub().retrieveWorkflowInstances(Empty.newBuilder().build()).getWorkflowInstancesList())
+            servicesManagementClient.getOperationalBlockingStub().terminateWorkflowInstance(Int64Value.of(workflowInstanceDTO.getId()));
+
+        for (MobileDeviceContract.MobileDeviceDTDTO mobileDeviceDTDTO :
+                mobileDeviceClient.getCrudBlockingStub().retrieveMobileDeviceDTs(Empty.newBuilder().build()).getMobileDeviceDTsList()) {
+            for (Long taskId : mobileDeviceDTDTO.getRunningTasksIdList()) {
+                MobileDeviceContract.TaskDTO taskDTO = mobileDeviceClient.getCrudBlockingStub().getTask(Int64Value.of(taskId));
+                mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceTaskCompletion(MobileDeviceContract.MobileDeviceDTTaskEndpoint.newBuilder()
+                        .setMobileDeviceDTId(mobileDeviceDTDTO.getId())
+                        .setTaskEndpointURI(taskDTO.getEndpointURI())
+                        .build());
+            }
+        }
     }
 
     @AfterAll
@@ -203,53 +253,5 @@ public class E2ETest {
         for (Long id : containerTypes)
             resourcesManagementClient.getCrudBlockingStub().removeContainerType(Int64Value.of(id));
     }
-
-    @Test
-    public void testContainerAllocationOnSignalMobileDeviceEndpointInvocation() {
-        mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
-                MobileDeviceContract.EndpointInvocationParameters.newBuilder()
-                        .setMobileDeviceDTId(mobileDevices.get(0))
-                        .setInvokedEndpointURI("example.com/doSomething")
-                        .setParameters("someParameters")
-                        .build());
-
-        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            MobileDeviceContract.MobileDeviceDTDTO mobileDeviceDTDTO = mobileDeviceClient.getCrudBlockingStub().getMobileDeviceDT(Int64Value.of(mobileDevices.get(0)));
-            MobileDeviceContract.TaskDTO taskDTO = mobileDeviceClient.getCrudBlockingStub().getTask(Int64Value.of(mobileDeviceDTDTO.getRunningTasksId(0)));
-            assertThat(taskDTO.getAssociatedWorkflowId()).isNotZero();
-        });
-
-        List<ServicesManagementContract.WorkflowInstanceDTO> workflowInstances =
-                servicesManagementClient.getCrudBlockingStub().retrieveWorkflowInstances(Empty.newBuilder().build()).getWorkflowInstancesList();
-        assertThat(workflowInstances.size()).isEqualTo(1);
-
-        ServicesManagementContract.EndpointServiceInstanceDTO endpointServiceInstance =
-                servicesManagementClient.getCrudBlockingStub().getEndpointServiceInstance(Int64Value.of(workflowInstances.get(0).getEndpointServiceInstanceId()));
-        assertThat(endpointServiceInstance.getParameters()).isEqualTo("someParameters");
-
-        ServicesManagementContract.EndpointServiceTypeDTO endpointServiceType =
-                servicesManagementClient.getCrudBlockingStub().getEndpointServiceType(Int64Value.of(endpointServiceInstance.getEndpointServiceTypeId()));
-        assertThat(endpointServiceType.getPhysicalEndpointURI()).isEqualTo("example.com/doSomething");
-
-        List<ResourcesManagementContract.ContainerInstanceDTO> containerInstances =
-                resourcesManagementClient.getCrudBlockingStub().retrieveContainerInstances(Empty.newBuilder().build()).getContainerInstancesList();
-        assertThat(containerInstances.size()).isEqualTo(6);
-    }
-
-//    @AfterEach
-//    public void cleanInstances() {
-//        List<MobileDeviceContract.MobileDeviceDTDTO> mobileDevicesDTDTO =
-//                mobileDeviceClient.getCrudBlockingStub().retrieveMobileDeviceDTs(Empty.newBuilder().build()).getMobileDeviceDTsList();
-//
-//        for (MobileDeviceContract.MobileDeviceDTDTO mobileDeviceDTDTO : mobileDevicesDTDTO) {
-//            for (Long taskId : mobileDeviceDTDTO.getRunningTasksIdList()) {
-//                MobileDeviceContract.TaskDTO taskDTO = mobileDeviceClient.getCrudBlockingStub().getTask(Int64Value.of(taskId));
-//                mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceTaskCompletion(MobileDeviceContract.MobileDeviceDTTaskEndpoint.newBuilder()
-//                        .setMobileDeviceDTId(mobileDeviceDTDTO.getId())
-//                        .setTaskEndpointURI(taskDTO.getEndpointURI())
-//                        .build());
-//            }
-//        }
-//    }
 
 }
