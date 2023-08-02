@@ -31,6 +31,9 @@ public class WorkflowInstance extends BaseEntity {
         this.workflowType = workflowType;
         this.workflowRequirements = workflowRequirements;
 
+        endpointServiceInstance = new EndpointServiceInstance(workflowType.getEndpointServiceType(), this, endpointParameters);
+        serviceInstanceDAG.addVertex(endpointServiceInstance);
+
         for (DefaultEdge edge : workflowType.getDAG().edgeSet()) {
             ServiceType calleeServiceType = workflowType.getDAG().getEdgeTarget(edge);
 
@@ -49,13 +52,8 @@ public class WorkflowInstance extends BaseEntity {
                     serviceInstanceDAG.addVertex(callerService);
                 }
                 serviceInstanceDAG.addEdge(callerService, calleeService);
-            } else {
-                if (endpointServiceInstance == null) {
-                    endpointServiceInstance = new EndpointServiceInstance(workflowType.getEndpointServiceType(), this, endpointParameters);
-                    serviceInstanceDAG.addVertex(endpointServiceInstance);
-                }
+            } else
                 serviceInstanceDAG.addEdge(endpointServiceInstance, calleeService);
-            }
         }
         storeGraphEdges();
     }
@@ -124,7 +122,7 @@ public class WorkflowInstance extends BaseEntity {
     @Table(name = "service_instance_graph_edge")
     protected static class ServiceInstanceGraphEdge extends BaseEntity {
 
-        @ManyToOne(optional = false)
+        @ManyToOne(cascade = CascadeType.ALL, optional = false)
         @JoinColumn(name = "caller_service", nullable = false)
         private ServiceInstance callerService;
 

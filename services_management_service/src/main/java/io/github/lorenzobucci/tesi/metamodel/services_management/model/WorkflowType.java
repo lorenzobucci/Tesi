@@ -79,16 +79,11 @@ public class WorkflowType extends BaseEntity {
 
     public void updateEndpointServiceType(EndpointServiceType endpointServiceType) {
         if (!serviceTypeDAG.containsVertex(endpointServiceType)) {
-            if (serviceTypeDAG.vertexSet().isEmpty()) {
-                serviceTypeDAG.addVertex(endpointServiceType);
-                this.endpointServiceType = endpointServiceType;
-            } else {
-                serviceTypeDAG.addVertex(endpointServiceType);
-                for (ServiceType descendant : serviceTypeDAG.getDescendants(this.endpointServiceType))
-                    serviceTypeDAG.addEdge(endpointServiceType, descendant);
-                serviceTypeDAG.removeVertex(this.endpointServiceType);
-                this.endpointServiceType = endpointServiceType;
-            }
+            serviceTypeDAG.addVertex(endpointServiceType);
+            for (ServiceType descendant : serviceTypeDAG.getDescendants(this.endpointServiceType))
+                serviceTypeDAG.addEdge(endpointServiceType, descendant);
+            serviceTypeDAG.removeVertex(this.endpointServiceType);
+            this.endpointServiceType = endpointServiceType;
         } else
             throw new NoSuchElementException("The service " + endpointServiceType.getId() + " already belongs to the workflow.");
         storeGraphEdges();
