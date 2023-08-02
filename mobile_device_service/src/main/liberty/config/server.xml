@@ -3,12 +3,15 @@
 
     <featureManager>
         <feature>grpc-1.0</feature>
+        <feature>grpcClient-1.0</feature>
         <feature>cdi-4.0</feature>
         <feature>persistenceContainer-3.1</feature>
         <feature>bells-1.0</feature>
         <feature>managedBeans-2.0</feature>
         <feature>beanValidation-3.0</feature>
     </featureManager>
+
+    <grpcClient host="*"/>
 
     <httpEndpoint id="defaultHttpEndpoint" httpPort="9080"/>
 
