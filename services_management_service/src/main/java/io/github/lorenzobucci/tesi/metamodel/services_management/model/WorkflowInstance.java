@@ -1,6 +1,5 @@
 package io.github.lorenzobucci.tesi.metamodel.services_management.model;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
@@ -13,7 +12,7 @@ import java.util.Set;
 @Table(name = "workflow_instance")
 public class WorkflowInstance extends BaseEntity {
 
-    @Transient // PERSISTED USING PROPERTY MODE
+    @Transient // PERSISTED USING SPECIFIC SECTION
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
@@ -104,7 +103,6 @@ public class WorkflowInstance extends BaseEntity {
             graphEdges.add(new ServiceInstanceGraphEdge(serviceInstanceDAG.getEdgeSource(edge), serviceInstanceDAG.getEdgeTarget(edge)));
     }
 
-    @PostConstruct
     @PostLoad
     private void retrieveGraphEdges() {
         if (graphEdges.isEmpty())

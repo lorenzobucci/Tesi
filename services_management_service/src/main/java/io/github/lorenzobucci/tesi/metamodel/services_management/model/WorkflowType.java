@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "workflow_type")
 public class WorkflowType extends BaseEntity {
 
-    @Transient // PERSISTED USING PROPERTY MODE
+    @Transient // PERSISTED USING SPECIFIC SECTION
     private final DirectedAcyclicGraph<ServiceType, DefaultEdge> serviceTypeDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
     @OneToOne(fetch = FetchType.EAGER, optional = false)
