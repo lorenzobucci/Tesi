@@ -11,8 +11,8 @@ public class ServiceInstance extends BaseEntity {
     @JoinColumn(name = "service_type_id", nullable = false)
     protected ServiceType serviceType;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "belonging_workflow_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "belonging_workflow_id")
     protected WorkflowInstance belongingWorkflow;
 
     @Embedded

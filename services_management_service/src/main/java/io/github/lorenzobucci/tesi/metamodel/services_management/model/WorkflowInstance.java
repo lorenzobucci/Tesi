@@ -15,8 +15,8 @@ public class WorkflowInstance extends BaseEntity {
     @Transient // PERSISTED USING SPECIFIC SECTION
     private final DirectedAcyclicGraph<ServiceInstance, DefaultEdge> serviceInstanceDAG = new DirectedAcyclicGraph<>(DefaultEdge.class);
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "endpoint_service_instance_id", nullable = false, unique = true)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endpoint_service_instance_id", unique = true)
     private EndpointServiceInstance endpointServiceInstance;
 
     @ManyToOne(optional = false)
@@ -95,7 +95,7 @@ public class WorkflowInstance extends BaseEntity {
     // GRAPH PERSISTENCE SECTION
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "workflow_instance_id", referencedColumnName = "id")
     private Set<ServiceInstanceGraphEdge> graphEdges = new HashSet<>();
 
     private void storeGraphEdges() {
@@ -120,12 +120,12 @@ public class WorkflowInstance extends BaseEntity {
     @Table(name = "service_instance_graph_edge")
     protected static class ServiceInstanceGraphEdge extends BaseEntity {
 
-        @ManyToOne(cascade = CascadeType.ALL, optional = false)
-        @JoinColumn(name = "caller_service", nullable = false)
+        @ManyToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "caller_service")
         private ServiceInstance callerService;
 
-        @ManyToOne(cascade = CascadeType.ALL, optional = false)
-        @JoinColumn(name = "callee_service", nullable = false)
+        @ManyToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "callee_service")
         private ServiceInstance calleeService;
 
 

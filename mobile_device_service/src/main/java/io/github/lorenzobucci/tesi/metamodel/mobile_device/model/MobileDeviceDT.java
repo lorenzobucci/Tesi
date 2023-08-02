@@ -15,8 +15,8 @@ public class MobileDeviceDT extends BaseEntity {
     @JoinColumn(name = "past_trajectory_id")
     private Trajectory pastTrajectory = new Trajectory();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "mobile_device_id", referencedColumnName = "id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "mobile_device_id", referencedColumnName = "id", nullable = false)
     private Set<Task> runningTasks = new HashSet<>();
 
     @Transient // CLASS INSTANCE PERSISTED USING PROPERTY MODE
