@@ -159,12 +159,15 @@ public class CrudService extends CrudGrpc.CrudImplBase {
     public void getCurrentAllocator(Empty request, StreamObserver<StringValue> responseObserver) {
         AllocatorAlgorithm allocatorAlgorithm = allocationController.getCurrentAllocator();
         responseObserver.onNext(StringValue.of(allocatorAlgorithm.getClass().getName()));
+        responseObserver.onCompleted();
     }
 
     @Override
     public void setAllocatorAlgorithm(StringValue request, StreamObserver<Empty> responseObserver) {
         try {
             allocationController.setAllocatorAlgorithm((AllocatorAlgorithm) Class.forName(request.getValue()).getConstructor().newInstance());
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(e);
         }
