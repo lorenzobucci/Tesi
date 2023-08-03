@@ -14,48 +14,55 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
+
+        <jakarta.version>10.0.0</jakarta.version>
+        <hibernate.version>6.2.7.Final</hibernate.version>
+        <grpc.version>1.57.1</grpc.version>
+        <annotations-api.version>6.0.53</annotations-api.version>
+        <protobuf-java-util.version>3.23.4</protobuf-java-util.version>
+        <open-liberty-grpc.version>1.0.79</open-liberty-grpc.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>10.0.0</version>
+            <version>${jakarta.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.2.7.Final</version>
+            <version>${hibernate.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.56.1</version>
+            <version>${grpc.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.56.1</version>
+            <version>${grpc.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>annotations-api</artifactId>
-            <version>6.0.53</version>
+            <version>${annotations-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>3.23.4</version>
+            <version>${protobuf-java-util.version}</version>
         </dependency>
         <dependency>
             <groupId>io.openliberty.api</groupId>
             <artifactId>io.openliberty.grpc.1.0</artifactId>
-            <version>1.0.79</version>
+            <version>${open-liberty-grpc.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
