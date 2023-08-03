@@ -10,10 +10,7 @@ import java.util.Set;
 @Table(name = "node")
 public class Node extends BaseEntity {
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "node_container_instances",
-            joinColumns = {@JoinColumn(name = "node_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "container_instance_id", referencedColumnName = "id")})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "belongingNode")
     private Set<ContainerInstance> ownedContainers = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
@@ -57,6 +54,7 @@ public class Node extends BaseEntity {
 
     public void addOwnedContainer(ContainerInstance newContainer) {
         this.ownedContainers.add(newContainer);
+        newContainer.updateBelongingNode(this);
     }
 
     public void removeOwnedContainer(ContainerInstance ownedContainer) {

@@ -15,14 +15,6 @@ public class ContainerInstanceDao {
     @PersistenceContext
     private EntityManager em;
 
-    public void create(ContainerInstance containerInstance) {
-        em.persist(containerInstance);
-    }
-
-    public void delete(ContainerInstance containerInstance) {
-        em.remove(em.contains(containerInstance) ? containerInstance : em.merge(containerInstance));
-    }
-
     public void update(ContainerInstance containerInstance) {
         em.merge(containerInstance);
     }

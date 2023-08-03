@@ -10,9 +10,10 @@ import java.util.Set;
 public class SampleAllocatorAlgorithm implements AllocatorAlgorithm {
 
     @Override
-    public ContainerInstance allocateContainer(DependabilityRequirements dependabilityRequirements, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
+    public AllocateResponse allocateContainer(DependabilityRequirements dependabilityRequirements, Set<Node> availableNodes, Set<ContainerType> providedContainerTypes) {
         Node selectedNode = availableNodes.iterator().next();
-        return new ContainerInstance(providedContainerTypes.iterator().next(), selectedNode);
+        ContainerInstance containerInstance = new ContainerInstance(providedContainerTypes.iterator().next());
+        return new AllocateResponse(containerInstance, selectedNode);
     }
 
     @Override

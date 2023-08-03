@@ -7,11 +7,14 @@ import io.github.lorenzobucci.tesi.metamodel.resources_management.model.Node;
 import java.util.Set;
 
 public interface AllocatorAlgorithm {
-    ContainerInstance allocateContainer(DependabilityRequirements dependabilityRequirements,
+    AllocateResponse allocateContainer(DependabilityRequirements dependabilityRequirements,
                                         Set<Node> availableNodes,
                                         Set<ContainerType> providedContainerTypes);
 
     Node reviseOptimalNode(ContainerInstance containerInstance,
                            DependabilityRequirements newDependabilityRequirements,
                            Set<Node> availableNodes);
+
+    record AllocateResponse(ContainerInstance createdContainerInstance, Node selectedNode) {
+    }
 }

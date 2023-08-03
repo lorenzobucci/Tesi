@@ -26,17 +26,15 @@ public class AllocationController {
     private AllocatorAlgorithm allocator = new SampleAllocatorAlgorithm(); // DEFAULT ALGORITHM
 
     public ContainerInstance allocateContainer(DependabilityRequirements dependabilityRequirements) {
-        ContainerInstance containerInstance = allocator.allocateContainer(dependabilityRequirements,
+        AllocatorAlgorithm.AllocateResponse allocateResponse = allocator.allocateContainer(dependabilityRequirements,
                 new HashSet<>(nodeController.retrieveNodes()),
                 new HashSet<>(containerTypeController.retrieveContainerTypes()));
 
-        containerInstance = containerInstanceController.addContainerInstance(containerInstance);
-
-        Node node = nodeController.getNode(containerInstance.getBelongingNode().getId());
-        node.addOwnedContainer(containerInstance);
+        Node node = nodeController.getNode(allocateResponse.selectedNode().getId());
+        node.addOwnedContainer(allocateResponse.createdContainerInstance());
         nodeController.updateNode(node);
 
-        return containerInstance;
+        return containerInstanceController.getContainerInstance(allocateResponse.createdContainerInstance().getUuid());
 
     }
 
@@ -52,7 +50,6 @@ public class AllocationController {
         if (!oldNode.equals(newNode)) {
             // CONTAINER MIGRATION
             newNode.addOwnedContainer(containerInstance);
-            containerInstance.updateBelongingNode(newNode);
             oldNode.removeOwnedContainer(containerInstance);
 
             nodeController.updateNode(newNode);

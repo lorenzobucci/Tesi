@@ -16,11 +16,11 @@ public class ContainerInstance extends BaseEntity {
     private String containerState = "IDLE";
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "belonging_node_id", nullable = false)
     private Node belongingNode;
 
-    public ContainerInstance(ContainerType containerType, Node belongingNode) {
+    public ContainerInstance(ContainerType containerType) {
         this.containerType = containerType;
-        this.belongingNode = belongingNode;
     }
 
     protected ContainerInstance() {
@@ -31,7 +31,7 @@ public class ContainerInstance extends BaseEntity {
         this.containerState = containerState;
     }
 
-    public void updateBelongingNode(Node newBelongingNode) {
+    void updateBelongingNode(Node newBelongingNode) {
         belongingNode = newBelongingNode;
     }
 
