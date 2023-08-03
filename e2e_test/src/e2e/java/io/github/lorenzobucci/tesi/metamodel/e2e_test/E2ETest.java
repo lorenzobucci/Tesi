@@ -233,6 +233,144 @@ public class E2ETest {
         resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(previousAllocatorAlgorithm);
     }
 
+    @Test
+    public void testContainersAreEquallyDistributedAmongTwoNodesWithSampleAllocatorAlgorithmWhenMoreThan10MobileDeviceDTSyncAreCalled() {
+        mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
+                MobileDeviceContract.EndpointInvocationParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setInvokedEndpointURI("example.com/doSomething")
+                        .setParameters("someParameters")
+                        .build());
+
+        StringValue previousAllocatorAlgorithm = resourcesManagementClient.getCrudBlockingStub().getCurrentAllocator(Empty.newBuilder().build());
+        resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(StringValue.of("io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.SampleAllocatorAlgorithm"));
+
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 3RD
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.1319f)
+                                .setLongitude(11.6784f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 4TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.9659f)
+                                .setLongitude(11.0424f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 5TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.7049f)
+                                .setLongitude(11.3824f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 6TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.5603f)
+                                .setLongitude(11.4607f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 7TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.7604f)
+                                .setLongitude(11.3470f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 8TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.7567f)
+                                .setLongitude(11.0343f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( // 9TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.6707f)
+                                .setLongitude(11.6044f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( //10 TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.7808f)
+                                .setLongitude(11.4600f)
+                                .build())
+                        .build());
+        mobileDeviceClient.getOperationalBlockingStub().syncMobileDeviceDTProperties( //11 TH
+                MobileDeviceContract.SyncMobileDeviceDTParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setCurrentPosition(MobileDeviceContract.PositionDTO.newBuilder()
+                                .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+                                .setLatitude(43.7804f)
+                                .setLongitude(11.7604f)
+                                .build())
+                        .build());
+
+        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<ResourcesManagementContract.NodeDTO> nodeList = resourcesManagementClient.getCrudBlockingStub().retrieveNodes(Empty.newBuilder().build()).getNodesList();
+            assertThat(nodeList.get(0).getOwnedContainerInstancesIdCount()).isEqualTo(nodeList.get(1).getOwnedContainerInstancesIdCount());
+        });
+
+        resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(previousAllocatorAlgorithm);
+    }
+
+    @Test
+    public void testTaskAndContainerAndWorkflowInstancesAreDeletedOnMobileDeviceTaskCompletion() {
+        mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
+                MobileDeviceContract.EndpointInvocationParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setInvokedEndpointURI("example.com/doSomething")
+                        .setParameters("someParameters")
+                        .build());
+
+        mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceTaskCompletion(
+                MobileDeviceContract.MobileDeviceDTTaskEndpoint.newBuilder().setMobileDeviceDTId(mobileDevices.get(0)).setTaskEndpointURI("example.com/doSomething").build());
+
+        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<ResourcesManagementContract.ContainerInstanceDTO> containerInstanceList =
+                    resourcesManagementClient.getCrudBlockingStub().retrieveContainerInstances(Empty.newBuilder().build()).getContainerInstancesList();
+            assertThat(containerInstanceList).isEmpty();
+        });
+
+        List<MobileDeviceContract.TaskDTO> taskList =
+                mobileDeviceClient.getCrudBlockingStub().retrieveTasks(Empty.newBuilder().build()).getTasksList();
+        assertThat(taskList).isEmpty();
+
+        List<ServicesManagementContract.WorkflowInstanceDTO> workflowInstanceList =
+                servicesManagementClient.getCrudBlockingStub().retrieveWorkflowInstances(Empty.newBuilder().build()).getWorkflowInstancesList();
+        assertThat(workflowInstanceList).isEmpty();
+
+        List<ServicesManagementContract.ServiceInstanceDTO> serviceInstanceList =
+                servicesManagementClient.getCrudBlockingStub().retrieveServiceInstances(Empty.newBuilder().build()).getServiceInstancesList();
+        assertThat(serviceInstanceList).isEmpty();
+
+        List<ResourcesManagementContract.NodeDTO> nodeList =
+                resourcesManagementClient.getCrudBlockingStub().retrieveNodes(Empty.newBuilder().build()).getNodesList();
+        for (ResourcesManagementContract.NodeDTO node : nodeList)
+            assertThat(node.getOwnedContainerInstancesIdCount()).isEqualTo(0);
+    }
+
     @AfterEach
     public void cleanInstances() {
         for (ResourcesManagementContract.ContainerInstanceDTO containerInstanceDTO :
