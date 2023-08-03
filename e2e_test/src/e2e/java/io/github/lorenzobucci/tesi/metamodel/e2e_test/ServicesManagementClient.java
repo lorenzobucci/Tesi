@@ -5,12 +5,17 @@ import io.github.lorenzobucci.tesi.metamodel.services_management.service.gRPC.Op
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 public class ServicesManagementClient {
+
+    ManagedChannel channel;
+
     private final CrudGrpc.CrudBlockingStub crudBlockingStub;
     private final OperationalGrpc.OperationalBlockingStub operationalBlockingStub;
 
     public ServicesManagementClient() {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9081).usePlaintext().build();
+        channel = ManagedChannelBuilder.forAddress("localhost", 9081).usePlaintext().build();
         crudBlockingStub = CrudGrpc.newBlockingStub(channel);
         operationalBlockingStub = OperationalGrpc.newBlockingStub(channel);
     }
@@ -21,5 +26,14 @@ public class ServicesManagementClient {
 
     public OperationalGrpc.OperationalBlockingStub getOperationalBlockingStub() {
         return operationalBlockingStub;
+    }
+
+    public void closeChannel() {
+        channel.shutdown();
+        try {
+            channel.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -256,7 +256,7 @@ public class E2ETest {
     }
 
     @AfterAll
-    public static void cleanDb() {
+    public static void cleanDbAndCloseChannels() {
         for (Long id : mobileDevices)
             mobileDeviceClient.getCrudBlockingStub().removeMobileDeviceDT(Int64Value.of(id));
 
@@ -278,6 +278,9 @@ public class E2ETest {
 
         for (Long id : containerTypes)
             resourcesManagementClient.getCrudBlockingStub().removeContainerType(Int64Value.of(id));
-    }
 
+        mobileDeviceClient.closeChannel();
+        servicesManagementClient.closeChannel();
+        resourcesManagementClient.closeChannel();
+    }
 }

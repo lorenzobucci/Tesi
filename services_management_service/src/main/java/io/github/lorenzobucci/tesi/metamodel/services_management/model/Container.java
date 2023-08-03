@@ -13,6 +13,7 @@ import jakarta.persistence.Transient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 @Embeddable
 public class Container {
@@ -79,7 +80,7 @@ public class Container {
             ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
 
             ResourcesManagementContract.ContainerInstanceDTO containerInstanceDTO = blockingStub.allocateContainer(dependabilityRequirementsDTO);
-            channel.shutdown();
+            channelShutdown();
 
             try {
                 ipAddress = InetAddress.getByName(containerInstanceDTO.getNodeIpAddress());
@@ -124,7 +125,7 @@ public class Container {
                     .setNewRequirements(dependabilityRequirementsDTO)
                     .build(), streamObserver);
 
-            channel.shutdown();
+            channelShutdown();
         }
 
         public void destroyContainer() {
@@ -149,7 +150,16 @@ public class Container {
 
             asyncStub.destroyContainer(Int64Value.of(associatedContainerId), streamObserver);
 
+            channelShutdown();
+        }
+
+        private void channelShutdown() {
             channel.shutdown();
+            try {
+                channel.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

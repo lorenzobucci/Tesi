@@ -9,6 +9,8 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import jakarta.persistence.*;
 
+import java.util.concurrent.TimeUnit;
+
 @Entity
 @Table(name = "task")
 public class Task extends BaseEntity {
@@ -102,7 +104,7 @@ public class Task extends BaseEntity {
                     .setWorkflowRequirements(workflowRequirementsDTO)
                     .build());
 
-            channel.shutdown();
+            channelShutdown();
 
             associatedWorkflowId = workflowInstanceDTO.getId();
         }
@@ -135,7 +137,7 @@ public class Task extends BaseEntity {
                     .setNewWorkflowRequirements(workflowRequirementsDTO)
                     .build(), streamObserver);
 
-            channel.shutdown();
+            channelShutdown();
         }
 
         private void workflowCompleted() {
@@ -160,7 +162,16 @@ public class Task extends BaseEntity {
 
             asyncStub.terminateWorkflowInstance(Int64Value.of(associatedWorkflowId), streamObserver);
 
+            channelShutdown();
+        }
+
+        private void channelShutdown() {
             channel.shutdown();
+            try {
+                channel.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
