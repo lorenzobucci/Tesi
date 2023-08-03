@@ -37,7 +37,7 @@
         <jdbcDriver libraryRef="jdbcLib"/>
         <properties serverName="localhost" portNumber="3310"
                     databaseName="MobileDevice"
-                    user="root"
+                    user="mduser"
                     password="admin"/>
     </dataSource>
 </server>

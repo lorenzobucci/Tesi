@@ -34,7 +34,7 @@
         <jdbcDriver libraryRef="jdbcLib"/>
         <properties serverName="localhost" portNumber="3312"
                     databaseName="ResourcesManagement"
-                    user="root"
+                    user="rmuser"
                     password="admin"/>
     </dataSource>
 </server>

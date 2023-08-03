@@ -8,5 +8,7 @@ services:
     ports:
       - "3310:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=mduser
+      - MYSQL_PASSWORD=admin
       - MYSQL_DATABASE=MobileDevice
