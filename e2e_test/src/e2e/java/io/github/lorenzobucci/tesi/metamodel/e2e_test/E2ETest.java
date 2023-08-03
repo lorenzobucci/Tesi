@@ -2,6 +2,7 @@ package io.github.lorenzobucci.tesi.metamodel.e2e_test;
 
 import com.google.protobuf.Empty;
 import com.google.protobuf.Int64Value;
+import com.google.protobuf.StringValue;
 import com.google.protobuf.util.Timestamps;
 import io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC.MobileDeviceContract;
 import io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC.ResourcesManagementContract;
@@ -13,8 +14,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 public class E2ETest {
 
@@ -205,6 +208,29 @@ public class E2ETest {
         List<ResourcesManagementContract.ContainerInstanceDTO> containerInstances =
                 resourcesManagementClient.getCrudBlockingStub().retrieveContainerInstances(Empty.newBuilder().build()).getContainerInstancesList();
         assertThat(containerInstances.size()).isEqualTo(6);
+    }
+
+    @Test
+    public void testContainersAreEquallyDistributedAmongTwoNodesWithSampleAllocatorAlgorithmWhenTaskOptimizationIsRequired() {
+        mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
+                MobileDeviceContract.EndpointInvocationParameters.newBuilder()
+                        .setMobileDeviceDTId(mobileDevices.get(0))
+                        .setInvokedEndpointURI("example.com/doSomething")
+                        .setParameters("someParameters")
+                        .build());
+
+        StringValue previousAllocatorAlgorithm = resourcesManagementClient.getCrudBlockingStub().getCurrentAllocator(Empty.newBuilder().build());
+        resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(StringValue.of("io.github.lorenzobucci.tesi.metamodel.resources_management.allocator.SampleAllocatorAlgorithm"));
+
+        mobileDeviceClient.getOperationalBlockingStub().requestMobileDeviceDTTaskOptimization(
+                MobileDeviceContract.MobileDeviceDTTaskEndpoint.newBuilder().setMobileDeviceDTId(mobileDevices.get(0)).setTaskEndpointURI("example.com/doSomething").build());
+
+        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<ResourcesManagementContract.NodeDTO> nodeList = resourcesManagementClient.getCrudBlockingStub().retrieveNodes(Empty.newBuilder().build()).getNodesList();
+            assertThat(nodeList.get(0).getOwnedContainerInstancesIdCount()).isEqualTo(nodeList.get(1).getOwnedContainerInstancesIdCount());
+        });
+
+        resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(previousAllocatorAlgorithm);
     }
 
     @AfterEach
