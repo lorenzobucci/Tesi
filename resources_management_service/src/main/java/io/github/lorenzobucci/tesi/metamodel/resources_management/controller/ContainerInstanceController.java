@@ -34,6 +34,12 @@ public class ContainerInstanceController {
         containerInstanceDao.delete(containerInstance);
     }
 
+    public void syncContainerDTProperties(long containerInstanceId, String containerState) throws NoSuchElementException {
+        ContainerInstance containerInstance = getContainerInstance(containerInstanceId);
+        containerInstance.syncWithRealObject(containerState);
+        containerInstanceDao.update(containerInstance);
+    }
+
     ContainerInstance addContainerInstance(ContainerInstance containerInstance) {
         containerInstanceDao.create(containerInstance);
         return containerInstanceDao.findByUuid(containerInstance.getUuid());

@@ -68,4 +68,15 @@ public class OperationalService extends OperationalGrpc.OperationalImplBase {
             responseObserver.onError(e);
         }
     }
+
+    @Override
+    public void syncContainerDTProperties(ResourcesManagement.ContainerDTSyncProperties request, StreamObserver<Empty> responseObserver) {
+        try {
+            containerInstanceController.syncContainerDTProperties(request.getContainerId(), request.getContainerState());
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+    }
 }
