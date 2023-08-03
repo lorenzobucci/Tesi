@@ -32,7 +32,7 @@
 
     <dataSource jndiName="jdbc/datasources/ResourcesManagementDS">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3312"
+        <properties serverName="mysql-resources-management" portNumber="3306"
                     databaseName="ResourcesManagement"
                     user="rmuser"
                     password="admin"/>

@@ -35,7 +35,7 @@
 
     <dataSource jndiName="jdbc/datasources/ServicesManagementDS">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3311"
+        <properties serverName="mysql-services-management" portNumber="3306"
                     databaseName="ServicesManagement"
                     user="smuser"
                     password="admin"/>

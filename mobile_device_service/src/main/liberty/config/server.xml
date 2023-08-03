@@ -35,7 +35,7 @@
 
     <dataSource jndiName="jdbc/datasources/MobileDeviceDS">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3310"
+        <properties serverName="mysql-mobile-device" portNumber="3306"
                     databaseName="MobileDevice"
                     user="mduser"
                     password="admin"/>

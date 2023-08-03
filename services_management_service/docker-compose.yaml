@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-services-management
+    ports:
+      - "3311:3306" # FOR DEV PURPOSE ONLY
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=smuser
+      - MYSQL_PASSWORD=admin
+      - MYSQL_DATABASE=ServicesManagement
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 20
+    networks:
+      - services-management-net
+
+  open-liberty:
+    build: .
+    container_name: open-liberty-services-management
+    ports:
+      - "9081:9081" # FOR DEV PURPOSE ONLY
+    networks:
+      - services-management-net
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+networks:
+  services-management-net:
+    driver: bridge
+    # FIXME rete comune mancante
