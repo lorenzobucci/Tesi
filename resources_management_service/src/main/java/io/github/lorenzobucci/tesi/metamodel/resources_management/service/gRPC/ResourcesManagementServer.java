@@ -20,7 +20,7 @@ public class ResourcesManagementServer {
     }
 
     public static void main(String[] args) throws Exception {
-        ResourcesManagementServer server = new ResourcesManagementServer(8080);
+        ResourcesManagementServer server = new ResourcesManagementServer(9082);
         server.start();
         server.blockUntilShutdown();
     }

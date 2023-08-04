@@ -18,7 +18,7 @@ public class ServicesManagementServer {
     }
 
     public static void main(String[] args) throws Exception {
-        ServicesManagementServer server = new ServicesManagementServer(8080);
+        ServicesManagementServer server = new ServicesManagementServer(9081);
         server.start();
         server.blockUntilShutdown();
     }

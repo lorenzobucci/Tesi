@@ -23,9 +23,10 @@ services:
     build: .
     container_name: open-liberty-services-management
     ports:
-      - "9081:9081" # FOR DEV PURPOSE ONLY
+      - "9081:9081" # FOR DEV AND TEST PURPOSE ONLY
     networks:
       - services-management-net
+      - common-net
     depends_on:
       mysql:
         condition: service_healthy
@@ -33,4 +34,6 @@ services:
 networks:
   services-management-net:
     driver: bridge
-    # FIXME rete comune mancante
+  common-net:
+    external: true
+    name: common-net

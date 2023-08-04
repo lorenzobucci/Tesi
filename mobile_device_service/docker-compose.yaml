@@ -23,9 +23,10 @@ services:
     build: .
     container_name: open-liberty-mobile-device
     ports:
-      - "9080:9080" # FOR DEV PURPOSE ONLY
+      - "9080:9080" # FOR DEV AND TEST PURPOSE ONLY
     networks:
       - mobile-device-net
+      - common-net
     depends_on:
       mysql:
         condition: service_healthy
@@ -33,4 +34,5 @@ services:
 networks:
   mobile-device-net:
     driver: bridge
-    # FIXME rete comune mancante
+  common-net:
+    name: common-net

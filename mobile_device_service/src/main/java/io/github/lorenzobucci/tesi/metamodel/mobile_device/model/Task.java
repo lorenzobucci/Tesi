@@ -87,7 +87,7 @@ public class Task extends BaseEntity {
         private OperationalGrpc.OperationalStub asyncStub;
 
         private void init() {
-            channel = ManagedChannelBuilder.forAddress("localhost", 9081).usePlaintext().build();
+            channel = ManagedChannelBuilder.forAddress("open-liberty-services-management", 9081).usePlaintext().build();
             blockingStub = OperationalGrpc.newBlockingStub(channel);
             asyncStub = OperationalGrpc.newStub(channel);
         }

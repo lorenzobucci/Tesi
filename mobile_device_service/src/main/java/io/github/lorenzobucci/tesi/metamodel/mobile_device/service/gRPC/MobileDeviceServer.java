@@ -20,7 +20,7 @@ public class MobileDeviceServer {
     }
 
     public static void main(String[] args) throws Exception {
-        MobileDeviceServer server = new MobileDeviceServer(8080);
+        MobileDeviceServer server = new MobileDeviceServer(9080);
         server.start();
         server.blockUntilShutdown();
     }

@@ -66,7 +66,7 @@ public class Container {
         private OperationalGrpc.OperationalStub asyncStub;
 
         private void init() {
-            channel = ManagedChannelBuilder.forAddress("localhost", 9082).usePlaintext().build();
+            channel = ManagedChannelBuilder.forAddress("open-liberty-resources-management", 9082).usePlaintext().build();
             blockingStub = OperationalGrpc.newBlockingStub(channel);
             asyncStub = OperationalGrpc.newStub(channel);
         }

@@ -13,7 +13,7 @@
 
     <grpcClient host="*"/>
 
-    <httpEndpoint id="defaultHttpEndpoint" httpPort="9080"/>
+    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080"/>
 
     <applicationManager autoExpand="true"/>
 
