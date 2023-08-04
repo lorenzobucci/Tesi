@@ -5,8 +5,9 @@ services:
   mysql:
     image: mysql:latest
     container_name: mysql-mobile-device
-    ports:
-      - "3310:3306" # FOR DEV PURPOSE ONLY
+    #    FOR DEV PURPOSE ONLY
+    #    ports:
+    #      - "3310:3306"
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_USER=mduser
@@ -22,8 +23,9 @@ services:
   open-liberty:
     build: .
     container_name: open-liberty-mobile-device
-    ports:
-      - "9080:9080" # FOR DEV AND TEST PURPOSE ONLY
+    #    FOR DEV AND TEST PURPOSE ONLY
+    #    ports:
+    #      - "9080:9080"
     networks:
       - mobile-device-net
       - common-net

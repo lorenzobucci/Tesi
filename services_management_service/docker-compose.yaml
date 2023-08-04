@@ -5,8 +5,9 @@ services:
   mysql:
     image: mysql:latest
     container_name: mysql-services-management
-    ports:
-      - "3311:3306" # FOR DEV PURPOSE ONLY
+    #    FOR DEV PURPOSE ONLY
+    #    ports:
+    #      - "3311:3306"
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_USER=smuser
@@ -22,8 +23,9 @@ services:
   open-liberty:
     build: .
     container_name: open-liberty-services-management
-    ports:
-      - "9081:9081" # FOR DEV AND TEST PURPOSE ONLY
+    #    FOR DEV AND TEST PURPOSE ONLY
+    #    ports:
+    #      - "9081:9081"
     networks:
       - services-management-net
       - common-net
