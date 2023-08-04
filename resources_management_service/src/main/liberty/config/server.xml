@@ -10,7 +10,14 @@
         <feature>beanValidation-3.0</feature>
     </featureManager>
 
-    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9082"/>
+    <variable name="GRPC_PORT" defaultValue="9082"/>
+    <variable name="MYSQL_HOSTNAME" defaultValue="mysql-resources-management"/>
+    <variable name="MYSQL_PORT" defaultValue="3306"/>
+    <variable name="DB_NAME" defaultValue="ResourcesManagement"/>
+    <variable name="MYSQL_USERNAME" defaultValue="rmuser"/>
+    <variable name="MYSQL_PASSWORD" defaultValue="admin"/>
+
+    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="${GRPC_PORT}"/>
 
     <applicationManager autoExpand="true"/>
 
@@ -32,9 +39,9 @@
 
     <dataSource jndiName="jdbc/datasources/ResourcesManagementDS">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="mysql-resources-management" portNumber="3306"
-                    databaseName="ResourcesManagement"
-                    user="rmuser"
-                    password="admin"/>
+        <properties serverName="${MYSQL_HOSTNAME}" portNumber="${MYSQL_PORT}"
+                    databaseName="${DB_NAME}"
+                    user="${MYSQL_USERNAME}"
+                    password="${MYSQL_PASSWORD}"/>
     </dataSource>
 </server>

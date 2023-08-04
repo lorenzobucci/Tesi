@@ -66,7 +66,11 @@ public class Container {
         private OperationalGrpc.OperationalStub asyncStub;
 
         private void init() {
-            channel = ManagedChannelBuilder.forAddress("open-liberty-resources-management", 9082).usePlaintext().build();
+            String resourcesManagementServiceHostname = System.getenv("RES_MGMT_HOSTNAME") != null ?
+                    System.getenv("RES_MGMT_HOSTNAME") : "open-liberty-resources-management";
+            int resourcesManagementServicePort = System.getenv("RES_MGMT_PORT") != null ?
+                    Integer.parseInt(System.getenv("RES_MGMT_PORT")) : 9082;
+            channel = ManagedChannelBuilder.forAddress(resourcesManagementServiceHostname, resourcesManagementServicePort).usePlaintext().build();
             blockingStub = OperationalGrpc.newBlockingStub(channel);
             asyncStub = OperationalGrpc.newStub(channel);
         }
