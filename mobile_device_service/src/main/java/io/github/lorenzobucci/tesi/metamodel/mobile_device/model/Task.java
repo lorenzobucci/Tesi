@@ -26,13 +26,13 @@ public class Task extends BaseEntity {
     private long associatedWorkflowId;
 
     @Transient
-    private final ServicesManagementsClient servicesManagementsClient = new ServicesManagementsClient();
+    private final ServicesManagementClient servicesManagementClient = new ServicesManagementClient();
 
     Task(String endpointURI, String parameters, DependabilityRequirements requirements) {
         this.endpointURI = endpointURI;
         this.parameters = parameters;
         this.requirements = requirements;
-        servicesManagementsClient.requestService(requirements, endpointURI, parameters);
+        servicesManagementClient.requestService(requirements, endpointURI, parameters);
     }
 
     protected Task() {
@@ -41,11 +41,11 @@ public class Task extends BaseEntity {
 
     void updateRequirements(DependabilityRequirements requirements) {
         this.requirements = requirements;
-        servicesManagementsClient.updateServiceRequirements(requirements);
+        servicesManagementClient.updateServiceRequirements(requirements);
     }
 
     void onCompleted() {
-        servicesManagementsClient.workflowCompleted();
+        servicesManagementClient.workflowCompleted();
     }
 
     public String getEndpointURI() {
@@ -80,7 +80,7 @@ public class Task extends BaseEntity {
     }
 
 
-    private class ServicesManagementsClient {
+    private class ServicesManagementClient {
 
         private ManagedChannel channel;
         private OperationalGrpc.OperationalBlockingStub blockingStub;
