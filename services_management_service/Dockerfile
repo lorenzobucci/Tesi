@@ -4,5 +4,5 @@ WORKDIR /usr/app
 
 COPY ./ ./
 
-RUN ./mvnw -f pom.xml compile
+RUN ./mvnw -f pom.xml clean compile
 CMD ./mvnw -f pom.xml liberty:run
