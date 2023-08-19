@@ -3,7 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
-option java_package = "io.github.lorenzobucci.tesi.metamodel.resources_management.service.gRPC";
+option java_package = "io.github.lorenzobucci.tesi.resources_management.service.gRPC";
 
 package ResourcesManagement;
 

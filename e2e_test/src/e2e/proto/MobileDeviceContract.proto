@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option java_package = "io.github.lorenzobucci.tesi.metamodel.mobile_device.service.gRPC";
+option java_package = "io.github.lorenzobucci.tesi.mobile_device.service.gRPC";
 
 package MobileDevice;
 
