@@ -106,7 +106,7 @@ JDK 17 must be installed on the machine where the tests will be performed.
    1. Edit the _docker-compose.yaml_ file to enable port 908x exposure for the `open-liberty` service. 
    The necessary instructions are already contained in the file, you just need to uncomment them.
 
-   2. Follow the instructions in the [Docker containerization](#Docker-containerization) section.
+   2. Follow the instructions in the [Docker containerization](#docker-containerization) section.
 
 3. Navigate to the E2E test folder:
    ```console
