@@ -41,7 +41,7 @@ public class MobileDeviceDT extends BaseEntity {
             task.onCompleted();
             runningTasks.remove(task);
         } else
-            throw new NoSuchElementException("Task " + task.getId() + " does not belong to this mobile device.");
+            throw new NoSuchElementException("There is no active task with URI " + endpointURI + " that belong to this mobile device.");
     }
 
     public void syncWithRealObject(Position currentPosition) {

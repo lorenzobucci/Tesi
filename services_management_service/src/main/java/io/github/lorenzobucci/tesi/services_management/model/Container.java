@@ -54,7 +54,7 @@ public class Container {
     private static class DependabilityRequirements {
         // PRIVATE STATIC ATTRIBUTES
 
-        private static DependabilityRequirements mergeAndCreate(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
+        private static DependabilityRequirements mergeAndBuild(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
             // MERGE ServiceRequirements AND WorkflowRequirements
             return new DependabilityRequirements();
         }
@@ -78,7 +78,7 @@ public class Container {
         private void allocateContainer(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
             init();
 
-            DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndCreate(serviceRequirements, workflowRequirements);
+            DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndBuild(serviceRequirements, workflowRequirements);
 
             // DO CONVERSION FROM DependabilityRequirements TO DependabilityRequirementsDTO
             ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
@@ -98,7 +98,7 @@ public class Container {
         private void reviseContainerAllocation(ServiceRequirements serviceRequirements, WorkflowRequirements newWorkflowRequirements) {
             init();
 
-            DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndCreate(serviceRequirements, newWorkflowRequirements);
+            DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndBuild(serviceRequirements, newWorkflowRequirements);
 
             // DO CONVERSION FROM DependabilityRequirements TO DependabilityRequirementsDTO
             ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
