@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Table(name = "task")
 public class Task extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "endpoint_URI", nullable = false, unique = true)
     private String endpointURI;
     private String parameters;
 
@@ -100,7 +100,12 @@ public class Task extends BaseEntity {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
-            ServicesManagementContract.WorkflowRequirementsDTO workflowRequirementsDTO = ServicesManagementContract.WorkflowRequirementsDTO.newBuilder().build();
+            ServicesManagementContract.WorkflowRequirementsDTO workflowRequirementsDTO =
+                    ServicesManagementContract.WorkflowRequirementsDTO.newBuilder()
+                            .setProximityComputation(requirements.isProximityComputation())
+                            .setPreferredLatitude(requirements.getPreferredLatitude())
+                            .setPreferredLongitude(requirements.getPreferredLongitude())
+                            .build();
 
             ServicesManagementContract.WorkflowInstanceDTO workflowInstanceDTO = blockingStub.instantiateWorkflowInstance(ServicesManagementContract.InstantiateWorkflowParameters.newBuilder()
                     .setEndpointParameters(parameters)
@@ -117,7 +122,12 @@ public class Task extends BaseEntity {
             init();
 
             // DO CONVERSION FROM DependabilityRequirements TO WorkflowRequirementsDTO
-            ServicesManagementContract.WorkflowRequirementsDTO workflowRequirementsDTO = ServicesManagementContract.WorkflowRequirementsDTO.newBuilder().build();
+            ServicesManagementContract.WorkflowRequirementsDTO workflowRequirementsDTO =
+                    ServicesManagementContract.WorkflowRequirementsDTO.newBuilder()
+                            .setProximityComputation(newRequirements.isProximityComputation())
+                            .setPreferredLatitude(newRequirements.getPreferredLatitude())
+                            .setPreferredLongitude(newRequirements.getPreferredLongitude())
+                            .build();
 
             StreamObserver<Empty> streamObserver = new StreamObserver<>() {
                 @Override

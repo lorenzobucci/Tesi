@@ -55,7 +55,10 @@ public class Builders {
     }
 
     public static DependabilityRequirements buildDependabilityRequirements(ResourcesManagement.DependabilityRequirementsDTO dependabilityRequirements) {
-        return new DependabilityRequirements(); // DO CONVERSION FROM DTO
+        return new DependabilityRequirements(
+                dependabilityRequirements.getProximityComputation(),
+                dependabilityRequirements.getPreferredLatitude(),
+                dependabilityRequirements.getPreferredLongitude());
     }
 }
 

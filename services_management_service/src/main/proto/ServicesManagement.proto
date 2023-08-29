@@ -125,7 +125,9 @@ message WorkflowInstanceList {
 // REQUIREMENTS
 
 message WorkflowRequirementsDTO {
-
+  bool proximityComputation = 1;
+  float preferredLatitude = 2;
+  float preferredLongitude = 3;
 }
 
 message ServiceRequirementsDTO {

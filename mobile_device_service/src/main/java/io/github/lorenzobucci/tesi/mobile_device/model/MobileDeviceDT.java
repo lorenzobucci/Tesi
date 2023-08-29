@@ -30,7 +30,8 @@ public class MobileDeviceDT extends BaseEntity {
     }
 
     public void taskInvoked(String endpointURI, String parameters) {
-        DependabilityRequirements requirements = new DependabilityRequirements(); // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
+        DependabilityRequirements requirements; // CALCULATE REQUIREMENTS BASED ON TRAJECTORY AND OTHER...
+        requirements = new DependabilityRequirements(false, 0, 0); // SAMPLE REQUIREMENTS
         Task invokedTask = new Task(endpointURI, parameters, requirements);
         runningTasks.add(invokedTask);
     }
@@ -56,7 +57,9 @@ public class MobileDeviceDT extends BaseEntity {
 
     private void requestTaskOptimization(Task taskToOptimize) {
         Trajectory forecastedTrajectory = trajectoryForecaster.forecast(getPastTrajectory());
-        DependabilityRequirements newDependabilityRequirements = new DependabilityRequirements();  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
+        DependabilityRequirements newDependabilityRequirements;  // DO STUFF TO DETERMINE THE NEW REQUIREMENTS
+
+        newDependabilityRequirements = new DependabilityRequirements(true, getCurrentPosition().getLatitude(), getCurrentPosition().getLongitude()); // SAMPLE REQUIREMENTS
         taskToOptimize.updateRequirements(newDependabilityRequirements);
     }
 

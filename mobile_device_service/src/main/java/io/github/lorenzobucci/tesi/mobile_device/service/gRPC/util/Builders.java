@@ -44,6 +44,10 @@ public class Builders {
     }
 
     public static MobileDevice.DependabilityRequirementsDTO buildDependabilityRequirementsDTO(DependabilityRequirements dependabilityRequirements) {
-        return MobileDevice.DependabilityRequirementsDTO.newBuilder().build(); // DO CONVERSION TO DTO
+        return MobileDevice.DependabilityRequirementsDTO.newBuilder()
+                .setProximityComputation(dependabilityRequirements.isProximityComputation())
+                .setPreferredLatitude(dependabilityRequirements.getPreferredLatitude())
+                .setPreferredLongitude(dependabilityRequirements.getPreferredLongitude())
+                .build();
     }
 }

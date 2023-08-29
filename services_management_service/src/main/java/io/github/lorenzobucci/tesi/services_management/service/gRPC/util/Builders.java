@@ -83,10 +83,17 @@ public class Builders {
     }
 
     public static ServicesManagement.WorkflowRequirementsDTO buildWorkflowRequirementsDTO(WorkflowRequirements workflowRequirements) {
-        return ServicesManagement.WorkflowRequirementsDTO.newBuilder().build(); // DO CONVERSION TO DTO
+        return ServicesManagement.WorkflowRequirementsDTO.newBuilder()
+                .setProximityComputation(workflowRequirements.isProximityComputation())
+                .setPreferredLatitude(workflowRequirements.getPreferredLatitude())
+                .setPreferredLongitude(workflowRequirements.getPreferredLongitude())
+                .build();
     }
 
     public static WorkflowRequirements buildWorkflowRequirements(ServicesManagement.WorkflowRequirementsDTO workflowRequirementsDTO) {
-        return new WorkflowRequirements(); // DO CONVERSION FROM DTO
+        return new WorkflowRequirements(
+                workflowRequirementsDTO.getProximityComputation(),
+                workflowRequirementsDTO.getPreferredLatitude(),
+                workflowRequirementsDTO.getPreferredLongitude());
     }
 }

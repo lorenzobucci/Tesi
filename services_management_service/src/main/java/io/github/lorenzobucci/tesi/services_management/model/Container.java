@@ -51,13 +51,15 @@ public class Container {
         return ipAddress;
     }
 
-    private static class DependabilityRequirements {
-        // PRIVATE STATIC ATTRIBUTES
+    // THIS CLASS HAS THE RESPONSIBILITY OF MERGING SERVICE AND WORKFLOW REQUIREMENTS
+    private record DependabilityRequirements(boolean proximityComputation, float preferredLatitude,
+                                             float preferredLongitude) { // SAMPLE REQUIREMENTS
 
         private static DependabilityRequirements mergeAndBuild(ServiceRequirements serviceRequirements, WorkflowRequirements workflowRequirements) {
-            // MERGE ServiceRequirements AND WorkflowRequirements
-            return new DependabilityRequirements();
+            // SIMULATION MERGE ServiceRequirements AND WorkflowRequirements
+            return new DependabilityRequirements(workflowRequirements.isProximityComputation(), workflowRequirements.getPreferredLatitude(), workflowRequirements.getPreferredLongitude());
         }
+
     }
 
     private class ResourcesManagementClient {
@@ -81,7 +83,12 @@ public class Container {
             DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndBuild(serviceRequirements, workflowRequirements);
 
             // DO CONVERSION FROM DependabilityRequirements TO DependabilityRequirementsDTO
-            ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
+            ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO =
+                    ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder()
+                            .setProximityComputation(dependabilityRequirements.proximityComputation)
+                            .setPreferredLatitude(dependabilityRequirements.preferredLatitude)
+                            .setPreferredLongitude(dependabilityRequirements.preferredLongitude)
+                            .build();
 
             ResourcesManagementContract.ContainerInstanceDTO containerInstanceDTO = blockingStub.allocateContainer(dependabilityRequirementsDTO);
             channelShutdown();
@@ -101,7 +108,12 @@ public class Container {
             DependabilityRequirements dependabilityRequirements = DependabilityRequirements.mergeAndBuild(serviceRequirements, newWorkflowRequirements);
 
             // DO CONVERSION FROM DependabilityRequirements TO DependabilityRequirementsDTO
-            ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO = ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder().build();
+            ResourcesManagementContract.DependabilityRequirementsDTO dependabilityRequirementsDTO =
+                    ResourcesManagementContract.DependabilityRequirementsDTO.newBuilder()
+                            .setProximityComputation(dependabilityRequirements.proximityComputation)
+                            .setPreferredLatitude(dependabilityRequirements.preferredLatitude)
+                            .setPreferredLongitude(dependabilityRequirements.preferredLongitude)
+                            .build();
 
             StreamObserver<ResourcesManagementContract.ContainerInstanceDTO> streamObserver = new StreamObserver<>() {
                 @Override

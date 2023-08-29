@@ -50,7 +50,9 @@ message PositionDTO {
 }
 
 message DependabilityRequirementsDTO {
-
+  bool proximityComputation = 1;
+  float preferredLatitude = 2;
+  float preferredLongitude = 3;
 }
 
 // DTO LIST
