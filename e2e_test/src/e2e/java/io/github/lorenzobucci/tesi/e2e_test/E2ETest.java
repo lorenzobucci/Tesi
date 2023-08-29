@@ -141,8 +141,8 @@ public class E2ETest {
 
         nodes.add(resourcesManagementClient.getCrudBlockingStub().addNode(
                 ResourcesManagementContract.NodeConstructorParameters.newBuilder()
-                        .setLatitude(14.3648f)
-                        .setLongitude(36.3792f)
+                        .setLatitude(43.2728f)
+                        .setLongitude(11.9835f)
                         .setIpAddress("10.10.10.1")
                         .setNodeType(ResourcesManagementContract.NodeTypeDTO.EDGE)
                         .setProperties(ResourcesManagementContract.NodeTechnicalPropertiesDTO.newBuilder()
@@ -154,8 +154,8 @@ public class E2ETest {
                         .build()).getId());
         nodes.add(resourcesManagementClient.getCrudBlockingStub().addNode(
                 ResourcesManagementContract.NodeConstructorParameters.newBuilder()
-                        .setLatitude(-67.3612f)
-                        .setLongitude(6.7906f)
+                        .setLatitude(-12.0475f)
+                        .setLongitude(-77.0412f)
                         .setIpAddress("10.10.10.2")
                         .setNodeType(ResourcesManagementContract.NodeTypeDTO.CLOUD)
                         .setProperties(ResourcesManagementContract.NodeTechnicalPropertiesDTO.newBuilder()
@@ -211,7 +211,7 @@ public class E2ETest {
     }
 
     @Test
-    public void testContainersAreEquallyDistributedAmongTwoNodesWithSampleAllocatorAlgorithmWhenTaskOptimizationIsRequired() {
+    public void testContainersAreAllocatedOnNearestNodeWithSampleAllocatorAlgorithmWhenTaskOptimizationIsRequired() {
         mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
                 MobileDeviceContract.EndpointInvocationParameters.newBuilder()
                         .setMobileDeviceDTId(mobileDevices.get(0))
@@ -227,14 +227,15 @@ public class E2ETest {
 
         await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             List<ResourcesManagementContract.NodeDTO> nodeList = resourcesManagementClient.getCrudBlockingStub().retrieveNodes(Empty.newBuilder().build()).getNodesList();
-            assertThat(nodeList.get(0).getOwnedContainerInstancesIdCount()).isEqualTo(nodeList.get(1).getOwnedContainerInstancesIdCount());
+            assertThat(nodeList.get(0).getOwnedContainerInstancesIdCount()).isEqualTo(6);
+            assertThat(nodeList.get(1).getOwnedContainerInstancesIdCount()).isEqualTo(0);
         });
 
         resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(previousAllocatorAlgorithm);
     }
 
     @Test
-    public void testContainersAreEquallyDistributedAmongTwoNodesWithSampleAllocatorAlgorithmWhenMoreThan10MobileDeviceDTSyncAreCalled() {
+    public void testContainersAreAllocatedOnNearestNodeWithSampleAllocatorAlgorithmWhenMoreThan10MobileDeviceDTSyncAreCalled() {
         mobileDeviceClient.getOperationalBlockingStub().signalMobileDeviceEndpointInvocation(
                 MobileDeviceContract.EndpointInvocationParameters.newBuilder()
                         .setMobileDeviceDTId(mobileDevices.get(0))
@@ -329,7 +330,8 @@ public class E2ETest {
 
         await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             List<ResourcesManagementContract.NodeDTO> nodeList = resourcesManagementClient.getCrudBlockingStub().retrieveNodes(Empty.newBuilder().build()).getNodesList();
-            assertThat(nodeList.get(0).getOwnedContainerInstancesIdCount()).isEqualTo(nodeList.get(1).getOwnedContainerInstancesIdCount());
+            assertThat(nodeList.get(0).getOwnedContainerInstancesIdCount()).isEqualTo(6);
+            assertThat(nodeList.get(1).getOwnedContainerInstancesIdCount()).isEqualTo(0);
         });
 
         resourcesManagementClient.getCrudBlockingStub().setAllocatorAlgorithm(previousAllocatorAlgorithm);
